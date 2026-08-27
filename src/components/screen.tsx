@@ -6,6 +6,8 @@ import { SafeAreaView } from 'react-native-screens/experimental';
 
 import { colors, layout, spacing } from '@/theme';
 
+import { EdgeSwipeNavigation } from './edge-swipe-navigation';
+
 type ScreenProps = PropsWithChildren<{
   header?: ReactNode;
 }>;
@@ -24,35 +26,37 @@ export function Screen({ children, header }: ScreenProps) {
   );
 
   return (
-    <SafeAreaView
-      edges={{ bottom: true, left: true, right: true, top: true }}
-      style={{ backgroundColor: colors.background, flex: 1 }}
-    >
-      <ScrollView
-        ref={scrollRef}
-        automaticallyAdjustKeyboardInsets
-        contentInsetAdjustmentBehavior="never"
+    <EdgeSwipeNavigation>
+      <SafeAreaView
+        edges={{ bottom: true, left: true, right: true, top: true }}
         style={{ backgroundColor: colors.background, flex: 1 }}
-        contentContainerStyle={{
-          alignItems: 'center',
-          paddingBottom:
-            process.env.EXPO_OS === 'web' ? layout.tabBarHeight + spacing.xxxl : spacing.xxxl,
-        }}
       >
-        <View
-          style={{
-            flex: 1,
-            gap: spacing.xxl,
-            maxWidth: layout.maxContentWidth,
-            paddingHorizontal: layout.screenPadding,
-            paddingTop: spacing.lg,
-            width: '100%',
+        <ScrollView
+          ref={scrollRef}
+          automaticallyAdjustKeyboardInsets
+          contentInsetAdjustmentBehavior="never"
+          style={{ backgroundColor: colors.background, flex: 1 }}
+          contentContainerStyle={{
+            alignItems: 'center',
+            paddingBottom:
+              process.env.EXPO_OS === 'web' ? layout.tabBarHeight + spacing.xxxl : spacing.xxxl,
           }}
         >
-          {header}
-          {children}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          <View
+            style={{
+              flex: 1,
+              gap: spacing.xxl,
+              maxWidth: layout.maxContentWidth,
+              paddingHorizontal: layout.screenPadding,
+              paddingTop: spacing.lg,
+              width: '100%',
+            }}
+          >
+            {header}
+            {children}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </EdgeSwipeNavigation>
   );
 }
