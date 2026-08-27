@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Trenuj bez zbędnych kroków",
+  "title": "Trening",
+  "todayWorkout": "Dzisiejszy trening",
+  "noPlan": "Nie wybrano treningu",
+  "noPlanDetail": "Tutaj pojawi się trening wynikający z planu tygodniowego lub wyboru na dziś.",
+  "chooseWorkout": "Wybierz trening",
+  "library": "Narzędzia treningowe",
+  "plans": "Plany treningowe",
+  "plansDetail": "Twórz plany i ustalaj kolejność ćwiczeń",
+  "exercises": "Biblioteka ćwiczeń",
+  "exercisesDetail": "Przeglądaj ćwiczenia wbudowane i własne",
+  "schedule": "Plan tygodniowy",
+  "scheduleDetail": "Przypisuj treningi, aktywności i dni odpoczynku",
+  "history": "Historia treningów",
+  "historyDetail": "Przeglądaj ukończone sesje"
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#0B0C0C" />
+  <circle cx="512" cy="512" r="344" fill="#CAFF00" />
+  <text
+    x="512"
+    y="584"
+    fill="#111400"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="224"
+    font-weight="800"
+    letter-spacing="-14"
+    text-anchor="middle"
+  >BA</text>
+</svg>

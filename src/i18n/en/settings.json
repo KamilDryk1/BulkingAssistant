@@ -1,0 +1,19 @@
+{
+  "eyebrow": "Make the assistant yours",
+  "title": "Settings",
+  "language": "Language",
+  "languageDetail": "The choice is saved on this device and will sync to your profile after authentication is added.",
+  "english": "English",
+  "polish": "Polski",
+  "units": "Units",
+  "weightUnit": "Weight unit",
+  "kilograms": "Kilograms",
+  "pounds": "Pounds",
+  "comingWithProfile": "Unit preference will be enabled with profile setup.",
+  "profile": "Profile & nutrition",
+  "profileDetail": "Personal parameters, activity level, and goal",
+  "account": "Account",
+  "accountDetail": "Email, session, and account management",
+  "foundation": "Foundation status",
+  "foundationReady": "Expo 57, Router, Supabase client, query cache, theme, and localization are ready."
+}

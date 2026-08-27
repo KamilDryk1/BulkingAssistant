@@ -1,0 +1,21 @@
+{
+  "eyebrow": "Twój dzień w skrócie",
+  "nutritionTarget": "Cel żywieniowy",
+  "targetPending": "Uzupełnij profil, aby obliczyć dzisiejszy cel",
+  "setUpProfile": "Uzupełnij profil",
+  "protein": "Białko",
+  "carbs": "Węglowodany",
+  "fat": "Tłuszcz",
+  "plannedTraining": "Zaplanowany trening",
+  "noWorkout": "Brak treningu na dziś",
+  "noWorkoutDetail": "Wybierz trening tylko na dziś, bez zmiany planu tygodniowego.",
+  "chooseWorkout": "Wybierz trening",
+  "activities": "Dzisiejsza aktywność",
+  "noActivities": "Brak zapisanych aktywności",
+  "noActivitiesDetail": "Szybkie zapisywanie aktywności pojawi się tutaj po dodaniu logowania.",
+  "addActivity": "Dodaj aktywność",
+  "bodyWeight": "Masa ciała",
+  "noWeight": "Brak dzisiejszego pomiaru",
+  "noWeightDetail": "Najnowszy dzisiejszy pomiar pojawi się tutaj wraz ze średnią z 7 dni.",
+  "logWeight": "Zapisz dzisiejszą wagę"
+}

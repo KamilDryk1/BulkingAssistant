@@ -1,0 +1,1 @@
+-- Predefined exercise and activity seed data is added with the Phase 2 schema.

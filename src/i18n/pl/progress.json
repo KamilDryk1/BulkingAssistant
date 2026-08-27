@@ -1,0 +1,14 @@
+{
+  "eyebrow": "Czytelny postęp bez przeładowania",
+  "title": "Postęp",
+  "exercise": "Ćwiczenie",
+  "chooseExercise": "Wybierz ćwiczenie",
+  "chooseExerciseDetail": "Ukończone serie zasilą dwa najważniejsze widoki postępu.",
+  "estimatedOneRepMax": "Szacowane 1RM",
+  "bestSet": "Najlepsza seria",
+  "current": "Aktualny wynik",
+  "noData": "Brak ukończonych serii",
+  "noDataDetail": "Ukończ trening, aby zacząć budować trend siłowy.",
+  "trend": "Postęp w czasie",
+  "eightWeeks": "8 tygodni"
+}

@@ -1,0 +1,14 @@
+{
+  "eyebrow": "Clear signals, no clutter",
+  "title": "Progress",
+  "exercise": "Exercise",
+  "chooseExercise": "Choose an exercise",
+  "chooseExerciseDetail": "Completed workout sets will power the two focused progress views.",
+  "estimatedOneRepMax": "Estimated 1RM",
+  "bestSet": "Best Set",
+  "current": "Current estimate",
+  "noData": "No completed sets yet",
+  "noDataDetail": "Finish a workout to start building your strength trend.",
+  "trend": "Progress over time",
+  "eightWeeks": "8 weeks"
+}

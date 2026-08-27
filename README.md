@@ -1,56 +1,79 @@
-# Welcome to your Expo app 👋
+# Bulking Assistant
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Bulking Assistant is an Expo/React Native workout, activity, body-weight, and nutrition assistant focused on fast, low-friction daily and in-gym logging.
 
-## Get started
+Phase 1 is complete. The repository currently contains the production app foundation and intentionally shows localized empty states; authentication and persisted product data begin in Phase 2.
 
-1. Install dependencies
+## Current foundation
 
-   ```bash
-   npm install
-   ```
+- Expo SDK 57, React Native 0.86, strict TypeScript, and Expo Router
+- five-area native tab shell: Today, Training, Progress, Body, and Settings
+- dark athletic design system with Google Sans Flex and `#CAFF00` brand accent
+- English and Polish translations with device detection and persisted override
+- Supabase client boundary with persisted-session configuration when environment values exist
+- TanStack Query provider and default caching policy
+- responsive web fallback plus iOS and Android bundles
+- Expo-aware linting and Prettier formatting
 
-2. Start the app
+See [the product specification](docs/PRODUCT_SPEC.md) and [implementation plan](docs/IMPLEMENTATION_PLAN.md) for scope and sequencing.
 
-   ```bash
-   npx expo start
-   ```
+## Requirements
 
-In the output, you'll find options to open the app in a
+- Node.js 22.13 or newer (the Expo SDK 57 minimum)
+- npm
+- Expo Go for the fastest native development loop
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Setup
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Install dependencies:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Copy the environment template when connecting a Supabase project:
 
-### Other setup steps
+```bash
+cp .env.example .env
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Set the project URL and publishable key. A legacy anon key is also supported. Public Supabase client keys are safe to bundle only when the database is protected with the Row Level Security policies planned for Phase 2; never place a service-role key in Expo public environment variables.
 
-## Learn more
+Start the app:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npx expo start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Use Expo Go first. Press `i`, `a`, or `w` for the available iOS simulator, Android emulator, or web target.
 
-## Join the community
+## Validation scripts
 
-Join our community of developers creating universal apps.
+```bash
+npm run typecheck
+npm run lint
+npm run format:check
+npx expo export --platform all
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Run `npm run format` to apply the repository formatting rules.
+
+## Structure
+
+```text
+src/app/          route files only
+src/screens/      feature screen composition
+src/components/   reusable visual primitives
+src/features/     domain logic, types, queries, and mutations
+src/i18n/         English/Polish resources and locale persistence
+src/lib/          shared environment and query setup
+src/providers/    app-level providers
+src/services/     Supabase and future external-service boundaries
+src/theme/        the only source of visual tokens
+supabase/         migrations, seed data, and future edge functions
+docs/             product specification and implementation plan
+```
+
+## Versioned Expo documentation
+
+This project is pinned to Expo SDK 57. Consult the [Expo SDK 57 reference](https://docs.expo.dev/versions/v57.0.0/) instead of the unversioned latest API pages when making version-specific changes.

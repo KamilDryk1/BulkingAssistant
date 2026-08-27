@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Trend ponad codziennymi wahaniami",
+  "title": "Ciało i żywienie",
+  "goal": "Obecna faza",
+  "cut": "Redukcja",
+  "maintain": "Utrzymanie",
+  "gain": "Masa",
+  "nutrition": "Dzienny cel",
+  "nutritionDetail": "Deterministyczny cel kalorii i makroskładników pojawi się po uzupełnieniu profilu.",
+  "profileAction": "Uzupełnij profil",
+  "weight": "Aktualna masa",
+  "weightDetail": "Zapisz wagę, aby zobaczyć najnowszy wynik, średnią z 7 dni i trend tygodniowy.",
+  "logWeight": "Zapisz dzisiejszą wagę",
+  "activity": "Ostatnia aktywność",
+  "activityEmpty": "Brak ostatnich aktywności",
+  "activityEmptyDetail": "Tutaj pojawi się podsumowanie treningów i aktywności."
+}

@@ -1,0 +1,91 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLocales } from 'expo-localization';
+import { createInstance } from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+import bodyEn from './en/body.json';
+import commonEn from './en/common.json';
+import progressEn from './en/progress.json';
+import settingsEn from './en/settings.json';
+import todayEn from './en/today.json';
+import trainingEn from './en/training.json';
+import bodyPl from './pl/body.json';
+import commonPl from './pl/common.json';
+import progressPl from './pl/progress.json';
+import settingsPl from './pl/settings.json';
+import todayPl from './pl/today.json';
+import trainingPl from './pl/training.json';
+
+export const supportedLocales = ['en', 'pl'] as const;
+export type SupportedLocale = (typeof supportedLocales)[number];
+
+const localeStorageKey = 'bulking-assistant.locale';
+const i18n = createInstance();
+
+const resources = {
+  en: {
+    body: bodyEn,
+    common: commonEn,
+    progress: progressEn,
+    settings: settingsEn,
+    today: todayEn,
+    training: trainingEn,
+  },
+  pl: {
+    body: bodyPl,
+    common: commonPl,
+    progress: progressPl,
+    settings: settingsPl,
+    today: todayPl,
+    training: trainingPl,
+  },
+} as const;
+
+function resolveLocale(value: string | null | undefined): SupportedLocale {
+  return supportedLocales.includes(value as SupportedLocale) ? (value as SupportedLocale) : 'en';
+}
+
+let initialization: Promise<void> | null = null;
+
+export function initializeI18n() {
+  if (!initialization) {
+    initialization = (async () => {
+      let storedLocale: string | null = null;
+
+      try {
+        storedLocale = await AsyncStorage.getItem(localeStorageKey);
+      } catch {
+        // A storage failure should never prevent the app from starting in the fallback locale.
+      }
+
+      const deviceLocale = getLocales()[0]?.languageCode;
+      const locale = resolveLocale(storedLocale ?? deviceLocale);
+
+      await i18n.use(initReactI18next).init({
+        defaultNS: 'common',
+        fallbackLng: 'en',
+        interpolation: { escapeValue: false },
+        lng: locale,
+        resources,
+        supportedLngs: supportedLocales,
+      });
+    })();
+  }
+
+  return initialization;
+}
+
+export async function setAppLocale(locale: SupportedLocale) {
+  try {
+    await AsyncStorage.setItem(localeStorageKey, locale);
+  } catch {
+    // Keep the in-memory preference usable even when device storage is unavailable.
+  }
+  await i18n.changeLanguage(locale);
+}
+
+export function getCurrentLocale(): SupportedLocale {
+  return resolveLocale(i18n.resolvedLanguage ?? i18n.language);
+}
+
+export { i18n };

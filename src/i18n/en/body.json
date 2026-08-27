@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Trend over daily noise",
+  "title": "Body & nutrition",
+  "goal": "Current phase",
+  "cut": "Cut",
+  "maintain": "Maintain",
+  "gain": "Gain",
+  "nutrition": "Daily target",
+  "nutritionDetail": "Your deterministic calorie and macro target will appear after profile setup.",
+  "profileAction": "Set up profile",
+  "weight": "Current weight",
+  "weightDetail": "Log weight to see the latest value, 7-day average, and weekly trend.",
+  "logWeight": "Log today's weight",
+  "activity": "Recent activity",
+  "activityEmpty": "No recent activities",
+  "activityEmptyDetail": "Workout and activity logs will be summarized here."
+}

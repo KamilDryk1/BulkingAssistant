@@ -1,0 +1,21 @@
+{
+  "eyebrow": "Your day at a glance",
+  "nutritionTarget": "Nutrition target",
+  "targetPending": "Complete your profile to calculate today's target",
+  "setUpProfile": "Set up profile",
+  "protein": "Protein",
+  "carbs": "Carbs",
+  "fat": "Fat",
+  "plannedTraining": "Planned training",
+  "noWorkout": "No workout planned today",
+  "noWorkoutDetail": "Choose a workout for today without changing your weekly schedule.",
+  "chooseWorkout": "Choose workout",
+  "activities": "Today's activity",
+  "noActivities": "No activities logged today",
+  "noActivitiesDetail": "Quick activity logging will appear here after sign-in is available.",
+  "addActivity": "Add activity",
+  "bodyWeight": "Body weight",
+  "noWeight": "No weight recorded today",
+  "noWeightDetail": "Today's latest entry will appear here with the 7-day average.",
+  "logWeight": "Log today's weight"
+}

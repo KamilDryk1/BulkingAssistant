@@ -1,0 +1,19 @@
+{
+  "eyebrow": "Dopasuj asystenta do siebie",
+  "title": "Ustawienia",
+  "language": "Język",
+  "languageDetail": "Wybór jest zapisywany na tym urządzeniu, a po dodaniu logowania będzie synchronizowany z profilem.",
+  "english": "English",
+  "polish": "Polski",
+  "units": "Jednostki",
+  "weightUnit": "Jednostka masy",
+  "kilograms": "Kilogramy",
+  "pounds": "Funty",
+  "comingWithProfile": "Wybór jednostek zostanie włączony wraz z konfiguracją profilu.",
+  "profile": "Profil i żywienie",
+  "profileDetail": "Parametry osobiste, poziom aktywności i cel",
+  "account": "Konto",
+  "accountDetail": "E-mail, sesja i zarządzanie kontem",
+  "foundation": "Stan fundamentu",
+  "foundationReady": "Expo 57, Router, klient Supabase, pamięć zapytań, motyw i lokalizacja są gotowe."
+}

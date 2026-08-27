@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Train with less friction",
+  "title": "Training",
+  "todayWorkout": "Today's workout",
+  "noPlan": "No workout selected",
+  "noPlanDetail": "Your weekly schedule and date-specific choice will resolve here.",
+  "chooseWorkout": "Choose workout",
+  "library": "Training tools",
+  "plans": "Workout plans",
+  "plansDetail": "Create and order reusable exercise plans",
+  "exercises": "Exercise library",
+  "exercisesDetail": "Browse predefined and custom exercises",
+  "schedule": "Weekly schedule",
+  "scheduleDetail": "Assign workouts, activities, and rest days",
+  "history": "Workout history",
+  "historyDetail": "Review completed sessions"
+}

@@ -1,0 +1,20 @@
+{
+  "brandName": "Bulking Assistant",
+  "tabs": {
+    "today": "Today",
+    "training": "Training",
+    "progress": "Progress",
+    "body": "Body",
+    "settings": "Settings"
+  },
+  "status": {
+    "notConfigured": "Not configured",
+    "nothingLogged": "Nothing logged yet"
+  },
+  "units": {
+    "kilograms": "kg",
+    "pounds": "lbs",
+    "calories": "kcal",
+    "grams": "g"
+  }
+}
