@@ -2,7 +2,7 @@ import { useRoute } from 'expo-router';
 import type { PropsWithChildren, ReactNode } from 'react';
 import { useCallback, useLayoutEffect, useRef } from 'react';
 import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-screens/experimental';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, layout, spacing } from '@/theme';
 
@@ -18,6 +18,7 @@ export function resetScreenScroll(routeName: string) {
 
 export function Screen({ children, header }: ScreenProps) {
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
 
   const scrollToTop = useCallback(() => {
@@ -41,35 +42,32 @@ export function Screen({ children, header }: ScreenProps) {
   }, [scrollToTop]);
 
   return (
-    <SafeAreaView
-      edges={{ bottom: true, left: true, right: true, top: true }}
+    <ScrollView
+      ref={scrollRef}
+      automaticallyAdjustKeyboardInsets
+      contentInsetAdjustmentBehavior="never"
+      directionalLockEnabled
+      showsVerticalScrollIndicator={false}
       style={{ backgroundColor: colors.background, flex: 1 }}
+      contentContainerStyle={{
+        alignItems: 'center',
+        paddingBottom: insets.bottom + layout.tabBarHeight + spacing.xxxl,
+        paddingTop: insets.top,
+      }}
     >
-      <ScrollView
-        ref={scrollRef}
-        automaticallyAdjustKeyboardInsets
-        contentInsetAdjustmentBehavior="never"
-        directionalLockEnabled
-        style={{ backgroundColor: colors.background, flex: 1 }}
-        contentContainerStyle={{
-          alignItems: 'center',
-          paddingBottom: layout.tabBarHeight + spacing.xxxl,
+      <View
+        style={{
+          flex: 1,
+          gap: spacing.xxl,
+          maxWidth: layout.maxContentWidth,
+          paddingHorizontal: layout.screenPadding,
+          paddingTop: spacing.lg,
+          width: '100%',
         }}
       >
-        <View
-          style={{
-            flex: 1,
-            gap: spacing.xxl,
-            maxWidth: layout.maxContentWidth,
-            paddingHorizontal: layout.screenPadding,
-            paddingTop: spacing.lg,
-            width: '100%',
-          }}
-        >
-          {header}
-          {children}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        {header}
+        {children}
+      </View>
+    </ScrollView>
   );
 }
