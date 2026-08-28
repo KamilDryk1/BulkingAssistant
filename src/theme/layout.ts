@@ -9,6 +9,7 @@ export const layout = {
   iconMedium: 24,
   iconLarge: 40,
   tabBarHeight: 76,
+  floatingTabBarHeight: 64,
   emptyChartHeight: 180,
   borderWidth: 1,
 } as const;

@@ -3,6 +3,7 @@ export const colors = {
   surface: '#151616',
   surfaceElevated: '#1D1E1E',
   surfaceSelected: '#272A20',
+  glassFallback: 'rgba(21, 22, 22, 0.88)',
   border: '#2D2F2F',
   borderStrong: '#3A3D34',
   primary: '#CAFF00',

@@ -18,7 +18,7 @@ function getSupabaseEnvironment(): SupabaseEnvironment {
     !key ? 'EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY or EXPO_PUBLIC_SUPABASE_ANON_KEY' : null,
   ].filter((value): value is string => Boolean(value));
 
-  if (missing.length > 0) {
+  if (missing.length > 0 || !key || !url) {
     return { configured: false, missing };
   }
 

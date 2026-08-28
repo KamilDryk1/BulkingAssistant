@@ -1,62 +1,75 @@
-import { useFocusEffect } from 'expo-router';
+import { useRoute } from 'expo-router';
 import type { PropsWithChildren, ReactNode } from 'react';
-import { useCallback, useRef } from 'react';
+import { useCallback, useLayoutEffect, useRef } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-screens/experimental';
 
 import { colors, layout, spacing } from '@/theme';
 
-import { EdgeSwipeNavigation } from './edge-swipe-navigation';
-
 type ScreenProps = PropsWithChildren<{
   header?: ReactNode;
 }>;
 
+const scrollResetters = new Map<string, () => void>();
+
+export function resetScreenScroll(routeName: string) {
+  scrollResetters.get(routeName)?.();
+}
+
 export function Screen({ children, header }: ScreenProps) {
+  const route = useRoute();
   const scrollRef = useRef<ScrollView>(null);
 
-  useFocusEffect(
-    useCallback(() => {
-      const frame = requestAnimationFrame(() => {
-        scrollRef.current?.scrollTo({ animated: false, y: spacing.none });
-      });
+  const scrollToTop = useCallback(() => {
+    scrollRef.current?.scrollTo({ animated: false, y: spacing.none });
+  }, []);
 
-      return () => cancelAnimationFrame(frame);
-    }, []),
-  );
+  useLayoutEffect(() => {
+    scrollResetters.set(route.name, scrollToTop);
+
+    return () => {
+      if (scrollResetters.get(route.name) === scrollToTop) {
+        scrollResetters.delete(route.name);
+      }
+    };
+  }, [route.name, scrollToTop]);
+
+  useLayoutEffect(() => {
+    if (scrollRef.current) {
+      scrollToTop();
+    }
+  }, [scrollToTop]);
 
   return (
-    <EdgeSwipeNavigation>
-      <SafeAreaView
-        edges={{ bottom: true, left: true, right: true, top: true }}
+    <SafeAreaView
+      edges={{ bottom: true, left: true, right: true, top: true }}
+      style={{ backgroundColor: colors.background, flex: 1 }}
+    >
+      <ScrollView
+        ref={scrollRef}
+        automaticallyAdjustKeyboardInsets
+        contentInsetAdjustmentBehavior="never"
+        directionalLockEnabled
         style={{ backgroundColor: colors.background, flex: 1 }}
+        contentContainerStyle={{
+          alignItems: 'center',
+          paddingBottom: layout.tabBarHeight + spacing.xxxl,
+        }}
       >
-        <ScrollView
-          ref={scrollRef}
-          automaticallyAdjustKeyboardInsets
-          contentInsetAdjustmentBehavior="never"
-          style={{ backgroundColor: colors.background, flex: 1 }}
-          contentContainerStyle={{
-            alignItems: 'center',
-            paddingBottom:
-              process.env.EXPO_OS === 'web' ? layout.tabBarHeight + spacing.xxxl : spacing.xxxl,
+        <View
+          style={{
+            flex: 1,
+            gap: spacing.xxl,
+            maxWidth: layout.maxContentWidth,
+            paddingHorizontal: layout.screenPadding,
+            paddingTop: spacing.lg,
+            width: '100%',
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              gap: spacing.xxl,
-              maxWidth: layout.maxContentWidth,
-              paddingHorizontal: layout.screenPadding,
-              paddingTop: spacing.lg,
-              width: '100%',
-            }}
-          >
-            {header}
-            {children}
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </EdgeSwipeNavigation>
+          {header}
+          {children}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
