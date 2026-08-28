@@ -16,6 +16,7 @@
 - Keep all repeated visual values in `src/theme/`. Do not hardcode colors, type sizes, spacing, radii, or shadows in screens.
 - Use strict TypeScript, kebab-case file names, and `@/` path aliases.
 - Prefer local component state and TanStack Query. Do not add a global state library without a demonstrated need.
+- Do not modify node_modules packages.
 
 ## Product conventions
 
