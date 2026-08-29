@@ -4,4 +4,5 @@ dist
 ios
 node_modules
 package-lock.json
+supabase/.temp
 assets/brand/*.svg

@@ -18,7 +18,11 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   cancelAnimation,
   Easing,
+  Extrapolation,
+  interpolate,
+  interpolateColor,
   ReduceMotion,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
@@ -30,7 +34,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useTranslation } from 'react-i18next';
 
-import { AppText } from '@/components/app-text';
 import { resetScreenScroll } from '@/components/screen';
 import {
   colors,
@@ -120,6 +123,83 @@ function clamp(value: number, lowerBound: number, upperBound: number) {
   return Math.min(upperBound, Math.max(lowerBound, value));
 }
 
+function TabIcon({
+  androidIcon,
+  index,
+  iosIcon,
+  selectionPosition,
+}: {
+  androidIcon: AndroidSymbolName;
+  index: number;
+  iosIcon: IosSymbolName;
+  selectionPosition: SharedValue<number>;
+}) {
+  const selectedIconStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      selectionPosition.get(),
+      [index - 1, index, index + 1],
+      [0, 1, 0],
+      Extrapolation.CLAMP,
+    ),
+  }));
+  const symbolName = {
+    android: androidIcon,
+    ios: iosIcon,
+  } as const;
+
+  return (
+    <View style={styles.tabIcon}>
+      <SymbolView
+        name={symbolName}
+        resizeMode="scaleAspectFit"
+        size={layout.iconMedium}
+        tintColor={colors.textMuted}
+      />
+      <Animated.View pointerEvents="none" style={[styles.tabIconSelected, selectedIconStyle]}>
+        <SymbolView
+          name={symbolName}
+          resizeMode="scaleAspectFit"
+          size={layout.iconMedium}
+          tintColor={colors.primary}
+        />
+      </Animated.View>
+    </View>
+  );
+}
+
+function TabLabel({
+  index,
+  isSelected,
+  label,
+  selectionPosition,
+}: {
+  index: number;
+  isSelected: boolean;
+  label: string;
+  selectionPosition: SharedValue<number>;
+}) {
+  const animatedLabelStyle = useAnimatedStyle(() => ({
+    color: interpolateColor(
+      selectionPosition.get(),
+      [index - 1, index, index + 1],
+      [colors.textMuted, colors.primary, colors.textMuted],
+    ),
+  }));
+
+  return (
+    <Animated.Text
+      numberOfLines={1}
+      style={[
+        typography.tab,
+        { fontFamily: isSelected ? fontFamilies.semibold : fontFamilies.medium },
+        animatedLabelStyle,
+      ]}
+    >
+      {label}
+    </Animated.Text>
+  );
+}
+
 export default function AppTabs() {
   const { t } = useTranslation('common');
   const { width: pageWidth } = useWindowDimensions();
@@ -140,6 +220,7 @@ export default function AppTabs() {
   const tabLensX = useSharedValue(tabLensMinimumX);
   const tabLensVisibility = useSharedValue(0);
   const tabLensScale = useSharedValue(1);
+  const tabSelectionPosition = useSharedValue(activeTabIndex);
 
   const handleTabBarLayout = useCallback((event: LayoutChangeEvent) => {
     setTabBarWidth(event.nativeEvent.layout.width);
@@ -171,10 +252,12 @@ export default function AppTabs() {
 
       resetScreenScroll(tab.name);
       cancelAnimation(translateX);
+      cancelAnimation(tabSelectionPosition);
       translateX.set(-index * pageWidth);
+      tabSelectionPosition.set(index);
       navigation.navigate(tab.name);
     },
-    [navigation, pageWidth, translateX],
+    [navigation, pageWidth, tabSelectionPosition, translateX],
   );
 
   useLayoutEffect(() => {
@@ -184,8 +267,10 @@ export default function AppTabs() {
     }
 
     cancelAnimation(translateX);
+    cancelAnimation(tabSelectionPosition);
     translateX.set(-activeTabIndex * pageWidth);
-  }, [activeTabIndex, pageWidth, translateX]);
+    tabSelectionPosition.set(activeTabIndex);
+  }, [activeTabIndex, pageWidth, tabSelectionPosition, translateX]);
 
   useLayoutEffect(() => {
     if (tabSlotWidth <= 0) {
@@ -206,6 +291,15 @@ export default function AppTabs() {
     const settle = (destinationIndex: number, velocity: number, shouldCommit: boolean) => {
       'worklet';
 
+      tabSelectionPosition.set(
+        withSpring(destinationIndex, {
+          dampingRatio: shouldCommit ? 1 : 0.8,
+          duration: shouldCommit ? 300 : 400,
+          overshootClamping: true,
+          reduceMotion: ReduceMotion.System,
+          velocity: pageWidth > 0 ? -velocity / pageWidth : 0,
+        }),
+      );
       translateX.set(
         withSpring(
           -destinationIndex * pageWidth,
@@ -235,13 +329,17 @@ export default function AppTabs() {
       .failOffsetY([-verticalTolerance, verticalTolerance])
       .onStart(() => {
         cancelAnimation(translateX);
+        cancelAnimation(tabSelectionPosition);
         gestureStartX.set(translateX.get());
+        tabSelectionPosition.set(activeTabIndex);
         scheduleOnRN(prepareTab, previousIndex);
       })
       .onUpdate((event) => {
         const previousPageX = -previousIndex * pageWidth;
         const nextX = gestureStartX.get() + Math.max(0, event.translationX);
-        translateX.set(Math.min(previousPageX, nextX));
+        const clampedX = Math.min(previousPageX, nextX);
+        translateX.set(clampedX);
+        tabSelectionPosition.set(pageWidth > 0 ? -clampedX / pageWidth : activeTabIndex);
       })
       .onEnd((event) => {
         const projectedX = event.translationX + project(event.velocityX);
@@ -256,13 +354,17 @@ export default function AppTabs() {
       .failOffsetY([-verticalTolerance, verticalTolerance])
       .onStart(() => {
         cancelAnimation(translateX);
+        cancelAnimation(tabSelectionPosition);
         gestureStartX.set(translateX.get());
+        tabSelectionPosition.set(activeTabIndex);
         scheduleOnRN(prepareTab, nextIndex);
       })
       .onUpdate((event) => {
         const nextPageX = -nextIndex * pageWidth;
         const nextX = gestureStartX.get() + Math.min(0, event.translationX);
-        translateX.set(Math.max(nextPageX, nextX));
+        const clampedX = Math.max(nextPageX, nextX);
+        translateX.set(clampedX);
+        tabSelectionPosition.set(pageWidth > 0 ? -clampedX / pageWidth : activeTabIndex);
       })
       .onEnd((event) => {
         const projectedX = event.translationX + project(event.velocityX);
@@ -271,7 +373,15 @@ export default function AppTabs() {
       });
 
     return Gesture.Simultaneous(fromLeftEdge, fromRightEdge);
-  }, [activeTabIndex, commitTab, gestureStartX, pageWidth, prepareTab, translateX]);
+  }, [
+    activeTabIndex,
+    commitTab,
+    gestureStartX,
+    pageWidth,
+    prepareTab,
+    tabSelectionPosition,
+    translateX,
+  ]);
 
   const tabBarSelectionGesture = useMemo(() => {
     const minimumX = tabLensMinimumX;
@@ -280,6 +390,15 @@ export default function AppTabs() {
     const settleLens = (index: number, velocity: number) => {
       'worklet';
 
+      tabSelectionPosition.set(
+        withSpring(index, {
+          dampingRatio: 0.8,
+          duration: 400,
+          overshootClamping: true,
+          reduceMotion: ReduceMotion.System,
+          velocity: tabSlotWidth > 0 ? velocity / tabSlotWidth : 0,
+        }),
+      );
       tabLensX.set(
         withSpring(minimumX + index * tabSlotWidth, {
           dampingRatio: 0.8,
@@ -298,7 +417,12 @@ export default function AppTabs() {
         cancelAnimation(tabLensX);
         cancelAnimation(tabLensVisibility);
         cancelAnimation(tabLensScale);
-        tabLensX.set(clamp(event.x - tabLensWidth / 2, minimumX, maximumX));
+        cancelAnimation(tabSelectionPosition);
+        const nextLensX = clamp(event.x - tabLensWidth / 2, minimumX, maximumX);
+        tabLensX.set(nextLensX);
+        tabSelectionPosition.set(
+          tabSlotWidth > 0 ? (nextLensX - minimumX) / tabSlotWidth : activeTabIndex,
+        );
         tabLensVisibility.set(0);
         tabLensScale.set(0.97);
         tabLensVisibility.set(
@@ -322,7 +446,11 @@ export default function AppTabs() {
         );
       })
       .onUpdate((event) => {
-        tabLensX.set(clamp(event.x - tabLensWidth / 2, minimumX, maximumX));
+        const nextLensX = clamp(event.x - tabLensWidth / 2, minimumX, maximumX);
+        tabLensX.set(nextLensX);
+        tabSelectionPosition.set(
+          tabSlotWidth > 0 ? (nextLensX - minimumX) / tabSlotWidth : activeTabIndex,
+        );
       })
       .onEnd((event) => {
         const projectedX = clamp(tabLensX.get() + project(event.velocityX), minimumX, maximumX);
@@ -352,6 +480,7 @@ export default function AppTabs() {
     selectTab,
     tabLensMinimumX,
     tabLensScale,
+    tabSelectionPosition,
     tabLensVisibility,
     tabLensWidth,
     tabLensX,
@@ -374,7 +503,7 @@ export default function AppTabs() {
     glassEffectStyle: {
       animate: true,
       animationDuration: motion.fast / 1000,
-      style: tabLensVisibility.get() > 0.5 ? 'regular' : 'none',
+      style: tabLensVisibility.get() > 0.5 ? 'clear' : 'none',
     },
   }));
 
@@ -383,7 +512,6 @@ export default function AppTabs() {
 
   const tabButtons = tabDefinitions.map((tab, index) => {
     const isSelected = activeTabIndex === index;
-    const tintColor = isSelected ? colors.primary : colors.textMuted;
 
     return (
       <Pressable
@@ -394,25 +522,18 @@ export default function AppTabs() {
         onPress={() => selectTab(index)}
         style={({ pressed }) => [styles.tabButton, pressed && styles.tabButtonPressed]}
       >
-        <SymbolView
-          name={{
-            android: tab.androidIcon,
-            ios: tab.iosIcon,
-          }}
-          resizeMode="scaleAspectFit"
-          size={layout.iconMedium}
-          tintColor={tintColor}
+        <TabIcon
+          androidIcon={tab.androidIcon}
+          index={index}
+          iosIcon={tab.iosIcon}
+          selectionPosition={tabSelectionPosition}
         />
-        <AppText
-          color={isSelected ? 'primary' : 'textMuted'}
-          style={{
-            fontFamily: isSelected ? fontFamilies.semibold : fontFamilies.medium,
-            fontSize: typography.tab.fontSize,
-          }}
-          variant="tab"
-        >
-          {t(tab.labelKey)}
-        </AppText>
+        <TabLabel
+          index={index}
+          isSelected={isSelected}
+          label={t(tab.labelKey)}
+          selectionPosition={tabSelectionPosition}
+        />
       </Pressable>
     );
   });
@@ -422,10 +543,10 @@ export default function AppTabs() {
       glassAvailable ? (
         <AnimatedGlassView
           animatedProps={animatedTabLensProps}
-          colorScheme="dark"
           glassEffectStyle="none"
           isInteractive
           style={[styles.tabLens, { width: tabLensWidth }, animatedTabLensStyle]}
+          tintColor={colors.transparent}
         >
           <Pressable
             accessible={false}
@@ -573,6 +694,14 @@ const styles = StyleSheet.create({
   tabButtonPressed: {
     opacity: opacity.pressed,
   },
+  tabIcon: {
+    height: layout.iconMedium,
+    position: 'relative',
+    width: layout.iconMedium,
+  },
+  tabIconSelected: {
+    ...StyleSheet.absoluteFill,
+  },
   tabLens: {
     borderCurve: 'continuous',
     borderRadius: radius.full,
@@ -582,7 +711,7 @@ const styles = StyleSheet.create({
     top: spacing.sm,
   },
   tabLensFallback: {
-    backgroundColor: colors.surfaceSelected,
+    backgroundColor: colors.transparent,
     borderColor: colors.borderStrong,
     borderWidth: layout.borderWidth,
   },
