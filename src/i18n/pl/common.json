@@ -8,8 +8,18 @@
     "settings": "Ustawienia"
   },
   "status": {
+    "loading": "Ładowanie",
     "notConfigured": "Nie skonfigurowano",
     "nothingLogged": "Jeszcze nic nie zapisano"
+  },
+  "validation": {
+    "required": "To pole jest wymagane",
+    "email": "Wpisz poprawny adres e-mail",
+    "passwordLength": "Użyj co najmniej 8 znaków",
+    "passwordMatch": "Hasła nie są takie same",
+    "date": "Wpisz poprawną datę w formacie RRRR-MM-DD",
+    "height": "Wpisz wzrost od 80 do 260 cm",
+    "weight": "Wpisz poprawną masę ciała"
   },
   "units": {
     "kilograms": "kg",

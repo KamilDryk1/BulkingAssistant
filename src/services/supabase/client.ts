@@ -5,9 +5,10 @@ import { createClient } from '@supabase/supabase-js';
 import { AppState } from 'react-native';
 
 import { env } from '@/lib/env';
+import type { Database } from '@/types/database';
 
 export const supabase = env.supabase.configured
-  ? createClient(env.supabase.url, env.supabase.key, {
+  ? createClient<Database>(env.supabase.url, env.supabase.key, {
       auth: {
         ...(process.env.EXPO_OS !== 'web' ? { storage: AsyncStorage } : {}),
         autoRefreshToken: true,

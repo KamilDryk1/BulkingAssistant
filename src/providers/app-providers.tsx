@@ -4,6 +4,7 @@ import type { PropsWithChildren } from 'react';
 import { View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { AuthProvider } from '@/features/auth/auth-context';
 import { queryClient } from '@/lib/query-client';
 import { colors } from '@/theme';
 
@@ -25,7 +26,9 @@ export function AppProviders({ children }: PropsWithChildren) {
     <GestureHandlerRootView style={{ backgroundColor: colors.background, flex: 1 }}>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider value={navigationTheme}>
-          <View style={{ backgroundColor: colors.background, flex: 1 }}>{children}</View>
+          <AuthProvider>
+            <View style={{ backgroundColor: colors.background, flex: 1 }}>{children}</View>
+          </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

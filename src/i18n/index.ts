@@ -3,14 +3,20 @@ import { getLocales } from 'expo-localization';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import authEn from './en/auth.json';
 import bodyEn from './en/body.json';
 import commonEn from './en/common.json';
+import onboardingEn from './en/onboarding.json';
+import profileEn from './en/profile.json';
 import progressEn from './en/progress.json';
 import settingsEn from './en/settings.json';
 import todayEn from './en/today.json';
 import trainingEn from './en/training.json';
+import authPl from './pl/auth.json';
 import bodyPl from './pl/body.json';
 import commonPl from './pl/common.json';
+import onboardingPl from './pl/onboarding.json';
+import profilePl from './pl/profile.json';
 import progressPl from './pl/progress.json';
 import settingsPl from './pl/settings.json';
 import todayPl from './pl/today.json';
@@ -24,16 +30,22 @@ const i18n = createInstance();
 
 const resources = {
   en: {
+    auth: authEn,
     body: bodyEn,
     common: commonEn,
+    onboarding: onboardingEn,
+    profile: profileEn,
     progress: progressEn,
     settings: settingsEn,
     today: todayEn,
     training: trainingEn,
   },
   pl: {
+    auth: authPl,
     body: bodyPl,
     common: commonPl,
+    onboarding: onboardingPl,
+    profile: profilePl,
     progress: progressPl,
     settings: settingsPl,
     today: todayPl,

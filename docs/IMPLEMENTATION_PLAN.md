@@ -33,12 +33,13 @@ supabase/
 - `@tanstack/react-query` — server-state cache, mutation lifecycle, and invalidation.
 - `expo-localization` — device locale detection using the SDK 57 API.
 - `i18next` and `react-i18next` — organized English/Polish translations and React bindings.
-- `@react-native-async-storage/async-storage` — persisted locale preference now and Supabase session storage in Phase 2.
+- `@react-native-async-storage/async-storage` — persisted locale preference and Supabase session storage.
 - `react-native-url-polyfill` — URL APIs expected by Supabase in React Native.
+- `react-hook-form`, `zod`, and `@hookform/resolvers` — typed auth, onboarding, and profile forms.
 - Google Sans Flex font assets/package — bundled typography matching the visual specification, with a system-sans fallback if the font cannot load.
 - `eslint` and `eslint-config-expo` — Expo-aware static analysis for the phase validation gate.
 
-React Hook Form and Zod are intentionally deferred to Phase 2, when onboarding/auth forms create a real use case. No global state library is planned.
+No global state library is planned; authentication state is scoped to a provider and remote profile state remains in TanStack Query.
 
 ## Phase checklist
 
@@ -55,7 +56,16 @@ React Hook Form and Zod are intentionally deferred to Phase 2, when onboarding/a
 
 ### Phase 2 — Supabase and authentication
 
-- [ ] Add versioned schema, RLS, seed strategy, email/password auth, persisted sessions, and onboarding/profile preferences.
+- [x] Add versioned schema for profiles, catalogs, planning, sessions, activities, weight, and nutrition snapshots.
+- [x] Enable RLS on all 14 exposed application tables and explicitly policy every operation.
+- [x] Make global exercise/activity catalog rows authenticated-readable and immutable while keeping custom rows private.
+- [x] Add a repeatable bilingual seed with stable identifiers for 56 exercises and 14 activities.
+- [x] Add a signup trigger, transactional onboarding RPC, typed Supabase client, and pgTAP user-isolation suite.
+- [x] Add email/password sign-in and sign-up, persisted sessions, protected Expo Router groups, and error/loading states.
+- [x] Add onboarding and profile editing for date of birth, sex, height, activity level, goal, locale, and weight unit.
+- [x] Synchronize language and unit preferences while storing body weight canonically in kilograms.
+- [x] Add unit tests for kg/lb conversion and decimal input normalization.
+- [ ] Execute a clean database reset, lint, and pgTAP suite against local or linked Supabase; the current host has no running PostgreSQL/Docker service.
 
 ### Phase 3 — Training domain
 

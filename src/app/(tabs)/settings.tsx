@@ -1,5 +1,9 @@
+import { useRouter } from 'expo-router';
+
 import { SettingsScreen } from '@/screens/settings';
 
 export default function SettingsRoute() {
-  return <SettingsScreen />;
+  const router = useRouter();
+
+  return <SettingsScreen onOpenProfile={() => router.push('/profile')} />;
 }

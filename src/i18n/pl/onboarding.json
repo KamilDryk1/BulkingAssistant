@@ -1,0 +1,33 @@
+{
+  "eyebrow": "Kilka przydatnych informacji",
+  "title": "Uzupełnij profil",
+  "detail": "Dzięki nim asystent obliczy cele bez ponownego zadawania tych samych pytań.",
+  "language": "Język",
+  "units": "Jednostka masy",
+  "sex": "Płeć",
+  "male": "Mężczyzna",
+  "female": "Kobieta",
+  "dateOfBirth": "Data urodzenia",
+  "datePlaceholder": "RRRR-MM-DD",
+  "height": "Wzrost (cm)",
+  "heightPlaceholder": "180",
+  "currentWeight": "Aktualna masa ({{unit}})",
+  "weightPlaceholder": "70,0",
+  "activityLevel": "Ogólny poziom aktywności",
+  "activity": {
+    "sedentary": "Siedzący tryb życia",
+    "light": "Lekka aktywność",
+    "moderate": "Umiarkowana aktywność",
+    "very_active": "Duża aktywność",
+    "extremely_active": "Bardzo duża aktywność"
+  },
+  "goal": "Aktualny cel",
+  "goals": {
+    "cut": "Redukcja",
+    "maintain": "Utrzymanie",
+    "gain": "Masa"
+  },
+  "save": "Zakończ konfigurację",
+  "signOut": "Wyloguj się",
+  "error": "Nie udało się zapisać profilu. Sprawdź wartości i spróbuj ponownie."
+}

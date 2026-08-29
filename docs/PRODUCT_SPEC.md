@@ -43,6 +43,14 @@ Global predefined exercises and activities are readable by authenticated users a
 - Authenticated profiles will store the preferred locale and weight unit.
 - Predefined catalog items have stable identifiers and English/Polish names. Custom names remain as entered.
 
+## Authentication and ownership
+
+- Email/password authentication is the MVP identity mechanism and sessions persist across app launches.
+- A profile row is created automatically for each Auth user; protected routes keep incomplete profiles in onboarding.
+- Onboarding saves the completed profile and initial weight in one database transaction.
+- Every user-owned table is protected by explicit select, insert, update, and delete policies. Child records derive ownership through their parent plan, override, or session.
+- Client-side filters improve query efficiency but are never relied on for data isolation.
+
 ## Visual and interaction direction
 
 The supplied concept is the primary visual reference: nearly black backgrounds, dark elevated cards, subtle borders, off-white type, muted secondary text, a restrained `#CAFF00` lime accent, generous rhythm, prominent numeric values, simple charts, and minimal icons. The app should feel premium, athletic, quiet, and immediately understandable.

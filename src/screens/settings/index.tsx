@@ -1,55 +1,46 @@
-import { Pressable, View } from 'react-native';
+import { useMutation } from '@tanstack/react-query';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { AppButton } from '@/components/app-button';
 import { AppHeader } from '@/components/app-header';
 import { AppText } from '@/components/app-text';
 import { Card } from '@/components/card';
+import { ChoiceField } from '@/components/choice-field';
 import { FeatureRow } from '@/components/feature-row';
 import { Screen } from '@/components/screen';
 import { SectionLabel } from '@/components/section-label';
+import { useAuth } from '@/features/auth/auth-context';
+import { signOut } from '@/features/auth/auth-service';
+import { useUpdateProfile } from '@/features/profile/profile-queries';
 import { getCurrentLocale, setAppLocale, type SupportedLocale } from '@/i18n';
-import { colors, layout, opacity, radius, spacing } from '@/theme';
+import type { WeightUnit } from '@/types/database';
+import { spacing } from '@/theme';
 
-function ChoiceButton({
-  label,
-  onPress,
-  selected,
-}: {
-  label: string;
-  onPress?: () => void;
-  selected: boolean;
-}) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ disabled: !onPress, selected }}
-      disabled={!onPress}
-      onPress={onPress}
-      style={({ pressed }) => ({
-        alignItems: 'center',
-        backgroundColor: selected ? colors.primary : colors.surfaceElevated,
-        borderColor: selected ? colors.primary : colors.border,
-        borderCurve: 'continuous',
-        borderRadius: radius.md,
-        borderWidth: layout.borderWidth,
-        flex: 1,
-        justifyContent: 'center',
-        minHeight: layout.minTouchTarget,
-        opacity: pressed ? opacity.pressed : 1,
-        paddingHorizontal: spacing.sm,
-      })}
-    >
-      <AppText color={selected ? 'onPrimary' : 'textSecondary'} variant="bodyStrong">
-        {label}
-      </AppText>
-    </Pressable>
-  );
-}
+type SettingsScreenProps = {
+  onOpenProfile: () => void;
+};
 
-export function SettingsScreen() {
+export function SettingsScreen({ onOpenProfile }: SettingsScreenProps) {
   const { t } = useTranslation('settings');
+  const { profile, profileError, refreshProfile, user } = useAuth();
   const currentLocale = getCurrentLocale();
-  const selectLocale = (locale: SupportedLocale) => void setAppLocale(locale);
+  const updateProfile = useUpdateProfile(user?.id ?? 'missing-user');
+  const logout = useMutation({ mutationFn: signOut });
+
+  const selectLocale = (locale: SupportedLocale) => {
+    if (locale === currentLocale) {
+      return;
+    }
+
+    updateProfile.mutate({ locale }, { onSuccess: () => void setAppLocale(locale) });
+  };
+
+  const selectWeightUnit = (preferred_weight_unit: WeightUnit) => {
+    if (preferred_weight_unit !== profile?.preferred_weight_unit) {
+      updateProfile.mutate({ preferred_weight_unit });
+    }
+  };
 
   return (
     <Screen header={<AppHeader eyebrow={t('eyebrow')} title={t('title')} />}>
@@ -59,18 +50,15 @@ export function SettingsScreen() {
           <AppText color="textMuted" variant="caption">
             {t('languageDetail')}
           </AppText>
-          <View style={{ flexDirection: 'row', gap: spacing.sm }}>
-            <ChoiceButton
-              label={t('english')}
-              onPress={() => selectLocale('en')}
-              selected={currentLocale === 'en'}
-            />
-            <ChoiceButton
-              label={t('polish')}
-              onPress={() => selectLocale('pl')}
-              selected={currentLocale === 'pl'}
-            />
-          </View>
+          <ChoiceField
+            label={t('language')}
+            onChange={selectLocale}
+            options={[
+              { label: t('english'), value: 'en' },
+              { label: t('polish'), value: 'pl' },
+            ]}
+            value={currentLocale}
+          />
         </Card>
       </View>
 
@@ -80,42 +68,70 @@ export function SettingsScreen() {
           <View style={{ gap: spacing.xs }}>
             <AppText variant="bodyStrong">{t('weightUnit')}</AppText>
             <AppText color="textMuted" variant="caption">
-              {t('comingWithProfile')}
+              {t('unitsDetail')}
             </AppText>
           </View>
-          <View style={{ flexDirection: 'row', gap: spacing.sm }}>
-            <ChoiceButton label={t('kilograms')} selected />
-            <ChoiceButton label={t('pounds')} selected={false} />
-          </View>
+          <ChoiceField
+            label={t('weightUnit')}
+            onChange={selectWeightUnit}
+            options={[
+              { label: t('kilograms'), value: 'kg' },
+              { label: t('pounds'), value: 'lb' },
+            ]}
+            value={profile?.preferred_weight_unit ?? 'kg'}
+          />
         </Card>
       </View>
+
+      {profileError ? (
+        <Card elevated style={{ gap: spacing.md }}>
+          <AppText color="danger" variant="bodyStrong">
+            {t('profileError')}
+          </AppText>
+          <AppButton onPress={() => void refreshProfile()} title={t('retry')} variant="secondary" />
+        </Card>
+      ) : null}
 
       <View style={{ gap: spacing.md }}>
         <SectionLabel title={t('profile')} />
-        <Card style={{ gap: spacing.sm }}>
-          <FeatureRow detail={t('profileDetail')} marker="01" title={t('profile')} />
-          <View style={{ backgroundColor: colors.border, height: layout.borderWidth }} />
-          <FeatureRow detail={t('accountDetail')} marker="02" title={t('account')} />
+        <Card>
+          <FeatureRow
+            detail={t('profileDetail')}
+            marker="01"
+            onPress={onOpenProfile}
+            title={t('profile')}
+          />
         </Card>
       </View>
 
       <View style={{ gap: spacing.md }}>
-        <SectionLabel title={t('foundation')} />
-        <Card
-          style={{
-            backgroundColor: colors.primaryMuted,
-            borderColor: colors.primaryMuted,
-            gap: spacing.sm,
-          }}
-        >
-          <AppText color="primary" variant="bodyStrong">
-            {t('foundation')}
-          </AppText>
-          <AppText color="textSecondary" variant="caption">
-            {t('foundationReady')}
-          </AppText>
+        <SectionLabel title={t('account')} />
+        <Card style={{ gap: spacing.lg }}>
+          <View style={{ gap: spacing.xs }}>
+            <AppText variant="bodyStrong">{t('account')}</AppText>
+            <AppText color="textMuted" variant="caption">
+              {user?.email ? t('accountDetail', { email: user.email }) : t('accountDetailUnknown')}
+            </AppText>
+          </View>
+          <AppButton
+            loading={logout.isPending}
+            onPress={() => logout.mutate()}
+            title={t('logout')}
+            variant="secondary"
+          />
         </Card>
       </View>
+
+      {updateProfile.isPending ? (
+        <AppText color="textMuted" variant="caption">
+          {t('saving')}
+        </AppText>
+      ) : null}
+      {updateProfile.isError ? (
+        <AppText color="danger" variant="caption">
+          {t('preferenceError')}
+        </AppText>
+      ) : null}
     </Screen>
   );
 }

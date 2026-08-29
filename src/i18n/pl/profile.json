@@ -1,0 +1,8 @@
+{
+  "eyebrow": "Dane używane do wyznaczania celów",
+  "title": "Profil i żywienie",
+  "detail": "Zaktualizuj parametry używane w deterministycznych obliczeniach żywieniowych.",
+  "save": "Zapisz zmiany",
+  "cancel": "Wróć do ustawień",
+  "error": "Nie udało się zaktualizować profilu. Spróbuj ponownie."
+}

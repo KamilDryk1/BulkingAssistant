@@ -2,7 +2,7 @@
 
 Bulking Assistant is an Expo/React Native workout, activity, body-weight, and nutrition assistant focused on fast, low-friction daily and in-gym logging.
 
-Phase 1 is complete. The repository currently contains the production app foundation and intentionally shows localized empty states; authentication and persisted product data begin in Phase 2.
+Phases 1 and 2 are implemented. The app now includes the production foundation, Supabase schema and Row Level Security, email/password authentication, persisted sessions, onboarding, and synchronized profile preferences. Training and daily logging features begin in Phase 3.
 
 ## Current foundation
 
@@ -11,6 +11,9 @@ Phase 1 is complete. The repository currently contains the production app founda
 - dark athletic design system with Google Sans Flex and `#CAFF00` brand accent
 - English and Polish translations with device detection and persisted override
 - Supabase client boundary with persisted-session configuration when environment values exist
+- versioned PostgreSQL schema, bilingual catalog seed, and pgTAP user-isolation tests
+- email/password authentication with protected routes and a transactional onboarding flow
+- synchronized profile, language, and kg/lb preferences with kilograms kept canonical in storage
 - TanStack Query provider and default caching policy
 - responsive web fallback plus iOS and Android bundles
 - Expo-aware linting and Prettier formatting
@@ -19,7 +22,7 @@ See [the product specification](docs/PRODUCT_SPEC.md) and [implementation plan](
 
 ## Requirements
 
-- Node.js 22.13 or newer (the Expo SDK 57 minimum)
+- Node.js 20.19.4+, 22.13+, or 24.3+ (the React Native version bundled with Expo SDK 57)
 - npm
 - Expo Go for the fastest native development loop
 
@@ -37,7 +40,33 @@ Copy the environment template when connecting a Supabase project:
 cp .env.example .env
 ```
 
-Set the project URL and publishable key. A legacy anon key is also supported. Public Supabase client keys are safe to bundle only when the database is protected with the Row Level Security policies planned for Phase 2; never place a service-role key in Expo public environment variables.
+Set `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_KEY`. Use the client-safe publishable key (`sb_publishable_...`), as provided by Supabase. The app also accepts the canonical `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` name and the legacy `EXPO_PUBLIC_SUPABASE_ANON_KEY` name. These client keys are safe to bundle only with the included Row Level Security policies in place. Never place a secret key, service-role key, or another privileged credential in Expo public environment variables.
+
+### Local Supabase
+
+With Docker running, create and verify a clean local database:
+
+```bash
+npx supabase start
+npx supabase db reset
+npx supabase db lint --local
+npx supabase test db
+```
+
+Copy the local API URL and anon key printed by `supabase status` into `.env` using the same `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_KEY` variable names. Local development emails are available through Inbucket at `http://127.0.0.1:54324`.
+
+### Hosted Supabase
+
+Link a project, preview the migration set, and then apply the schema plus repeatable catalog seed:
+
+```bash
+npx supabase login
+npx supabase link --project-ref YOUR_PROJECT_REF
+npx supabase db push --dry-run
+npx supabase db push --include-seed
+```
+
+Before using the app against the hosted project, enable email/password sign-up in Supabase Auth and set the two public values in `.env`.
 
 Start the app:
 
@@ -52,7 +81,10 @@ Use Expo Go first. Press `i`, `a`, or `w` for the available iOS simulator, Andro
 ```bash
 npm run typecheck
 npm run lint
+npm run test:unit
 npm run format:check
+npx supabase db lint --local
+npx supabase test db
 npx expo export --platform all
 ```
 

@@ -1,0 +1,33 @@
+{
+  "eyebrow": "A few useful facts",
+  "title": "Set up your profile",
+  "detail": "These inputs let the assistant calculate targets without asking the same questions again.",
+  "language": "Language",
+  "units": "Weight unit",
+  "sex": "Sex",
+  "male": "Male",
+  "female": "Female",
+  "dateOfBirth": "Date of birth",
+  "datePlaceholder": "YYYY-MM-DD",
+  "height": "Height (cm)",
+  "heightPlaceholder": "180",
+  "currentWeight": "Current weight ({{unit}})",
+  "weightPlaceholder": "70.0",
+  "activityLevel": "General activity level",
+  "activity": {
+    "sedentary": "Sedentary",
+    "light": "Lightly active",
+    "moderate": "Moderately active",
+    "very_active": "Very active",
+    "extremely_active": "Extremely active"
+  },
+  "goal": "Current goal",
+  "goals": {
+    "cut": "Cut",
+    "maintain": "Maintain",
+    "gain": "Gain"
+  },
+  "save": "Finish setup",
+  "signOut": "Sign out",
+  "error": "We could not save your profile. Check the values and try again."
+}

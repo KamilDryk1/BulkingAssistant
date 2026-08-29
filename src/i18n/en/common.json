@@ -8,8 +8,18 @@
     "settings": "Settings"
   },
   "status": {
+    "loading": "Loading",
     "notConfigured": "Not configured",
     "nothingLogged": "Nothing logged yet"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Enter a valid email address",
+    "passwordLength": "Use at least 8 characters",
+    "passwordMatch": "Passwords do not match",
+    "date": "Use a valid date in YYYY-MM-DD format",
+    "height": "Enter a height between 80 and 260 cm",
+    "weight": "Enter a valid body weight"
   },
   "units": {
     "kilograms": "kg",
