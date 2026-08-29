@@ -2,7 +2,7 @@
 
 Bulking Assistant is an Expo/React Native workout, activity, body-weight, and nutrition assistant focused on fast, low-friction daily and in-gym logging.
 
-Phases 1–4 are implemented. The app now includes the production foundation, authentication and onboarding, training planning, and a complete active-workout flow with immutable exercise snapshots, fast set logging, previous-performance context, and workout history.
+Phases 1–5 are implemented. The app now includes the production foundation, authentication and onboarding, training planning, a complete active-workout flow, and a persisted Today dashboard for nutrition, schedule, activities, and weight.
 
 ## Current foundation
 
@@ -19,11 +19,14 @@ Phases 1–4 are implemented. The app now includes the production foundation, au
 - weekly workout/activity/rest scheduling and one-date overrides without changing the recurring week
 - focused active workouts with elapsed time, exercise progress, previous-session reference, and independent weight/repetition sets
 - resumable sessions, safe set editing/deletion/completion, localized session snapshots, and paginated workout history
+- a live Today dashboard with local-date schedule resolution, daily overrides, workout shortcuts, completed activity, and current body weight
+- deterministic Mifflin–St Jeor calorie and macro targets persisted as daily snapshots
+- native form sheets for quick activity logging and one-primary-entry-per-day weight logging
 - TanStack Query provider and default caching policy
 - responsive web fallback plus iOS and Android bundles
 - Expo-aware linting and Prettier formatting
 
-See [the product specification](docs/PRODUCT_SPEC.md) and [implementation plan](docs/IMPLEMENTATION_PLAN.md) for scope and sequencing.
+See [the product specification](docs/PRODUCT_SPEC.md), [nutrition calculation](docs/NUTRITION_CALCULATION.md), and [implementation plan](docs/IMPLEMENTATION_PLAN.md) for scope and sequencing.
 
 ## Requirements
 

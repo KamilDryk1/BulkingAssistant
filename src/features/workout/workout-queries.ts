@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { trainingKeys } from '@/features/training/training-queries';
+import { todayKeys } from '@/features/today/today-queries';
 
 import {
   deleteWorkoutSet,
@@ -89,6 +90,7 @@ export function useFinishWorkoutSession() {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: workoutKeys.all }),
         queryClient.invalidateQueries({ queryKey: trainingKeys.all }),
+        queryClient.invalidateQueries({ queryKey: todayKeys.all }),
       ]);
     },
   });

@@ -1,8 +1,6 @@
 {
   "eyebrow": "Twój dzień w skrócie",
   "nutritionTarget": "Cel żywieniowy",
-  "targetPending": "Uzupełnij profil, aby obliczyć dzisiejszy cel",
-  "setUpProfile": "Uzupełnij profil",
   "protein": "Białko",
   "carbs": "Węglowodany",
   "fat": "Tłuszcz",
@@ -10,12 +8,104 @@
   "noWorkout": "Brak treningu na dziś",
   "noWorkoutDetail": "Wybierz trening tylko na dziś, bez zmiany planu tygodniowego.",
   "chooseWorkout": "Wybierz trening",
-  "activities": "Dzisiejsza aktywność",
-  "noActivities": "Brak zapisanych aktywności",
-  "noActivitiesDetail": "Szybkie zapisywanie aktywności pojawi się tutaj po dodaniu logowania.",
-  "addActivity": "Dodaj aktywność",
+  "noActivities": "Brak ukończonych aktywności",
+  "noActivitiesDetail": "Po ukończeniu dodatkowej aktywności zapisz ją jednym krótkim formularzem.",
   "bodyWeight": "Masa ciała",
   "noWeight": "Brak dzisiejszego pomiaru",
-  "noWeightDetail": "Najnowszy dzisiejszy pomiar pojawi się tutaj wraz ze średnią z 7 dni.",
-  "logWeight": "Zapisz dzisiejszą wagę"
+  "noWeightDetail": "Zapisz dzisiejszą wagę, aby uaktualnić cel i trend.",
+  "status": {
+    "loadingTitle": "Przygotowuję Twój dzień",
+    "loadingDetail": "Wczytuję dzisiejszy cel, plan, aktywności i wagę.",
+    "errorTitle": "Nie udało się wczytać dnia",
+    "errorDetail": "Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie"
+  },
+  "nutrition": {
+    "dailyTarget": "Cel na dziś",
+    "unavailableTitle": "Cel żywieniowy jest niedostępny",
+    "unavailableDetail": "Uzupełnij profil i zapisz masę ciała, aby go obliczyć."
+  },
+  "training": {
+    "weeklySource": "Z planu tygodniowego",
+    "overrideSource": "Zmieniono na dzisiaj",
+    "exerciseCount_one": "{{count}} ćwiczenie",
+    "exerciseCount_few": "{{count}} ćwiczenia",
+    "exerciseCount_many": "{{count}} ćwiczeń",
+    "exerciseCount_other": "{{count}} ćwiczenia",
+    "lastPerformed_one": "ostatnio {{count}} dzień temu",
+    "lastPerformed_few": "ostatnio {{count}} dni temu",
+    "lastPerformed_many": "ostatnio {{count}} dni temu",
+    "lastPerformed_other": "ostatnio {{count}} dnia temu",
+    "neverPerformed": "jeszcze niewykonywany",
+    "completed": "Ukończono",
+    "plannedActivity": "Zaplanowana aktywność",
+    "rest": "Dzień odpoczynku",
+    "active": "Trening w toku",
+    "resume": "Wznów trening",
+    "start": "Rozpocznij trening",
+    "openCompleted": "Otwórz ukończony trening",
+    "emptyPlan": "Dodaj co najmniej jedno ćwiczenie do planu przed rozpoczęciem treningu.",
+    "change": "Zmień dzisiejszy plan",
+    "startError": "Nie udało się rozpocząć treningu."
+  },
+  "activities": {
+    "title": "Dzisiejsza aktywność",
+    "strengthWorkout": "Trening siłowy",
+    "duration_one": "{{count}} min",
+    "duration_few": "{{count}} min",
+    "duration_many": "{{count}} min",
+    "duration_other": "{{count}} min",
+    "add": "Dodaj aktywność",
+    "delete": "Usuń aktywność",
+    "deleteTitle": "Usunąć tę aktywność?",
+    "deleteDetail": "Zniknie z listy dzisiejszych ukończonych aktywności.",
+    "deleteError": "Nie udało się usunąć aktywności."
+  },
+  "weight": {
+    "today": "Dzisiejsza waga",
+    "latest": "Ostatnio: {{value}} {{unit}}",
+    "average": "Średnia z 7 dni: {{value}} {{unit}}",
+    "log": "Zapisz wagę",
+    "edit": "Edytuj wagę"
+  },
+  "navigation": {
+    "openBody": "Otwórz Ciało"
+  },
+  "intensity": {
+    "light": "Lekka",
+    "moderate": "Umiarkowana",
+    "hard": "Wysoka"
+  },
+  "activityForm": {
+    "title": "Dodaj aktywność",
+    "detail": "Wybierz ukończoną aktywność. Czas i intensywność są opcjonalne.",
+    "loadingTitle": "Wczytuję aktywności",
+    "loadingDetail": "Za chwilę pojawi się biblioteka aktywności.",
+    "activity": "Aktywność",
+    "duration": "Czas w minutach",
+    "durationPlaceholder": "Opcjonalnie",
+    "intensity": "Intensywność",
+    "unspecified": "Nie określono",
+    "save": "Zapisz aktywność",
+    "saveError": "Nie udało się zapisać aktywności."
+  },
+  "weightForm": {
+    "title": "Zapisz dzisiejszą wagę",
+    "editTitle": "Edytuj dzisiejszą wagę",
+    "detail": "Aplikacja przechowuje kilogramy i przelicza je tylko dla wybranej jednostki wyświetlania.",
+    "weight": "Waga ({{unit}})",
+    "placeholder": "np. 70,2",
+    "save": "Zapisz wagę",
+    "saveError": "Nie udało się zapisać wagi."
+  },
+  "validation": {
+    "activityRequired": "Wybierz aktywność",
+    "durationInvalid": "Podaj całkowitą liczbę od 1 do 1440",
+    "weightInvalid": "Podaj prawidłową wagę",
+    "weightRange": "Podana waga jest poza obsługiwanym zakresem"
+  },
+  "actions": {
+    "cancel": "Anuluj",
+    "delete": "Usuń"
+  }
 }

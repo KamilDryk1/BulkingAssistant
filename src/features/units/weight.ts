@@ -11,3 +11,9 @@ export function poundsToKilograms(pounds: number) {
 export function normalizeDecimalInput(value: string) {
   return Number(value.trim().replace(',', '.'));
 }
+
+export function formatBodyWeight(weightKg: number, unit: 'kg' | 'lb') {
+  const displayWeight = unit === 'lb' ? kilogramsToPounds(weightKg) : weightKg;
+
+  return Number(displayWeight.toFixed(1)).toString();
+}

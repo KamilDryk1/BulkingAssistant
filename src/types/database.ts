@@ -267,7 +267,7 @@ export type PreviousExercisePerformanceRow = {
   weight_kg: number;
 };
 
-type ActivityLogRow = {
+export type ActivityLogRow = {
   activity_date: string;
   activity_definition_id: string | null;
   activity_name_snapshot: string;
@@ -291,7 +291,7 @@ type ActivityLogInsert = {
   user_id: string;
 };
 
-type WeightLogRow = {
+export type WeightLogRow = {
   created_at: string;
   id: string;
   recorded_at: string;
@@ -309,7 +309,7 @@ type WeightLogInsert = {
   weight_kg: number;
 };
 
-type NutritionTargetSnapshotRow = {
+export type NutritionTargetSnapshotRow = {
   calculation_version: string;
   calories: number;
   carbohydrate_grams: number;

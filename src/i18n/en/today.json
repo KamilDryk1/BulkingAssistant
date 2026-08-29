@@ -1,8 +1,6 @@
 {
   "eyebrow": "Your day at a glance",
   "nutritionTarget": "Nutrition target",
-  "targetPending": "Complete your profile to calculate today's target",
-  "setUpProfile": "Set up profile",
   "protein": "Protein",
   "carbs": "Carbs",
   "fat": "Fat",
@@ -10,12 +8,98 @@
   "noWorkout": "No workout planned today",
   "noWorkoutDetail": "Choose a workout for today without changing your weekly schedule.",
   "chooseWorkout": "Choose workout",
-  "activities": "Today's activity",
-  "noActivities": "No activities logged today",
-  "noActivitiesDetail": "Quick activity logging will appear here after sign-in is available.",
-  "addActivity": "Add activity",
+  "noActivities": "No activities completed today",
+  "noActivitiesDetail": "Log an additional activity when you complete it.",
   "bodyWeight": "Body weight",
   "noWeight": "No weight recorded today",
-  "noWeightDetail": "Today's latest entry will appear here with the 7-day average.",
-  "logWeight": "Log today's weight"
+  "noWeightDetail": "Log today's weight to keep your target and trend current.",
+  "status": {
+    "loadingTitle": "Preparing your day",
+    "loadingDetail": "Loading today's target, schedule, activities, and weight.",
+    "errorTitle": "Today could not be loaded",
+    "errorDetail": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "nutrition": {
+    "dailyTarget": "Daily target",
+    "unavailableTitle": "Nutrition target unavailable",
+    "unavailableDetail": "Complete your profile and log a body weight to calculate it."
+  },
+  "training": {
+    "weeklySource": "From weekly schedule",
+    "overrideSource": "Adjusted for today",
+    "exerciseCount_one": "{{count}} exercise",
+    "exerciseCount_other": "{{count}} exercises",
+    "lastPerformed_one": "last performed {{count}} day ago",
+    "lastPerformed_other": "last performed {{count}} days ago",
+    "neverPerformed": "not performed yet",
+    "completed": "Completed",
+    "plannedActivity": "Planned activity",
+    "rest": "Rest day",
+    "active": "Workout in progress",
+    "resume": "Resume workout",
+    "start": "Start workout",
+    "openCompleted": "Open completed workout",
+    "emptyPlan": "Add at least one exercise to this plan before starting it.",
+    "change": "Change today's plan",
+    "startError": "The workout could not be started."
+  },
+  "activities": {
+    "title": "Today's activity",
+    "strengthWorkout": "Strength workout",
+    "duration_one": "{{count}} min",
+    "duration_other": "{{count}} min",
+    "add": "Add activity",
+    "delete": "Delete activity",
+    "deleteTitle": "Delete this activity?",
+    "deleteDetail": "It will be removed from today's completed activity.",
+    "deleteError": "The activity could not be deleted."
+  },
+  "weight": {
+    "today": "Today's weight",
+    "latest": "Latest: {{value}} {{unit}}",
+    "average": "7-day average: {{value}} {{unit}}",
+    "log": "Log weight",
+    "edit": "Edit weight"
+  },
+  "navigation": {
+    "openBody": "Open Body"
+  },
+  "intensity": {
+    "light": "Light",
+    "moderate": "Moderate",
+    "hard": "Hard"
+  },
+  "activityForm": {
+    "title": "Add activity",
+    "detail": "Choose what you completed. Duration and intensity are optional.",
+    "loadingTitle": "Loading activities",
+    "loadingDetail": "Your activity library is on the way.",
+    "activity": "Activity",
+    "duration": "Duration in minutes",
+    "durationPlaceholder": "Optional",
+    "intensity": "Intensity",
+    "unspecified": "Not specified",
+    "save": "Save activity",
+    "saveError": "The activity could not be saved."
+  },
+  "weightForm": {
+    "title": "Log today's weight",
+    "editTitle": "Edit today's weight",
+    "detail": "The app keeps kilograms canonical and converts only for your preferred display unit.",
+    "weight": "Weight ({{unit}})",
+    "placeholder": "e.g. 70.2",
+    "save": "Save weight",
+    "saveError": "The weight could not be saved."
+  },
+  "validation": {
+    "activityRequired": "Choose an activity",
+    "durationInvalid": "Enter a whole number from 1 to 1440",
+    "weightInvalid": "Enter a valid weight",
+    "weightRange": "The entered weight is outside the supported range"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "delete": "Delete"
+  }
 }

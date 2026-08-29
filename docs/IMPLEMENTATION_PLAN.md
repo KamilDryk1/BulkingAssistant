@@ -89,11 +89,17 @@ No global state library is planned; authentication state is scoped to a provider
 
 ### Phase 5 — Today
 
-- [ ] Connect the primary dashboard to persisted schedule, nutrition, activity, workout, and weight data.
+- [x] Replace all Today placeholders with persisted nutrition, schedule, workout, activity, and weight data.
+- [x] Resolve the local calendar date, recurring schedule, and date-specific override without asking for known information.
+- [x] Add deterministic Mifflin–St Jeor calories and macros with centralized constants, tests, documentation, and daily snapshots.
+- [x] Add start/resume/completed workout states, previous-workout context, and shortcuts to overrides, history, Training, and Body.
+- [x] Add native quick-entry sheets for predefined activities and today's primary weight, including edit/delete and kg/lb conversion.
+- [x] Show completed strength/activity records, the latest weight, and a seven-day average from the latest entry per calendar day.
+- [x] Add English/Polish copy, loading/empty/error/normal states, RLS coverage, and all-platform export validation.
 
 ### Phase 6 — Body
 
-- [ ] Add deterministic nutrition calculations, weight entry/editing, rolling averages/trend, charting, and activity logs.
+- [ ] Connect Body to the shared nutrition target and weight/activity mutations, then add full history, weekly trend, charting, and custom activities.
 
 ### Phase 7 — Progress
 

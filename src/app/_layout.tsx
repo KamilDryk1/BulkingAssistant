@@ -89,6 +89,28 @@ function RootNavigator() {
         <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen name="training-tools" options={{ headerShown: false }} />
         <Stack.Screen name="workout" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="today-activity"
+          options={{
+            contentStyle: { backgroundColor: colors.background },
+            headerShown: false,
+            presentation: 'formSheet',
+            sheetAllowedDetents: [0.9, 1],
+            sheetGrabberVisible: true,
+            sheetInitialDetentIndex: 0,
+          }}
+        />
+        <Stack.Screen
+          name="today-weight"
+          options={{
+            contentStyle: { backgroundColor: colors.background },
+            headerShown: false,
+            presentation: 'formSheet',
+            sheetAllowedDetents: [0.55, 0.85],
+            sheetGrabberVisible: true,
+            sheetInitialDetentIndex: 0,
+          }}
+        />
       </Stack.Protected>
     </Stack>
   );

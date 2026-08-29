@@ -1,108 +1,489 @@
-import { useMemo } from 'react';
-import { View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { AppButton } from '@/components/app-button';
 import { AppHeader } from '@/components/app-header';
 import { AppText } from '@/components/app-text';
 import { Card } from '@/components/card';
+import { CompactAction } from '@/components/compact-action';
 import { EmptyStateCard } from '@/components/empty-state-card';
+import { QueryStateCard } from '@/components/query-state-card';
 import { Screen } from '@/components/screen';
 import { SectionLabel } from '@/components/section-label';
+import { useAuth } from '@/features/auth/auth-context';
+import { resolveScheduleForDate } from '@/features/training/training-domain';
+import { useDailyScheduleOverride, useTrainingData } from '@/features/training/training-queries';
+import type { WorkoutPlan } from '@/features/training/training-types';
+import {
+  useDeleteActivityLog,
+  useLastCompletedWorkoutDates,
+  useTodayData,
+} from '@/features/today/today-queries';
+import { useCurrentDate } from '@/features/today/use-current-date';
+import { formatBodyWeight } from '@/features/units/weight';
+import { getCalendarDayDifference } from '@/features/workout/workout-domain';
+import {
+  useActiveWorkoutSession,
+  useStartWorkoutSession,
+} from '@/features/workout/workout-queries';
 import { getCurrentLocale } from '@/i18n';
-import { colors, layout, radius, spacing } from '@/theme';
+import { colors, layout, spacing } from '@/theme';
+import type { ActivityLogRow, WorkoutSessionRow } from '@/types/database';
 import { formatFullDate } from '@/utils/format-date';
 
-function MacroPlaceholder({ label }: { label: string }) {
+function MacroStat({ label, value }: { label: string; value: number }) {
+  const { t } = useTranslation('common');
+
   return (
     <View style={{ flex: 1, gap: spacing.xs }}>
       <AppText adjustsFontSizeToFit numberOfLines={1} variant="label">
         {label}
       </AppText>
-      <AppText color="textMuted" selectable variant="bodyStrong">
-        —
+      <AppText color="textSecondary" selectable variant="bodyStrong">
+        {value} {t('units.grams')}
       </AppText>
     </View>
   );
 }
 
-export function TodayScreen() {
+type PlannedWorkoutProps = {
+  completedSession: WorkoutSessionRow | null;
+  date: string;
+  lastDate: string | null;
+  onOpenHistory: (sessionId: string) => void;
+  onStart: (planId: string) => void;
+  plan: WorkoutPlan;
+  starting: boolean;
+};
+
+function PlannedWorkout({
+  completedSession,
+  date,
+  lastDate,
+  onOpenHistory,
+  onStart,
+  plan,
+  starting,
+}: PlannedWorkoutProps) {
   const { t } = useTranslation('today');
-  const locale = getCurrentLocale();
-  const dateLabel = useMemo(() => formatFullDate(new Date(), locale), [locale]);
+
+  return (
+    <View style={{ gap: spacing.md }}>
+      <View style={{ gap: spacing.xs }}>
+        <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.sm }}>
+          <AppText style={{ flex: 1 }} variant="title">
+            {plan.name}
+          </AppText>
+          {completedSession ? (
+            <AppText color="success" variant="label">
+              {t('training.completed')}
+            </AppText>
+          ) : null}
+        </View>
+        <AppText color="textSecondary" variant="caption">
+          {t('training.exerciseCount', { count: plan.exercises.length })}
+          {' · '}
+          {lastDate
+            ? t('training.lastPerformed', {
+                count: getCalendarDayDifference(date, lastDate),
+              })
+            : t('training.neverPerformed')}
+        </AppText>
+      </View>
+      <AppButton
+        disabled={!completedSession && plan.exercises.length === 0}
+        loading={starting}
+        onPress={() => (completedSession ? onOpenHistory(completedSession.id) : onStart(plan.id))}
+        title={t(completedSession ? 'training.openCompleted' : 'training.start')}
+        variant={completedSession ? 'secondary' : 'primary'}
+      />
+      {plan.exercises.length === 0 ? (
+        <AppText color="warning" variant="caption">
+          {t('training.emptyPlan')}
+        </AppText>
+      ) : null}
+    </View>
+  );
+}
+
+function LoggedActivityRow({
+  activity,
+  deleting,
+  onDelete,
+}: {
+  activity: ActivityLogRow;
+  deleting: boolean;
+  onDelete: () => void;
+}) {
+  const { t } = useTranslation('today');
+  const details = [
+    activity.duration_minutes
+      ? t('activities.duration', { count: activity.duration_minutes })
+      : null,
+    activity.intensity ? t(`intensity.${activity.intensity}`) : null,
+  ].filter(Boolean);
+
+  return (
+    <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
+      <View style={{ flex: 1, gap: spacing.xs }}>
+        <AppText variant="bodyStrong">{activity.activity_name_snapshot}</AppText>
+        {details.length > 0 ? (
+          <AppText color="textMuted" variant="caption">
+            {details.join(' · ')}
+          </AppText>
+        ) : null}
+      </View>
+      <AppText color="success" variant="bodyStrong">
+        ✓
+      </AppText>
+      <CompactAction
+        accessibilityLabel={t('activities.delete')}
+        disabled={deleting}
+        label="×"
+        onPress={onDelete}
+      />
+    </View>
+  );
+}
+
+export function TodayScreen() {
+  const { t } = useTranslation(['today', 'common']);
+  const router = useRouter();
+  const { profile, user } = useAuth();
+  const locale = profile?.locale ?? getCurrentLocale();
+  const { date, dateKey } = useCurrentDate();
+  const training = useTrainingData(user?.id ?? '', locale);
+  const dailyOverride = useDailyScheduleOverride(user?.id ?? '', dateKey);
+  const today = useTodayData(user?.id ?? '', dateKey, profile);
+  const activeWorkout = useActiveWorkoutSession(user?.id ?? '');
+  const activeSession = activeWorkout.data;
+  const startWorkout = useStartWorkoutSession();
+  const deleteActivity = useDeleteActivityLog();
+  const resolvedSchedule = training.data
+    ? resolveScheduleForDate(dateKey, training.data.weeklySchedule, dailyOverride.data ?? null)
+    : null;
+  const scheduledPlans =
+    training.data && resolvedSchedule
+      ? resolvedSchedule.items.flatMap((item) => {
+          const plan =
+            item.itemType === 'workout'
+              ? training.data.plans.find((candidate) => candidate.id === item.referenceId)
+              : null;
+          return plan ? [plan] : [];
+        })
+      : [];
+  const lastWorkoutDates = useLastCompletedWorkoutDates(
+    user?.id ?? '',
+    dateKey,
+    scheduledPlans.map((plan) => plan.id),
+  );
+  const loading =
+    training.isPending || dailyOverride.isPending || today.isPending || activeWorkout.isPending;
+  const failed =
+    training.isError || dailyOverride.isError || today.isError || activeWorkout.isError;
+  const dateLabel = formatFullDate(date, locale);
+
+  const retry = () => {
+    void training.refetch();
+    void dailyOverride.refetch();
+    void today.refetch();
+    void activeWorkout.refetch();
+    void lastWorkoutDates.refetch();
+  };
+
+  const launchWorkout = (planId: string) => {
+    startWorkout.mutate(planId, {
+      onSuccess: (sessionId) => router.push(`/workout/${sessionId}`),
+    });
+  };
+
+  const confirmActivityDelete = (activity: ActivityLogRow) => {
+    Alert.alert(t('activities.deleteTitle'), t('activities.deleteDetail'), [
+      { style: 'cancel', text: t('actions.cancel') },
+      {
+        onPress: () => deleteActivity.mutate(activity.id),
+        style: 'destructive',
+        text: t('actions.delete'),
+      },
+    ]);
+  };
+
+  if (loading) {
+    return (
+      <Screen header={<AppHeader eyebrow={t('eyebrow')} title={dateLabel} />}>
+        <QueryStateCard detail={t('status.loadingDetail')} title={t('status.loadingTitle')} />
+      </Screen>
+    );
+  }
+
+  if (failed || !training.data || !resolvedSchedule || !today.data) {
+    return (
+      <Screen header={<AppHeader eyebrow={t('eyebrow')} title={dateLabel} />}>
+        <QueryStateCard
+          actionLabel={t('status.retry')}
+          detail={t('status.errorDetail')}
+          onAction={retry}
+          title={t('status.errorTitle')}
+        />
+      </Screen>
+    );
+  }
+
+  const target = today.data.nutritionTarget;
+  const unit = profile?.preferred_weight_unit ?? 'kg';
+  const unitLabel = t(unit === 'lb' ? 'units.pounds' : 'units.kilograms', { ns: 'common' });
 
   return (
     <Screen header={<AppHeader eyebrow={t('eyebrow')} title={dateLabel} />}>
       <View style={{ gap: spacing.md }}>
         <SectionLabel title={t('nutritionTarget')} />
         <Card elevated padding="large" style={{ gap: spacing.xl }}>
-          <View style={{ gap: spacing.sm }}>
-            <AppText color="textMuted" variant="caption">
-              {t('targetPending')}
-            </AppText>
-            <View style={{ alignItems: 'baseline', flexDirection: 'row', gap: spacing.sm }}>
-              <AppText color="primary" selectable variant="display">
-                —
-              </AppText>
-              <AppText color="textMuted" variant="bodyStrong">
-                {t('common:units.calories')}
-              </AppText>
+          {target ? (
+            <>
+              <View style={{ gap: spacing.sm }}>
+                <AppText color="textMuted" variant="caption">
+                  {t('nutrition.dailyTarget')}
+                </AppText>
+                <View style={{ alignItems: 'baseline', flexDirection: 'row', gap: spacing.sm }}>
+                  <AppText color="primary" selectable variant="display">
+                    {new Intl.NumberFormat(locale).format(target.calories)}
+                  </AppText>
+                  <AppText color="textMuted" variant="bodyStrong">
+                    {t('units.calories', { ns: 'common' })}
+                  </AppText>
+                </View>
+              </View>
+              <View
+                style={{
+                  backgroundColor: colors.border,
+                  height: layout.borderWidth,
+                  width: '100%',
+                }}
+              />
+              <View style={{ flexDirection: 'row', gap: spacing.lg }}>
+                <MacroStat label={t('protein')} value={target.protein_grams} />
+                <MacroStat label={t('carbs')} value={target.carbohydrate_grams} />
+                <MacroStat label={t('fat')} value={target.fat_grams} />
+              </View>
+            </>
+          ) : (
+            <View style={{ gap: spacing.sm }}>
+              <AppText variant="title">{t('nutrition.unavailableTitle')}</AppText>
+              <AppText color="textSecondary">{t('nutrition.unavailableDetail')}</AppText>
             </View>
-          </View>
-
-          <View
-            style={{
-              backgroundColor: colors.border,
-              height: layout.borderWidth,
-              width: '100%',
-            }}
+          )}
+          <AppButton
+            onPress={() => router.push('/body')}
+            title={t('navigation.openBody')}
+            variant="secondary"
           />
-
-          <View style={{ flexDirection: 'row', gap: spacing.lg }}>
-            <MacroPlaceholder label={t('protein')} />
-            <MacroPlaceholder label={t('carbs')} />
-            <MacroPlaceholder label={t('fat')} />
-          </View>
-
-          <AppButton disabled title={t('setUpProfile')} />
         </Card>
       </View>
 
       <View style={{ gap: spacing.md }}>
         <SectionLabel title={t('plannedTraining')} />
-        <EmptyStateCard
-          actionLabel={t('chooseWorkout')}
-          detail={t('noWorkoutDetail')}
-          title={t('noWorkout')}
-        />
+        {activeSession ? (
+          <Card elevated style={{ gap: spacing.lg }}>
+            <View style={{ gap: spacing.xs }}>
+              <AppText color="primary" variant="label">
+                {t('training.active')}
+              </AppText>
+              <AppText variant="title">{activeSession.workout_name_snapshot}</AppText>
+            </View>
+            <AppButton
+              onPress={() => router.push(`/workout/${activeSession.id}`)}
+              title={t('training.resume')}
+            />
+          </Card>
+        ) : resolvedSchedule.items.length === 0 ? (
+          <EmptyStateCard
+            actionLabel={t('chooseWorkout')}
+            detail={t('noWorkoutDetail')}
+            onAction={() =>
+              router.push({ pathname: '/training-tools/override', params: { date: dateKey } })
+            }
+            title={t('noWorkout')}
+          />
+        ) : (
+          <Card elevated style={{ gap: spacing.lg }}>
+            <AppText color="primary" variant="label">
+              {t(
+                resolvedSchedule.source === 'override'
+                  ? 'training.overrideSource'
+                  : 'training.weeklySource',
+              )}
+            </AppText>
+            {resolvedSchedule.items.map((item, index) => {
+              if (item.itemType === 'rest') {
+                return (
+                  <AppText key={`rest-${index}`} variant="title">
+                    {t('training.rest')}
+                  </AppText>
+                );
+              }
+
+              if (item.itemType === 'activity') {
+                const activity = training.data.activities.find(
+                  (candidate) => candidate.id === item.referenceId,
+                );
+                const completed = today.data.activities.some(
+                  (log) => log.activity_definition_id === item.referenceId,
+                );
+
+                return activity ? (
+                  <View
+                    key={`${item.itemType}-${item.referenceId}-${index}`}
+                    style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}
+                  >
+                    <View style={{ flex: 1, gap: spacing.xs }}>
+                      <AppText variant="title">{activity.displayName}</AppText>
+                      <AppText color="textMuted" variant="caption">
+                        {t('training.plannedActivity')}
+                      </AppText>
+                    </View>
+                    {completed ? (
+                      <AppText color="success" variant="label">
+                        {t('training.completed')}
+                      </AppText>
+                    ) : null}
+                  </View>
+                ) : null;
+              }
+
+              const plan = training.data.plans.find(
+                (candidate) => candidate.id === item.referenceId,
+              );
+              const completedSession =
+                today.data.completedWorkouts.find(
+                  (session) => session.workout_plan_id === item.referenceId,
+                ) ?? null;
+
+              return plan ? (
+                <PlannedWorkout
+                  completedSession={completedSession}
+                  date={dateKey}
+                  key={`${item.itemType}-${item.referenceId}-${index}`}
+                  lastDate={lastWorkoutDates.data?.[plan.id] ?? null}
+                  onOpenHistory={(sessionId) => router.push(`/workout/history/${sessionId}`)}
+                  onStart={launchWorkout}
+                  plan={plan}
+                  starting={startWorkout.isPending && startWorkout.variables === plan.id}
+                />
+              ) : null;
+            })}
+            <AppButton
+              onPress={() =>
+                router.push({ pathname: '/training-tools/override', params: { date: dateKey } })
+              }
+              title={t('training.change')}
+              variant="secondary"
+            />
+            {startWorkout.isError ? (
+              <AppText color="danger" variant="caption">
+                {t('training.startError')}
+              </AppText>
+            ) : null}
+          </Card>
+        )}
       </View>
 
       <View style={{ gap: spacing.md }}>
-        <SectionLabel title={t('activities')} />
-        <EmptyStateCard
-          actionLabel={t('addActivity')}
-          detail={t('noActivitiesDetail')}
-          title={t('noActivities')}
+        <SectionLabel title={t('activities.title')} />
+        {today.data.activities.length === 0 && today.data.completedWorkouts.length === 0 ? (
+          <EmptyStateCard detail={t('noActivitiesDetail')} title={t('noActivities')} />
+        ) : (
+          <Card style={{ gap: spacing.lg }}>
+            {today.data.completedWorkouts.map((session) => (
+              <View
+                key={session.id}
+                style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}
+              >
+                <View style={{ flex: 1, gap: spacing.xs }}>
+                  <AppText variant="bodyStrong">{session.workout_name_snapshot}</AppText>
+                  <AppText color="textMuted" variant="caption">
+                    {t('activities.strengthWorkout')}
+                  </AppText>
+                </View>
+                <AppText color="success" variant="bodyStrong">
+                  ✓
+                </AppText>
+              </View>
+            ))}
+            {today.data.activities.map((activity) => (
+              <LoggedActivityRow
+                activity={activity}
+                deleting={deleteActivity.isPending}
+                key={activity.id}
+                onDelete={() => confirmActivityDelete(activity)}
+              />
+            ))}
+          </Card>
+        )}
+        <AppButton
+          onPress={() => router.push('/today-activity')}
+          title={t('activities.add')}
+          variant="secondary"
         />
+        {deleteActivity.isError ? (
+          <AppText color="danger" variant="caption">
+            {t('activities.deleteError')}
+          </AppText>
+        ) : null}
       </View>
 
       <View style={{ gap: spacing.md }}>
         <SectionLabel title={t('bodyWeight')} />
-        <Card
-          style={{
-            backgroundColor: colors.surface,
-            borderCurve: 'continuous',
-            borderRadius: radius.lg,
-            gap: spacing.lg,
-          }}
-        >
-          <View style={{ gap: spacing.xs }}>
-            <AppText variant="bodyStrong">{t('noWeight')}</AppText>
-            <AppText color="textMuted" variant="caption">
-              {t('noWeightDetail')}
+        <Card style={{ gap: spacing.lg }}>
+          {today.data.todayWeight ? (
+            <View style={{ gap: spacing.xs }}>
+              <AppText color="textMuted" variant="caption">
+                {t('weight.today')}
+              </AppText>
+              <View style={{ alignItems: 'baseline', flexDirection: 'row', gap: spacing.sm }}>
+                <AppText selectable variant="display">
+                  {formatBodyWeight(today.data.todayWeight.weight_kg, unit)}
+                </AppText>
+                <AppText color="textMuted" variant="bodyStrong">
+                  {unitLabel}
+                </AppText>
+              </View>
+            </View>
+          ) : (
+            <View style={{ gap: spacing.xs }}>
+              <AppText variant="bodyStrong">{t('noWeight')}</AppText>
+              <AppText color="textMuted" variant="caption">
+                {today.data.latestWeight
+                  ? t('weight.latest', {
+                      unit: unitLabel,
+                      value: formatBodyWeight(today.data.latestWeight.weight_kg, unit),
+                    })
+                  : t('noWeightDetail')}
+              </AppText>
+            </View>
+          )}
+          {today.data.sevenDayAverageKg !== null ? (
+            <AppText color="textSecondary" variant="caption">
+              {t('weight.average', {
+                unit: unitLabel,
+                value: formatBodyWeight(today.data.sevenDayAverageKg, unit),
+              })}
             </AppText>
+          ) : null}
+          <View style={{ flexDirection: 'row', gap: spacing.md }}>
+            <AppButton
+              onPress={() => router.push('/today-weight')}
+              style={{ flex: 1 }}
+              title={t(today.data.todayWeight ? 'weight.edit' : 'weight.log')}
+              variant="secondary"
+            />
+            <AppButton
+              onPress={() => router.push('/body')}
+              style={{ flex: 1 }}
+              title={t('navigation.openBody')}
+              variant="ghost"
+            />
           </View>
-          <AppButton disabled title={t('logWeight')} variant="secondary" />
         </Card>
       </View>
     </Screen>
