@@ -1,0 +1,89 @@
+{
+  "routes": {
+    "active": "Aktywny trening",
+    "history": "Historia treningów",
+    "details": "Szczegóły treningu"
+  },
+  "status": {
+    "loadingTitle": "Wczytuję trening",
+    "loadingDetail": "Za chwilę pojawią się ćwiczenia i serie.",
+    "errorTitle": "Nie udało się wczytać treningu",
+    "errorDetail": "Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie"
+  },
+  "launch": {
+    "start": "Rozpocznij: {{name}}",
+    "startWorkout": "Rozpocznij trening",
+    "starting": "Rozpoczynam trening",
+    "startError": "Nie udało się rozpocząć treningu.",
+    "resumeTitle": "Trening w toku",
+    "resumeDetail": "Trening {{name}} nadal trwa. Kontynuuj od miejsca, w którym skończyłeś.",
+    "resume": "Wznów trening",
+    "emptyPlan": "Dodaj co najmniej jedno ćwiczenie do planu przed jego rozpoczęciem."
+  },
+  "active": {
+    "progress": "Ćwiczenie {{current}} z {{total}}",
+    "elapsed": "Czas",
+    "previousExercise": "Poprzednie ćwiczenie",
+    "nextExercise": "Następne ćwiczenie",
+    "lastTime": "Poprzednio — {{count}} dzień temu",
+    "lastTime_few": "Poprzednio — {{count}} dni temu",
+    "lastTime_many": "Poprzednio — {{count}} dni temu",
+    "lastTime_other": "Poprzednio — {{count}} dnia temu",
+    "noPrevious": "Brak poprzedniej sesji",
+    "noPreviousDetail": "Tutaj pojawią się ostatnie ukończone serie tego ćwiczenia.",
+    "todaySets": "Dzisiejsze serie",
+    "noSets": "Nie zapisano jeszcze żadnej serii tego ćwiczenia.",
+    "addSet": "Dodaj serię",
+    "setNumber": "Seria {{number}}",
+    "weight": "Ciężar",
+    "reps": "Powtórzenia",
+    "completed": "Ukończona",
+    "incomplete": "Nieukończona",
+    "completeSet": "Ukończ serię",
+    "markIncomplete": "Oznacz jako nieukończoną",
+    "saveChanges": "Zapisz zmiany",
+    "deleteSet": "Usuń serię",
+    "deleteSetTitle": "Usunąć tę serię?",
+    "deleteSetDetail": "Pozostałe serie zostaną ponumerowane ponownie.",
+    "deleteSetError": "Nie udało się usunąć serii.",
+    "saveSetError": "Nie udało się zapisać serii.",
+    "weightError": "Podaj ciężar równy zero lub większy.",
+    "repsError": "Podaj całkowitą liczbę powtórzeń większą od zera.",
+    "finish": "Zakończ trening",
+    "finishTitle": "Zakończyć ten trening?",
+    "finishDetail": "Sesja i ukończone serie zostaną zapisane w historii treningów.",
+    "finishError": "Nie udało się zakończyć treningu.",
+    "leave": "Wróć do Treningu"
+  },
+  "history": {
+    "intro": "Ukończone treningi zachowują pierwotną kolejność ćwiczeń oraz wartości serii.",
+    "emptyTitle": "Brak ukończonych treningów",
+    "emptyDetail": "Zakończ pierwszy trening, a pojawi się w tym miejscu.",
+    "exerciseCount": "{{count}} ćwiczenie",
+    "exerciseCount_few": "{{count}} ćwiczenia",
+    "exerciseCount_many": "{{count}} ćwiczeń",
+    "exerciseCount_other": "{{count}} ćwiczenia",
+    "setCount": "{{count}} ukończona seria",
+    "setCount_few": "{{count}} ukończone serie",
+    "setCount_many": "{{count}} ukończonych serii",
+    "setCount_other": "{{count}} ukończonej serii",
+    "duration": "Czas: {{duration}}",
+    "loadMore": "Wczytaj więcej",
+    "loadingMore": "Wczytuję więcej",
+    "refresh": "Odśwież historię"
+  },
+  "details": {
+    "summary": "Podsumowanie treningu",
+    "performed": "Wykonano {{date}}",
+    "duration": "Czas trwania",
+    "completedSets": "Ukończone serie",
+    "allSets": "Wszystkie serie",
+    "noSets": "Dla tego ćwiczenia nie zapisano serii.",
+    "notCompleted": "Nieukończona"
+  },
+  "actions": {
+    "cancel": "Anuluj",
+    "delete": "Usuń"
+  }
+}

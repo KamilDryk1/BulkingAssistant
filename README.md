@@ -2,7 +2,7 @@
 
 Bulking Assistant is an Expo/React Native workout, activity, body-weight, and nutrition assistant focused on fast, low-friction daily and in-gym logging.
 
-Phases 1 and 2 are implemented. The app now includes the production foundation, Supabase schema and Row Level Security, email/password authentication, persisted sessions, onboarding, and synchronized profile preferences. Training and daily logging features begin in Phase 3.
+Phases 1–4 are implemented. The app now includes the production foundation, authentication and onboarding, training planning, and a complete active-workout flow with immutable exercise snapshots, fast set logging, previous-performance context, and workout history.
 
 ## Current foundation
 
@@ -14,6 +14,11 @@ Phases 1 and 2 are implemented. The app now includes the production foundation, 
 - versioned PostgreSQL schema, bilingual catalog seed, and pgTAP user-isolation tests
 - email/password authentication with protected routes and a transactional onboarding flow
 - synchronized profile, language, and kg/lb preferences with kilograms kept canonical in storage
+- virtualized bilingual exercise library with private custom exercise creation and deletion
+- workout plan creation/editing with transactionally persisted exercise ordering
+- weekly workout/activity/rest scheduling and one-date overrides without changing the recurring week
+- focused active workouts with elapsed time, exercise progress, previous-session reference, and independent weight/repetition sets
+- resumable sessions, safe set editing/deletion/completion, localized session snapshots, and paginated workout history
 - TanStack Query provider and default caching policy
 - responsive web fallback plus iOS and Android bundles
 - Expo-aware linting and Prettier formatting
@@ -22,7 +27,7 @@ See [the product specification](docs/PRODUCT_SPEC.md) and [implementation plan](
 
 ## Requirements
 
-- Node.js 20.19.4+, 22.13+, or 24.3+ (the React Native version bundled with Expo SDK 57)
+- Node.js 22.13+ (required by Expo SDK 57)
 - npm
 - Expo Go for the fastest native development loop
 

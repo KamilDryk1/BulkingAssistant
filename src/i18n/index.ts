@@ -12,6 +12,7 @@ import progressEn from './en/progress.json';
 import settingsEn from './en/settings.json';
 import todayEn from './en/today.json';
 import trainingEn from './en/training.json';
+import workoutEn from './en/workout.json';
 import authPl from './pl/auth.json';
 import bodyPl from './pl/body.json';
 import commonPl from './pl/common.json';
@@ -21,6 +22,7 @@ import progressPl from './pl/progress.json';
 import settingsPl from './pl/settings.json';
 import todayPl from './pl/today.json';
 import trainingPl from './pl/training.json';
+import workoutPl from './pl/workout.json';
 
 export const supportedLocales = ['en', 'pl'] as const;
 export type SupportedLocale = (typeof supportedLocales)[number];
@@ -39,6 +41,7 @@ const resources = {
     settings: settingsEn,
     today: todayEn,
     training: trainingEn,
+    workout: workoutEn,
   },
   pl: {
     auth: authPl,
@@ -50,6 +53,7 @@ const resources = {
     settings: settingsPl,
     today: todayPl,
     training: trainingPl,
+    workout: workoutPl,
   },
 } as const;
 

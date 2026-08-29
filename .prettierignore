@@ -5,4 +5,5 @@ ios
 node_modules
 package-lock.json
 supabase/.temp
+supabase/**/*.sql
 assets/brand/*.svg

@@ -87,6 +87,8 @@ function RootNavigator() {
       <Stack.Protected guard={Boolean(session) && onboardingComplete}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
+        <Stack.Screen name="training-tools" options={{ headerShown: false }} />
+        <Stack.Screen name="workout" options={{ headerShown: false }} />
       </Stack.Protected>
     </Stack>
   );

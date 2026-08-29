@@ -13,5 +13,151 @@
   "schedule": "Weekly schedule",
   "scheduleDetail": "Assign workouts, activities, and rest days",
   "history": "Workout history",
-  "historyDetail": "Review completed sessions"
+  "historyDetail": "Review completed sessions",
+  "status": {
+    "loadingTitle": "Loading training data",
+    "loadingDetail": "Your plans, exercises, and schedule are on the way.",
+    "errorTitle": "Training data could not be loaded",
+    "errorDetail": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "actions": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "moveDown": "Move down",
+    "moveUp": "Move up",
+    "remove": "Remove",
+    "save": "Save"
+  },
+  "routes": {
+    "plans": "Workout plans",
+    "newPlan": "New workout plan",
+    "editPlan": "Edit workout plan",
+    "exercises": "Exercise library",
+    "newExercise": "Custom exercise",
+    "schedule": "Weekly schedule",
+    "editDay": "Edit day",
+    "todayOverride": "Today's plan"
+  },
+  "plansScreen": {
+    "intro": "Build reusable workouts and keep the exercise order exactly as you want it.",
+    "create": "Create workout plan",
+    "emptyTitle": "No workout plans yet",
+    "emptyDetail": "Create your first plan, then assign it to days in the weekly schedule.",
+    "exerciseCount_one": "{{count}} exercise",
+    "exerciseCount_other": "{{count}} exercises",
+    "deleteTitle": "Delete workout plan?",
+    "deleteDetail": "This removes the plan from your schedule too. Completed workouts are not affected.",
+    "deleteError": "The workout plan could not be deleted."
+  },
+  "planEditor": {
+    "details": "Plan details",
+    "name": "Plan name",
+    "namePlaceholder": "e.g. Upper body",
+    "selected": "Exercises in this plan",
+    "selectedEmpty": "Add exercises from the library below.",
+    "available": "Add exercises",
+    "search": "Search exercises",
+    "noResults": "No exercises match this search.",
+    "saveCreate": "Create plan",
+    "saveUpdate": "Save changes",
+    "saveError": "The workout plan could not be saved.",
+    "notFoundTitle": "Workout plan not found",
+    "notFoundDetail": "It may have been deleted on another device.",
+    "goBack": "Go back"
+  },
+  "exercisesScreen": {
+    "intro": "Browse the built-in catalog or add a private exercise visible only to you.",
+    "create": "Add custom exercise",
+    "search": "Search by name, muscle, or equipment",
+    "custom": "Your exercises",
+    "predefined": "Built-in exercises",
+    "emptyTitle": "No exercises found",
+    "emptyDetail": "Change the search phrase or create your own exercise.",
+    "customBadge": "Custom",
+    "deleteTitle": "Delete custom exercise?",
+    "deleteDetail": "It will also be removed from workout plans that use it.",
+    "deleteError": "The exercise could not be deleted."
+  },
+  "exerciseForm": {
+    "intro": "Custom exercises are private to your account and can be used in any workout plan.",
+    "name": "Exercise name",
+    "namePlaceholder": "e.g. Incline cable fly",
+    "muscleGroup": "Muscle group",
+    "equipment": "Equipment",
+    "save": "Create exercise",
+    "error": "The exercise could not be created."
+  },
+  "muscleGroups": {
+    "chest": "Chest",
+    "back": "Back",
+    "legs": "Legs",
+    "shoulders": "Shoulders",
+    "biceps": "Biceps",
+    "triceps": "Triceps",
+    "core": "Core"
+  },
+  "equipment": {
+    "barbell": "Barbell",
+    "dumbbell": "Dumbbell",
+    "machine": "Machine",
+    "cable": "Cable",
+    "bodyweight": "Bodyweight",
+    "other": "Other"
+  },
+  "weekdays": {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "7": "Sunday"
+  },
+  "scheduleScreen": {
+    "intro": "Plan a repeatable week. A date-specific override changes only that one day.",
+    "todayOverride": "Adjust today only",
+    "emptyDay": "Nothing planned",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "editDay": "Edit {{day}}"
+  },
+  "scheduleEditor": {
+    "planned": "Planned items",
+    "empty": "Nothing is planned for this day yet.",
+    "addWorkout": "Add a workout",
+    "addActivity": "Add an activity",
+    "setRest": "Set as rest day",
+    "rest": "Rest day",
+    "workout": "Workout",
+    "activity": "Activity",
+    "missingItem": "Unavailable item",
+    "noPlans": "Create a workout plan before adding one here.",
+    "save": "Save day",
+    "saveError": "This schedule could not be saved."
+  },
+  "overrideScreen": {
+    "date": "Plan for {{date}}",
+    "introWeekly": "This starts with the weekly plan. Saving creates an override for this date only.",
+    "introOverride": "This date already has its own plan instead of the weekly schedule.",
+    "save": "Save for this date",
+    "reset": "Use weekly schedule",
+    "resetTitle": "Use the weekly schedule?",
+    "resetDetail": "The custom plan for this date will be removed.",
+    "resetError": "The date-specific plan could not be removed."
+  },
+  "today": {
+    "weeklySource": "From weekly schedule",
+    "overrideSource": "Adjusted for today",
+    "rest": "Rest day",
+    "edit": "Adjust today"
+  },
+  "validation": {
+    "exerciseNameRequired": "Enter an exercise name",
+    "planNameRequired": "Enter a workout plan name",
+    "nameTooLong": "Use no more than 80 characters"
+  }
 }

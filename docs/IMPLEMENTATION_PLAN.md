@@ -8,6 +8,7 @@ src/
 │   ├── (auth)/             # Phase 2 sign-in and sign-up stack
 │   ├── (tabs)/             # Today, Training, Progress, Body, Settings
 │   ├── onboarding/         # Phase 2 profile setup flow
+│   ├── training-tools/     # Phase 3 catalog, plans, schedule, and overrides
 │   └── workout/            # Phase 4 focused active-workout stack
 ├── components/             # Reusable visual primitives
 ├── screens/                # Screen composition, grouped by feature
@@ -65,15 +66,26 @@ No global state library is planned; authentication state is scoped to a provider
 - [x] Add onboarding and profile editing for date of birth, sex, height, activity level, goal, locale, and weight unit.
 - [x] Synchronize language and unit preferences while storing body weight canonically in kilograms.
 - [x] Add unit tests for kg/lb conversion and decimal input normalization.
-- [ ] Execute a clean database reset, lint, and pgTAP suite against local or linked Supabase; the current host has no running PostgreSQL/Docker service.
+- [x] Apply the schema to the linked project and run the linked schema linter.
+- [ ] Execute a clean local database reset and pgTAP suite; the current host has no running PostgreSQL/Docker service.
 
 ### Phase 3 — Training domain
 
-- [ ] Add exercise catalog/custom exercises, plan CRUD/reordering, weekly scheduling, and daily workout overrides.
+- [x] Add a bilingual, searchable, virtualized exercise catalog grouped by muscle with private custom exercise creation and safe deletion.
+- [x] Add workout plan creation, editing, deletion, exercise selection, and transactionally persisted ordering.
+- [x] Add the seven-day schedule with ordered workout/activity/rest items and transactional per-day replacement.
+- [x] Add date-specific schedule overrides with weekly fallback and one-action reset to the recurring plan.
+- [x] Resolve today's schedule in the Training tab and connect all Phase 3 navigation routes.
+- [x] Add English/Polish copy, pure domain tests, linked migration deployment/lint, and iOS/Android/web export validation.
 
 ### Phase 4 — Active workout
 
-- [ ] Add session snapshots, previous-performance reference, fast set logging, exercise navigation, finishing, and history.
+- [x] Add an atomic session-start RPC with one active workout per user and localized ordered exercise snapshots.
+- [x] Resolve and display the latest previous completed performance for each exercise without prefilling today's sets.
+- [x] Add fast independent weight/repetition set entry with completion, editing, deletion, and gap-free numbering.
+- [x] Add elapsed time, overall exercise progress, previous/next navigation, resume handling, and a focused stack flow.
+- [x] Finish sessions into history and add paginated history plus snapshot-based workout details.
+- [x] Add English/Polish copy, kg/lb boundary conversion, pure domain tests, linked migration deployment/lint, and iOS/Android/web export validation.
 
 ### Phase 5 — Today
 

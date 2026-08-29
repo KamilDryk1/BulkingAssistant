@@ -41,7 +41,7 @@ type ProfileInsert = {
 
 type ProfileUpdate = Partial<ProfileInsert>;
 
-type ExerciseRow = {
+export type ExerciseRow = {
   created_at: string;
   custom_name: string | null;
   equipment: EquipmentCategory;
@@ -69,7 +69,7 @@ type ExerciseInsert = {
   updated_at?: string;
 };
 
-type ActivityDefinitionRow = {
+export type ActivityDefinitionRow = {
   created_at: string;
   custom_name: string | null;
   id: string;
@@ -93,7 +93,7 @@ type ActivityDefinitionInsert = {
   updated_at?: string;
 };
 
-type WorkoutPlanRow = {
+export type WorkoutPlanRow = {
   created_at: string;
   id: string;
   name: string;
@@ -109,7 +109,7 @@ type WorkoutPlanInsert = {
   user_id: string;
 };
 
-type WorkoutPlanExerciseRow = {
+export type WorkoutPlanExerciseRow = {
   created_at: string;
   exercise_id: string;
   id: string;
@@ -127,7 +127,7 @@ type WorkoutPlanExerciseInsert = {
   workout_plan_id: string;
 };
 
-type WeeklyScheduleItemRow = {
+export type WeeklyScheduleItemRow = {
   activity_definition_id: string | null;
   created_at: string;
   id: string;
@@ -151,7 +151,7 @@ type WeeklyScheduleItemInsert = {
   workout_plan_id?: string | null;
 };
 
-type DailyScheduleOverrideRow = {
+export type DailyScheduleOverrideRow = {
   created_at: string;
   id: string;
   scheduled_date: string;
@@ -167,7 +167,7 @@ type DailyScheduleOverrideInsert = {
   user_id: string;
 };
 
-type DailyScheduleOverrideItemRow = {
+export type DailyScheduleOverrideItemRow = {
   activity_definition_id: string | null;
   created_at: string;
   daily_override_id: string;
@@ -189,7 +189,7 @@ type DailyScheduleOverrideItemInsert = {
   workout_plan_id?: string | null;
 };
 
-type WorkoutSessionRow = {
+export type WorkoutSessionRow = {
   completed_at: string | null;
   created_at: string;
   id: string;
@@ -213,7 +213,7 @@ type WorkoutSessionInsert = {
   workout_plan_id?: string | null;
 };
 
-type WorkoutSessionExerciseRow = {
+export type WorkoutSessionExerciseRow = {
   created_at: string;
   equipment_snapshot: EquipmentCategory;
   exercise_id: string | null;
@@ -237,7 +237,7 @@ type WorkoutSessionExerciseInsert = {
   workout_session_id: string;
 };
 
-type WorkoutSetRow = {
+export type WorkoutSetRow = {
   completed_at: string | null;
   created_at: string;
   id: string;
@@ -256,6 +256,14 @@ type WorkoutSetInsert = {
   session_exercise_id: string;
   set_number: number;
   updated_at?: string;
+  weight_kg: number;
+};
+
+export type PreviousExercisePerformanceRow = {
+  exercise_id: string;
+  previous_session_date: string;
+  reps: number;
+  set_number: number;
   weight_kg: number;
 };
 
@@ -361,6 +369,76 @@ export type Database = {
           profile_sex_value: ProfileSex;
         };
         Returns: ProfileRow;
+      };
+      delete_daily_schedule_override: {
+        Args: {
+          override_date: string;
+        };
+        Returns: undefined;
+      };
+      delete_workout_set: {
+        Args: {
+          workout_set_id_value: string;
+        };
+        Returns: undefined;
+      };
+      delete_custom_exercise: {
+        Args: {
+          exercise_id_value: string;
+        };
+        Returns: undefined;
+      };
+      replace_daily_schedule_override: {
+        Args: {
+          override_date: string;
+          schedule_items: Json;
+        };
+        Returns: string;
+      };
+      finish_workout_session: {
+        Args: {
+          workout_session_id_value: string;
+        };
+        Returns: WorkoutSessionRow;
+      };
+      get_previous_exercise_performance: {
+        Args: {
+          before_started_at_value: string;
+          exercise_ids: string[];
+        };
+        Returns: PreviousExercisePerformanceRow[];
+      };
+      replace_weekly_schedule_day: {
+        Args: {
+          schedule_items: Json;
+          schedule_weekday: number;
+        };
+        Returns: WeeklyScheduleItemRow[];
+      };
+      save_workout_plan: {
+        Args: {
+          ordered_exercise_ids: string[];
+          workout_plan_id_value: string | null;
+          workout_plan_name: string;
+        };
+        Returns: WorkoutPlanRow;
+      };
+      save_workout_set: {
+        Args: {
+          completed_value: boolean;
+          reps_value: number;
+          session_exercise_id_value: string;
+          weight_kg_value: number;
+          workout_set_id_value: string | null;
+        };
+        Returns: WorkoutSetRow;
+      };
+      start_workout_session: {
+        Args: {
+          session_date_value: string;
+          workout_plan_id_value: string;
+        };
+        Returns: string;
       };
     };
     Tables: {

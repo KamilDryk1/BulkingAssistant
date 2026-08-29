@@ -13,5 +13,155 @@
   "schedule": "Plan tygodniowy",
   "scheduleDetail": "Przypisuj treningi, aktywności i dni odpoczynku",
   "history": "Historia treningów",
-  "historyDetail": "Przeglądaj ukończone sesje"
+  "historyDetail": "Przeglądaj ukończone sesje",
+  "status": {
+    "loadingTitle": "Wczytuję dane treningowe",
+    "loadingDetail": "Za chwilę pojawią się Twoje plany, ćwiczenia i harmonogram.",
+    "errorTitle": "Nie udało się wczytać danych treningowych",
+    "errorDetail": "Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie"
+  },
+  "actions": {
+    "add": "Dodaj",
+    "cancel": "Anuluj",
+    "create": "Utwórz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "moveDown": "Przesuń w dół",
+    "moveUp": "Przesuń w górę",
+    "remove": "Usuń",
+    "save": "Zapisz"
+  },
+  "routes": {
+    "plans": "Plany treningowe",
+    "newPlan": "Nowy plan treningowy",
+    "editPlan": "Edytuj plan treningowy",
+    "exercises": "Biblioteka ćwiczeń",
+    "newExercise": "Własne ćwiczenie",
+    "schedule": "Plan tygodniowy",
+    "editDay": "Edytuj dzień",
+    "todayOverride": "Dzisiejszy plan"
+  },
+  "plansScreen": {
+    "intro": "Twórz treningi wielokrotnego użytku i ustawiaj ćwiczenia dokładnie w wybranej kolejności.",
+    "create": "Utwórz plan treningowy",
+    "emptyTitle": "Nie masz jeszcze planów treningowych",
+    "emptyDetail": "Utwórz pierwszy plan, a potem przypisz go do dni w planie tygodniowym.",
+    "exerciseCount_one": "{{count}} ćwiczenie",
+    "exerciseCount_few": "{{count}} ćwiczenia",
+    "exerciseCount_many": "{{count}} ćwiczeń",
+    "exerciseCount_other": "{{count}} ćwiczenia",
+    "deleteTitle": "Usunąć plan treningowy?",
+    "deleteDetail": "Plan zniknie również z harmonogramu. Ukończone treningi pozostaną bez zmian.",
+    "deleteError": "Nie udało się usunąć planu treningowego."
+  },
+  "planEditor": {
+    "details": "Szczegóły planu",
+    "name": "Nazwa planu",
+    "namePlaceholder": "np. Góra ciała",
+    "selected": "Ćwiczenia w planie",
+    "selectedEmpty": "Dodaj ćwiczenia z biblioteki poniżej.",
+    "available": "Dodaj ćwiczenia",
+    "search": "Szukaj ćwiczeń",
+    "noResults": "Brak ćwiczeń pasujących do wyszukiwania.",
+    "saveCreate": "Utwórz plan",
+    "saveUpdate": "Zapisz zmiany",
+    "saveError": "Nie udało się zapisać planu treningowego.",
+    "notFoundTitle": "Nie znaleziono planu treningowego",
+    "notFoundDetail": "Mógł zostać usunięty na innym urządzeniu.",
+    "goBack": "Wróć"
+  },
+  "exercisesScreen": {
+    "intro": "Przeglądaj wbudowany katalog albo dodaj prywatne ćwiczenie widoczne tylko dla Ciebie.",
+    "create": "Dodaj własne ćwiczenie",
+    "search": "Szukaj po nazwie, partii lub sprzęcie",
+    "custom": "Twoje ćwiczenia",
+    "predefined": "Ćwiczenia wbudowane",
+    "emptyTitle": "Nie znaleziono ćwiczeń",
+    "emptyDetail": "Zmień wyszukiwaną frazę albo utwórz własne ćwiczenie.",
+    "customBadge": "Własne",
+    "deleteTitle": "Usunąć własne ćwiczenie?",
+    "deleteDetail": "Zostanie też usunięte z planów treningowych, które je zawierają.",
+    "deleteError": "Nie udało się usunąć ćwiczenia."
+  },
+  "exerciseForm": {
+    "intro": "Własne ćwiczenia są prywatne i możesz użyć ich w dowolnym planie treningowym.",
+    "name": "Nazwa ćwiczenia",
+    "namePlaceholder": "np. Rozpiętki na wyciągu skośnym",
+    "muscleGroup": "Partia mięśniowa",
+    "equipment": "Sprzęt",
+    "save": "Utwórz ćwiczenie",
+    "error": "Nie udało się utworzyć ćwiczenia."
+  },
+  "muscleGroups": {
+    "chest": "Klatka piersiowa",
+    "back": "Plecy",
+    "legs": "Nogi",
+    "shoulders": "Barki",
+    "biceps": "Biceps",
+    "triceps": "Triceps",
+    "core": "Brzuch"
+  },
+  "equipment": {
+    "barbell": "Sztanga",
+    "dumbbell": "Hantle",
+    "machine": "Maszyna",
+    "cable": "Wyciąg",
+    "bodyweight": "Masa ciała",
+    "other": "Inne"
+  },
+  "weekdays": {
+    "1": "Poniedziałek",
+    "2": "Wtorek",
+    "3": "Środa",
+    "4": "Czwartek",
+    "5": "Piątek",
+    "6": "Sobota",
+    "7": "Niedziela"
+  },
+  "scheduleScreen": {
+    "intro": "Zaplanuj powtarzalny tydzień. Wyjątek dla daty zmienia tylko jeden wybrany dzień.",
+    "todayOverride": "Zmień tylko dzisiaj",
+    "emptyDay": "Nic nie zaplanowano",
+    "itemCount_one": "{{count}} element",
+    "itemCount_few": "{{count}} elementy",
+    "itemCount_many": "{{count}} elementów",
+    "itemCount_other": "{{count}} elementu",
+    "editDay": "Edytuj: {{day}}"
+  },
+  "scheduleEditor": {
+    "planned": "Zaplanowane elementy",
+    "empty": "Na ten dzień nic jeszcze nie zaplanowano.",
+    "addWorkout": "Dodaj trening",
+    "addActivity": "Dodaj aktywność",
+    "setRest": "Ustaw dzień odpoczynku",
+    "rest": "Dzień odpoczynku",
+    "workout": "Trening",
+    "activity": "Aktywność",
+    "missingItem": "Niedostępny element",
+    "noPlans": "Utwórz plan treningowy, zanim dodasz go tutaj.",
+    "save": "Zapisz dzień",
+    "saveError": "Nie udało się zapisać harmonogramu."
+  },
+  "overrideScreen": {
+    "date": "Plan na {{date}}",
+    "introWeekly": "Punktem wyjścia jest plan tygodniowy. Zapis utworzy wyjątek tylko dla tej daty.",
+    "introOverride": "Ta data ma już własny plan zamiast harmonogramu tygodniowego.",
+    "save": "Zapisz dla tej daty",
+    "reset": "Użyj planu tygodniowego",
+    "resetTitle": "Użyć planu tygodniowego?",
+    "resetDetail": "Własny plan dla tej daty zostanie usunięty.",
+    "resetError": "Nie udało się usunąć planu dla tej daty."
+  },
+  "today": {
+    "weeklySource": "Z planu tygodniowego",
+    "overrideSource": "Zmieniono na dzisiaj",
+    "rest": "Dzień odpoczynku",
+    "edit": "Zmień dzisiaj"
+  },
+  "validation": {
+    "exerciseNameRequired": "Podaj nazwę ćwiczenia",
+    "planNameRequired": "Podaj nazwę planu treningowego",
+    "nameTooLong": "Użyj maksymalnie 80 znaków"
+  }
 }

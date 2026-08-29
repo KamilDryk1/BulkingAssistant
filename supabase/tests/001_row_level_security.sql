@@ -34,6 +34,11 @@ select is(
 
 set local session_replication_role = replica;
 
+insert into auth.users (id)
+values
+  ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'),
+  ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb');
+
 insert into public.profiles (user_id, locale)
 values
   ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', 'en'),

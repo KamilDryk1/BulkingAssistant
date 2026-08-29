@@ -1,0 +1,83 @@
+{
+  "routes": {
+    "active": "Active workout",
+    "history": "Workout history",
+    "details": "Workout details"
+  },
+  "status": {
+    "loadingTitle": "Loading workout",
+    "loadingDetail": "Your exercises and sets are on the way.",
+    "errorTitle": "Workout could not be loaded",
+    "errorDetail": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "launch": {
+    "start": "Start {{name}}",
+    "startWorkout": "Start workout",
+    "starting": "Starting workout",
+    "startError": "The workout could not be started.",
+    "resumeTitle": "Workout in progress",
+    "resumeDetail": "{{name}} is still active. Continue where you left off.",
+    "resume": "Resume workout",
+    "emptyPlan": "Add at least one exercise to this plan before starting it."
+  },
+  "active": {
+    "progress": "Exercise {{current}} of {{total}}",
+    "elapsed": "Elapsed",
+    "previousExercise": "Previous exercise",
+    "nextExercise": "Next exercise",
+    "lastTime": "Last time — {{count}} day ago",
+    "lastTime_other": "Last time — {{count}} days ago",
+    "noPrevious": "No previous session yet",
+    "noPreviousDetail": "Your last completed sets for this exercise will appear here.",
+    "todaySets": "Today's sets",
+    "noSets": "No sets logged for this exercise yet.",
+    "addSet": "Add set",
+    "setNumber": "Set {{number}}",
+    "weight": "Weight",
+    "reps": "Reps",
+    "completed": "Completed",
+    "incomplete": "Not completed",
+    "completeSet": "Complete set",
+    "markIncomplete": "Mark incomplete",
+    "saveChanges": "Save changes",
+    "deleteSet": "Delete set",
+    "deleteSetTitle": "Delete this set?",
+    "deleteSetDetail": "The remaining sets will be renumbered.",
+    "deleteSetError": "The set could not be deleted.",
+    "saveSetError": "The set could not be saved.",
+    "weightError": "Enter a weight of zero or greater.",
+    "repsError": "Enter a whole number of repetitions greater than zero.",
+    "finish": "Finish workout",
+    "finishTitle": "Finish this workout?",
+    "finishDetail": "The session and completed sets will be saved to workout history.",
+    "finishError": "The workout could not be finished.",
+    "leave": "Back to Training"
+  },
+  "history": {
+    "intro": "Completed workouts are stored with their original exercise order and set values.",
+    "emptyTitle": "No completed workouts yet",
+    "emptyDetail": "Finish your first workout and it will appear here.",
+    "exerciseCount": "{{count}} exercise",
+    "exerciseCount_other": "{{count}} exercises",
+    "setCount": "{{count}} completed set",
+    "setCount_other": "{{count}} completed sets",
+    "duration": "Duration: {{duration}}",
+    "loadMore": "Load more",
+    "loadingMore": "Loading more",
+    "refresh": "Refresh history"
+  },
+  "details": {
+    "summary": "Workout summary",
+    "performed": "Performed {{date}}",
+    "duration": "Duration",
+    "completedSets": "Completed sets",
+    "allSets": "All sets",
+    "noSets": "No sets were logged for this exercise.",
+    "notCompleted": "Not completed"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "delete": "Delete"
+  }
+}
