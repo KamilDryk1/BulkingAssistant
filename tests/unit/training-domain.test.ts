@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
   addScheduleItem,
+  addUniqueItem,
   getActivityDisplayName,
   getExerciseDisplayName,
   getIsoWeekday,
@@ -86,6 +87,14 @@ test('moves ordered items without mutating the original array', () => {
   const original = ['bench', 'row', 'squat'];
   assert.deepEqual(moveItem(original, 2, 0), ['squat', 'bench', 'row']);
   assert.deepEqual(original, ['bench', 'row', 'squat']);
+});
+
+test('adds a newly created exercise once while preserving the current order', () => {
+  const selected = ['bench', 'row'];
+
+  assert.deepEqual(addUniqueItem(selected, 'pulldown'), ['bench', 'row', 'pulldown']);
+  assert.deepEqual(addUniqueItem(selected, 'bench'), selected);
+  assert.deepEqual(selected, ['bench', 'row']);
 });
 
 test('localizes predefined names while preserving custom names', () => {

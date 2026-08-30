@@ -5,12 +5,15 @@ import { WorkoutPlanEditorScreen } from '@/screens/training/workout-plan-editor'
 
 export default function EditWorkoutPlanRoute() {
   const { t } = useTranslation('training');
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { addedExerciseId, id } = useLocalSearchParams<{
+    addedExerciseId?: string;
+    id: string;
+  }>();
 
   return (
     <>
       <Stack.Screen options={{ title: t('routes.editPlan') }} />
-      <WorkoutPlanEditorScreen planId={id ?? ''} />
+      <WorkoutPlanEditorScreen addedExerciseId={addedExerciseId} planId={id ?? ''} />
     </>
   );
 }

@@ -1,42 +1,55 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { FlatList, Pressable, View } from 'react-native';
+import { type FlatList, Pressable, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { AppButton } from '@/components/app-button';
 import { AppText } from '@/components/app-text';
+import { AutoScrollProvider, useAutoScrollContainer } from '@/components/auto-scroll-context';
 import { Card } from '@/components/card';
 import { CompactAction } from '@/components/compact-action';
 import { FormTextField } from '@/components/form-text-field';
 import { QueryStateCard } from '@/components/query-state-card';
+import { ReorderableList } from '@/components/reorderable-list';
 import { SectionLabel } from '@/components/section-label';
 import { useAuth } from '@/features/auth/auth-context';
-import { moveItem } from '@/features/training/training-domain';
+import { addUniqueItem, moveItem } from '@/features/training/training-domain';
 import { useSaveWorkoutPlan, useTrainingData } from '@/features/training/training-queries';
 import {
   workoutPlanSchema,
   type WorkoutPlanFormValues,
 } from '@/features/training/training-schemas';
+import type { Exercise } from '@/features/training/training-types';
 import { getCurrentLocale } from '@/i18n';
 import { colors, layout, opacity, spacing } from '@/theme';
 
 type WorkoutPlanEditorScreenProps = {
+  addedExerciseId?: string;
   planId: string | null;
 };
 
-export function WorkoutPlanEditorScreen({ planId }: WorkoutPlanEditorScreenProps) {
+export function WorkoutPlanEditorScreen({ addedExerciseId, planId }: WorkoutPlanEditorScreenProps) {
   const { t } = useTranslation('training');
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const {
+    animatedRef,
+    onContentSizeChange,
+    onLayout,
+    onScroll,
+    value: autoScrollValue,
+  } = useAutoScrollContainer<FlatList<Exercise>>();
   const { profile, user } = useAuth();
   const training = useTrainingData(user?.id ?? '', profile?.locale ?? getCurrentLocale());
   const savePlan = useSaveWorkoutPlan();
   const plan = planId ? training.data?.plans.find((item) => item.id === planId) : null;
   const [selectedExerciseIdsOverride, setSelectedExerciseIds] = useState<string[] | null>(null);
   const [search, setSearch] = useState('');
+  const handledAddedExerciseId = useRef<string | null>(null);
   const form = useForm<WorkoutPlanFormValues>({
     defaultValues: { name: '' },
     resolver: zodResolver(workoutPlanSchema),
@@ -44,6 +57,19 @@ export function WorkoutPlanEditorScreen({ planId }: WorkoutPlanEditorScreenProps
   });
   const selectedExerciseIds =
     selectedExerciseIdsOverride ?? plan?.exercises.map((item) => item.exercise.id) ?? [];
+
+  useEffect(() => {
+    if (!addedExerciseId || handledAddedExerciseId.current === addedExerciseId) {
+      return;
+    }
+
+    handledAddedExerciseId.current = addedExerciseId;
+    setSelectedExerciseIds((currentIds) => {
+      const baseIds = currentIds ?? plan?.exercises.map((item) => item.exercise.id) ?? [];
+      return addUniqueItem(baseIds, addedExerciseId);
+    });
+    setSearch('');
+  }, [addedExerciseId, plan?.exercises]);
 
   const exercisesById = useMemo(
     () => new Map(training.data?.exercises.map((exercise) => [exercise.id, exercise]) ?? []),
@@ -150,50 +176,64 @@ export function WorkoutPlanEditorScreen({ planId }: WorkoutPlanEditorScreenProps
           </Card>
         ) : (
           <View style={{ gap: spacing.sm }}>
-            {selectedExercises.map((exercise, index) => (
-              <Card
-                key={exercise.id}
-                style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}
-              >
-                <AppText color="primary" variant="bodyStrong">
-                  {index + 1}
-                </AppText>
-                <View style={{ flex: 1, gap: spacing.xxs }}>
-                  <AppText variant="bodyStrong">{exercise.displayName}</AppText>
-                  <AppText color="textMuted" variant="caption">
-                    {t(`muscleGroups.${exercise.muscle_group}`)} ·{' '}
-                    {t(`equipment.${exercise.equipment}`)}
-                  </AppText>
-                </View>
-                <View style={{ flexDirection: 'row', gap: spacing.xs }}>
-                  <CompactAction
-                    accessibilityLabel={t('actions.moveUp')}
-                    disabled={index === 0}
-                    label="↑"
-                    onPress={() =>
-                      setSelectedExerciseIds(moveItem(selectedExerciseIds, index, index - 1))
-                    }
-                  />
-                  <CompactAction
-                    accessibilityLabel={t('actions.moveDown')}
-                    disabled={index === selectedExercises.length - 1}
-                    label="↓"
-                    onPress={() =>
-                      setSelectedExerciseIds(moveItem(selectedExerciseIds, index, index + 1))
-                    }
-                  />
-                  <CompactAction
-                    accessibilityLabel={t('actions.remove')}
-                    label="×"
-                    onPress={() =>
-                      setSelectedExerciseIds(
-                        selectedExerciseIds.filter((exerciseId) => exerciseId !== exercise.id),
-                      )
-                    }
-                  />
-                </View>
-              </Card>
-            ))}
+            {selectedExercises.length > 1 ? (
+              <AppText color="textMuted" variant="caption">
+                {t('actions.reorderHint')}
+              </AppText>
+            ) : null}
+            <ReorderableList
+              itemKeys={selectedExercises.map((exercise) => exercise.id)}
+              onMove={(fromIndex, toIndex) =>
+                setSelectedExerciseIds(moveItem(selectedExerciseIds, fromIndex, toIndex))
+              }
+              renderItem={(exerciseId, index) => {
+                const exercise = exercisesById.get(exerciseId);
+
+                return exercise ? (
+                  <Card style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
+                    <AppText color="primary" variant="bodyStrong">
+                      {index + 1}
+                    </AppText>
+                    <View style={{ flex: 1, gap: spacing.xxs }}>
+                      <AppText variant="bodyStrong">{exercise.displayName}</AppText>
+                      <AppText color="textMuted" variant="caption">
+                        {t(`muscleGroups.${exercise.muscle_group}`)} ·{' '}
+                        {t(`equipment.${exercise.equipment}`)}
+                      </AppText>
+                    </View>
+                    <View style={{ flexDirection: 'row', gap: spacing.xs }}>
+                      <CompactAction
+                        accessibilityLabel={t('actions.moveUp')}
+                        disabled={index === 0}
+                        label="↑"
+                        onPress={() =>
+                          setSelectedExerciseIds(moveItem(selectedExerciseIds, index, index - 1))
+                        }
+                      />
+                      <CompactAction
+                        accessibilityLabel={t('actions.moveDown')}
+                        disabled={index === selectedExercises.length - 1}
+                        label="↓"
+                        onPress={() =>
+                          setSelectedExerciseIds(moveItem(selectedExerciseIds, index, index + 1))
+                        }
+                      />
+                      <CompactAction
+                        accessibilityLabel={t('actions.remove')}
+                        label="×"
+                        onPress={() =>
+                          setSelectedExerciseIds(
+                            selectedExerciseIds.filter(
+                              (selectedExerciseId) => selectedExerciseId !== exercise.id,
+                            ),
+                          )
+                        }
+                      />
+                    </View>
+                  </Card>
+                ) : null;
+              }}
+            />
           </View>
         )}
       </View>
@@ -207,49 +247,73 @@ export function WorkoutPlanEditorScreen({ planId }: WorkoutPlanEditorScreenProps
 
   return (
     <View style={{ backgroundColor: colors.background, flex: 1 }}>
-      <FlatList
-        automaticallyAdjustKeyboardInsets
-        contentInsetAdjustmentBehavior="automatic"
-        data={availableExercises}
-        keyboardDismissMode="interactive"
-        keyboardShouldPersistTaps="handled"
-        keyExtractor={(exercise) => exercise.id}
-        ListEmptyComponent={
-          <Card>
-            <AppText color="textMuted">{t('planEditor.noResults')}</AppText>
-          </Card>
-        }
-        ListHeaderComponent={header}
-        renderItem={({ item }) => (
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => setSelectedExerciseIds([...selectedExerciseIds, item.id])}
-            style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
-          >
-            <Card style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
-              <View style={{ flex: 1, gap: spacing.xxs }}>
-                <AppText variant="bodyStrong">{item.displayName}</AppText>
-                <AppText color="textMuted" variant="caption">
-                  {t(`muscleGroups.${item.muscle_group}`)} · {t(`equipment.${item.equipment}`)}
-                </AppText>
-              </View>
-              <AppText accessibilityElementsHidden color="primary" importantForAccessibility="no">
-                +
-              </AppText>
+      <AutoScrollProvider value={autoScrollValue}>
+        <Animated.FlatList<Exercise>
+          ref={animatedRef}
+          automaticallyAdjustKeyboardInsets
+          contentInsetAdjustmentBehavior="automatic"
+          data={availableExercises}
+          keyboardDismissMode="interactive"
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={(exercise) => exercise.id}
+          ListEmptyComponent={
+            <Card>
+              <AppText color="textMuted">{t('planEditor.noResults')}</AppText>
             </Card>
-          </Pressable>
-        )}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          alignSelf: 'center',
-          gap: spacing.sm,
-          maxWidth: layout.maxContentWidth,
-          paddingBottom: insets.bottom + spacing.huge,
-          paddingHorizontal: layout.screenPadding,
-          paddingTop: spacing.lg,
-          width: '100%',
-        }}
-      />
+          }
+          ListHeaderComponent={header}
+          ListFooterComponent={
+            <View style={{ paddingTop: spacing.sm }}>
+              <AppButton
+                onPress={() =>
+                  router.push({
+                    pathname: '/training-tools/exercises/new',
+                    params: {
+                      addToPlan: planId ?? 'new',
+                      initialName: search.trim(),
+                    },
+                  })
+                }
+                title={t('planEditor.createExercise')}
+                variant="secondary"
+              />
+            </View>
+          }
+          onContentSizeChange={onContentSizeChange}
+          onLayout={onLayout}
+          onScroll={onScroll}
+          renderItem={({ item }) => (
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setSelectedExerciseIds(addUniqueItem(selectedExerciseIds, item.id))}
+              style={({ pressed }) => ({ opacity: pressed ? opacity.pressed : 1 })}
+            >
+              <Card style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
+                <View style={{ flex: 1, gap: spacing.xxs }}>
+                  <AppText variant="bodyStrong">{item.displayName}</AppText>
+                  <AppText color="textMuted" variant="caption">
+                    {t(`muscleGroups.${item.muscle_group}`)} · {t(`equipment.${item.equipment}`)}
+                  </AppText>
+                </View>
+                <AppText accessibilityElementsHidden color="primary" importantForAccessibility="no">
+                  +
+                </AppText>
+              </Card>
+            </Pressable>
+          )}
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            alignSelf: 'center',
+            gap: spacing.sm,
+            maxWidth: layout.maxContentWidth,
+            paddingBottom: insets.bottom + spacing.huge,
+            paddingHorizontal: layout.screenPadding,
+            paddingTop: spacing.lg,
+            width: '100%',
+          }}
+        />
+      </AutoScrollProvider>
     </View>
   );
 }

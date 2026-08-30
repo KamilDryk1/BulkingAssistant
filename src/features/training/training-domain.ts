@@ -54,6 +54,10 @@ export function addScheduleItem(items: readonly ScheduleDraftItem[], nextItem: S
   return duplicate ? [...withoutRest] : [...withoutRest, nextItem];
 }
 
+export function addUniqueItem<T>(items: readonly T[], nextItem: T) {
+  return items.includes(nextItem) ? [...items] : [...items, nextItem];
+}
+
 export function moveItem<T>(items: readonly T[], fromIndex: number, toIndex: number) {
   if (
     fromIndex < 0 ||

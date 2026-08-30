@@ -29,6 +29,7 @@
     "edit": "Edit",
     "moveDown": "Move down",
     "moveUp": "Move up",
+    "reorderHint": "Touch and hold a tile, then drag it to reorder the list.",
     "remove": "Remove",
     "save": "Save"
   },
@@ -62,6 +63,7 @@
     "available": "Add exercises",
     "search": "Search exercises",
     "noResults": "No exercises match this search.",
+    "createExercise": "Add a new exercise",
     "saveCreate": "Create plan",
     "saveUpdate": "Save changes",
     "saveError": "The workout plan could not be saved.",

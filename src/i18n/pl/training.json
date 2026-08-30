@@ -29,6 +29,7 @@
     "edit": "Edytuj",
     "moveDown": "Przesuń w dół",
     "moveUp": "Przesuń w górę",
+    "reorderHint": "Przytrzymaj kafelek, a następnie przeciągnij go, aby zmienić kolejność.",
     "remove": "Usuń",
     "save": "Zapisz"
   },
@@ -64,6 +65,7 @@
     "available": "Dodaj ćwiczenia",
     "search": "Szukaj ćwiczeń",
     "noResults": "Brak ćwiczeń pasujących do wyszukiwania.",
+    "createExercise": "Dodaj nowe ćwiczenie",
     "saveCreate": "Utwórz plan",
     "saveUpdate": "Zapisz zmiany",
     "saveError": "Nie udało się zapisać planu treningowego.",

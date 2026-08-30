@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -36,16 +35,20 @@ const equipment: EquipmentCategory[] = [
   'other',
 ];
 
-export function CustomExerciseScreen() {
+type CustomExerciseScreenProps = {
+  initialName?: string;
+  onCreated: (exerciseId: string) => void;
+};
+
+export function CustomExerciseScreen({ initialName = '', onCreated }: CustomExerciseScreenProps) {
   const { t } = useTranslation('training');
-  const router = useRouter();
   const { user } = useAuth();
   const createExercise = useCreateCustomExercise();
   const form = useForm<CustomExerciseFormValues>({
     defaultValues: {
       equipment: 'barbell',
       muscleGroup: 'chest',
-      name: '',
+      name: initialName.trim(),
     },
     resolver: zodResolver(customExerciseSchema),
   });
@@ -54,7 +57,10 @@ export function CustomExerciseScreen() {
       return;
     }
 
-    createExercise.mutate({ ...values, userId: user.id }, { onSuccess: () => router.back() });
+    createExercise.mutate(
+      { ...values, userId: user.id },
+      { onSuccess: (exercise) => onCreated(exercise.id) },
+    );
   });
 
   return (

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { AppText } from '@/components/app-text';
 import { Card } from '@/components/card';
 import { CompactAction } from '@/components/compact-action';
+import { ReorderableList } from '@/components/reorderable-list';
 import { SectionLabel } from '@/components/section-label';
 import { colors, layout, opacity, radius, spacing } from '@/theme';
 
@@ -110,42 +111,51 @@ export function ScheduleItemsEditor({
           </Card>
         ) : (
           <View style={{ gap: spacing.sm }}>
-            {items.map((item, index) => {
-              const text = getItemText(item);
+            {items.length > 1 ? (
+              <AppText color="textMuted" variant="caption">
+                {t('actions.reorderHint')}
+              </AppText>
+            ) : null}
+            <ReorderableList
+              itemKeys={items.map((item) => `${item.itemType}:${item.referenceId ?? 'rest'}`)}
+              onMove={(fromIndex, toIndex) => onChange(moveItem(items, fromIndex, toIndex))}
+              renderItem={(_itemKey, index) => {
+                const item = items[index];
+                const text = getItemText(item);
 
-              return (
-                <Card
-                  key={`${item.itemType}-${item.referenceId ?? 'rest'}-${index}`}
-                  style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}
-                >
-                  <View style={{ flex: 1, gap: spacing.xxs }}>
-                    <AppText variant="bodyStrong">{text.title}</AppText>
-                    <AppText color="textMuted" variant="caption">
-                      {text.detail}
-                    </AppText>
-                  </View>
-                  <View style={{ flexDirection: 'row', gap: spacing.xs }}>
-                    <CompactAction
-                      accessibilityLabel={t('actions.moveUp')}
-                      disabled={index === 0}
-                      label="↑"
-                      onPress={() => onChange(moveItem(items, index, index - 1))}
-                    />
-                    <CompactAction
-                      accessibilityLabel={t('actions.moveDown')}
-                      disabled={index === items.length - 1}
-                      label="↓"
-                      onPress={() => onChange(moveItem(items, index, index + 1))}
-                    />
-                    <CompactAction
-                      accessibilityLabel={t('actions.remove')}
-                      label="×"
-                      onPress={() => onChange(items.filter((_, itemIndex) => itemIndex !== index))}
-                    />
-                  </View>
-                </Card>
-              );
-            })}
+                return (
+                  <Card style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
+                    <View style={{ flex: 1, gap: spacing.xxs }}>
+                      <AppText variant="bodyStrong">{text.title}</AppText>
+                      <AppText color="textMuted" variant="caption">
+                        {text.detail}
+                      </AppText>
+                    </View>
+                    <View style={{ flexDirection: 'row', gap: spacing.xs }}>
+                      <CompactAction
+                        accessibilityLabel={t('actions.moveUp')}
+                        disabled={index === 0}
+                        label="↑"
+                        onPress={() => onChange(moveItem(items, index, index - 1))}
+                      />
+                      <CompactAction
+                        accessibilityLabel={t('actions.moveDown')}
+                        disabled={index === items.length - 1}
+                        label="↓"
+                        onPress={() => onChange(moveItem(items, index, index + 1))}
+                      />
+                      <CompactAction
+                        accessibilityLabel={t('actions.remove')}
+                        label="×"
+                        onPress={() =>
+                          onChange(items.filter((_, itemIndex) => itemIndex !== index))
+                        }
+                      />
+                    </View>
+                  </Card>
+                );
+              }}
+            />
           </View>
         )}
       </View>
