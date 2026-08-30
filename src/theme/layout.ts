@@ -11,6 +11,7 @@ export const layout = {
   tabBarHeight: 76,
   floatingTabBarHeight: 64,
   emptyChartHeight: 180,
+  swipeActionWidth: 84,
   dragAutoScrollEdge: 80,
   borderWidth: 1,
 } as const;

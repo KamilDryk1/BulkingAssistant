@@ -5,6 +5,7 @@ import { trainingKeys } from '@/features/training/training-queries';
 import { todayKeys } from '@/features/today/today-queries';
 
 import {
+  deleteWorkoutSession,
   deleteWorkoutSet,
   fetchActiveWorkoutSession,
   fetchWorkoutHistory,
@@ -81,6 +82,21 @@ export function useDeleteWorkoutSet(userId: string, sessionId: string) {
     mutationFn: (setId: string) => deleteWorkoutSet(setId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: workoutKeys.detail(userId, sessionId) });
+    },
+  });
+}
+
+export function useDeleteWorkoutSession() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (sessionId: string) => deleteWorkoutSession(sessionId),
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: workoutKeys.all }),
+        queryClient.invalidateQueries({ queryKey: progressKeys.all }),
+        queryClient.invalidateQueries({ queryKey: todayKeys.all }),
+      ]);
     },
   });
 }

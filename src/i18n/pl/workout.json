@@ -69,6 +69,10 @@
     "setCount_many": "{{count}} ukończonych serii",
     "setCount_other": "{{count}} ukończonej serii",
     "duration": "Czas: {{duration}}",
+    "deleteAction": "Usuń trening",
+    "deleteTitle": "Usunąć trening z historii?",
+    "deleteDetail": "Trening „{{name}}” oraz wszystkie zapisane w nim serie zostaną trwale usunięte.",
+    "deleteError": "Nie udało się usunąć treningu z historii.",
     "loadMore": "Wczytaj więcej",
     "loadingMore": "Wczytuję więcej",
     "refresh": "Odśwież historię"
@@ -80,7 +84,8 @@
     "completedSets": "Ukończone serie",
     "allSets": "Wszystkie serie",
     "noSets": "Dla tego ćwiczenia nie zapisano serii.",
-    "notCompleted": "Nieukończona"
+    "notCompleted": "Nieukończona",
+    "back": "Powrót"
   },
   "actions": {
     "cancel": "Anuluj",

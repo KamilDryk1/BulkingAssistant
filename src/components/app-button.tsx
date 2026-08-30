@@ -4,7 +4,7 @@ import { colors, layout, opacity, radius, spacing } from '@/theme';
 
 import { AppText } from './app-text';
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
 const variants = {
   primary: {
@@ -16,6 +16,11 @@ const variants = {
     backgroundColor: colors.surfaceElevated,
     borderColor: colors.borderStrong,
     textColor: 'textPrimary' as const,
+  },
+  danger: {
+    backgroundColor: colors.danger,
+    borderColor: colors.danger,
+    textColor: 'onPrimary' as const,
   },
   ghost: {
     backgroundColor: colors.transparent,

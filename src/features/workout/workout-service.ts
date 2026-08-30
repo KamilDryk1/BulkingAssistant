@@ -183,6 +183,18 @@ export async function finishWorkoutSession(sessionId: string) {
   return data;
 }
 
+export async function deleteWorkoutSession(sessionId: string) {
+  const { error } = await getSupabaseClient()
+    .from('workout_sessions')
+    .delete()
+    .eq('id', sessionId)
+    .not('completed_at', 'is', null);
+
+  if (error) {
+    throw error;
+  }
+}
+
 export async function fetchWorkoutHistory(
   userId: string,
   page: number,

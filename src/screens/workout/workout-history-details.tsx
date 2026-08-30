@@ -1,6 +1,7 @@
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { AppButton } from '@/components/app-button';
 import { AppText } from '@/components/app-text';
 import { Card } from '@/components/card';
 import { EmptyStateCard } from '@/components/empty-state-card';
@@ -13,18 +14,26 @@ import {
   formatWorkoutWeight,
   getElapsedSeconds,
 } from '@/features/workout/workout-domain';
-import { useWorkoutSessionDetails } from '@/features/workout/workout-queries';
+import {
+  useDeleteWorkoutSession,
+  useWorkoutSessionDetails,
+} from '@/features/workout/workout-queries';
 import { getCurrentLocale } from '@/i18n';
 import { colors, layout, spacing } from '@/theme';
 
 type WorkoutHistoryDetailsScreenProps = {
+  onBack: () => void;
   sessionId: string;
 };
 
-export function WorkoutHistoryDetailsScreen({ sessionId }: WorkoutHistoryDetailsScreenProps) {
+export function WorkoutHistoryDetailsScreen({
+  onBack,
+  sessionId,
+}: WorkoutHistoryDetailsScreenProps) {
   const { t } = useTranslation(['workout', 'common']);
   const { profile, user } = useAuth();
   const workout = useWorkoutSessionDetails(user?.id ?? '', sessionId);
+  const deleteWorkout = useDeleteWorkoutSession();
 
   if (workout.isPending) {
     return (
@@ -55,6 +64,21 @@ export function WorkoutHistoryDetailsScreen({ sessionId }: WorkoutHistoryDetails
     0,
   );
   const locale = profile?.locale ?? getCurrentLocale();
+
+  const confirmDelete = () => {
+    Alert.alert(
+      t('history.deleteTitle'),
+      t('history.deleteDetail', { name: session.workout_name_snapshot }),
+      [
+        { style: 'cancel', text: t('actions.cancel') },
+        {
+          onPress: () => deleteWorkout.mutate(session.id, { onSuccess: onBack }),
+          style: 'destructive',
+          text: t('actions.delete'),
+        },
+      ],
+    );
+  };
 
   return (
     <StackScrollScreen>
@@ -137,6 +161,29 @@ export function WorkoutHistoryDetailsScreen({ sessionId }: WorkoutHistoryDetails
           ))}
         </View>
       )}
+
+      {deleteWorkout.isError ? (
+        <AppText accessibilityLiveRegion="polite" color="danger" variant="caption">
+          {t('history.deleteError')}
+        </AppText>
+      ) : null}
+
+      <View style={{ flexDirection: 'row', gap: spacing.md }}>
+        <AppButton
+          disabled={deleteWorkout.isPending}
+          onPress={onBack}
+          style={{ flex: 1 }}
+          title={t('details.back')}
+          variant="secondary"
+        />
+        <AppButton
+          loading={deleteWorkout.isPending}
+          onPress={confirmDelete}
+          style={{ flex: 1 }}
+          title={t('actions.delete')}
+          variant="danger"
+        />
+      </View>
     </StackScrollScreen>
   );
 }

@@ -1,10 +1,11 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { WorkoutHistoryDetailsScreen } from '@/screens/workout/workout-history-details';
 
 export default function WorkoutHistoryDetailsRoute() {
   const { t } = useTranslation('workout');
+  const router = useRouter();
   const params = useLocalSearchParams<{ 'session-id': string }>();
   const sessionId = Array.isArray(params['session-id'])
     ? params['session-id'][0]
@@ -13,7 +14,7 @@ export default function WorkoutHistoryDetailsRoute() {
   return (
     <>
       <Stack.Screen options={{ title: t('routes.details') }} />
-      <WorkoutHistoryDetailsScreen sessionId={sessionId ?? ''} />
+      <WorkoutHistoryDetailsScreen onBack={() => router.back()} sessionId={sessionId ?? ''} />
     </>
   );
 }

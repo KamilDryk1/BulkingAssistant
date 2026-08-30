@@ -63,6 +63,10 @@
     "setCount": "{{count}} completed set",
     "setCount_other": "{{count}} completed sets",
     "duration": "Duration: {{duration}}",
+    "deleteAction": "Delete workout",
+    "deleteTitle": "Delete this workout from history?",
+    "deleteDetail": "{{name}} and every set recorded in it will be permanently deleted.",
+    "deleteError": "The workout could not be deleted from history.",
     "loadMore": "Load more",
     "loadingMore": "Loading more",
     "refresh": "Refresh history"
@@ -74,7 +78,8 @@
     "completedSets": "Completed sets",
     "allSets": "All sets",
     "noSets": "No sets were logged for this exercise.",
-    "notCompleted": "Not completed"
+    "notCompleted": "Not completed",
+    "back": "Back"
   },
   "actions": {
     "cancel": "Cancel",
