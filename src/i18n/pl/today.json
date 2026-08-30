@@ -94,7 +94,7 @@
     "editTitle": "Edytuj dzisiejszą wagę",
     "detail": "Aplikacja przechowuje kilogramy i przelicza je tylko dla wybranej jednostki wyświetlania.",
     "weight": "Waga ({{unit}})",
-    "placeholder": "np. 70,2",
+    "placeholder": "Wpisz wagę",
     "save": "Zapisz wagę",
     "saveError": "Nie udało się zapisać wagi."
   },

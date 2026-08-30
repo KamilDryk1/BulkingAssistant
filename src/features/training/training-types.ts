@@ -59,6 +59,11 @@ export type CreateCustomExerciseInput = {
   userId: string;
 };
 
+export type CreateCustomActivityInput = {
+  name: string;
+  userId: string;
+};
+
 export type SaveWorkoutPlanInput = {
   exerciseIds: string[];
   name: string;

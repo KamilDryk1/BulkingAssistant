@@ -2,13 +2,51 @@
   "eyebrow": "Czytelny postęp bez przeładowania",
   "title": "Postęp",
   "exercise": "Ćwiczenie",
-  "chooseExercise": "Wybierz ćwiczenie",
-  "chooseExerciseDetail": "Ukończone serie zasilą dwa najważniejsze widoki postępu.",
-  "estimatedOneRepMax": "Szacowane 1RM",
-  "bestSet": "Najlepsza seria",
-  "current": "Aktualny wynik",
-  "noData": "Brak ukończonych serii",
-  "noDataDetail": "Ukończ trening, aby zacząć budować trend siłowy.",
-  "trend": "Postęp w czasie",
-  "eightWeeks": "8 tygodni"
+  "exercisePicker": {
+    "label": "Wybierz ćwiczenie"
+  },
+  "modes": {
+    "estimatedOneRepMax": "Szacowane 1RM",
+    "bestSet": "Najlepsza seria"
+  },
+  "current": {
+    "estimatedOneRepMax": "Aktualne szacowane 1RM",
+    "bestSet": "Aktualna najlepsza seria",
+    "sourceSet": "Na podstawie {{weight}} {{unit}} × {{reps}}"
+  },
+  "trend": {
+    "weight": "{{value}} {{unit}} w ciągu ostatnich {{weeks}} tygodni",
+    "reps_one": "{{sign}}{{count}} powtórzenie w ciągu ostatnich {{weeks}} tygodni",
+    "reps_few": "{{sign}}{{count}} powtórzenia w ciągu ostatnich {{weeks}} tygodni",
+    "reps_many": "{{sign}}{{count}} powtórzeń w ciągu ostatnich {{weeks}} tygodni",
+    "reps_other": "{{sign}}{{count}} powtórzenia w ciągu ostatnich {{weeks}} tygodni",
+    "unavailable": "Ukończ jeszcze jeden trening, aby obliczyć ostatnią zmianę."
+  },
+  "chart": {
+    "title": "Postęp w czasie",
+    "period": "{{weeks}} tygodni",
+    "estimatedOneRepMaxDetail": "Najlepszy wynik wzoru Epleya z każdego ukończonego treningu.",
+    "bestSetDetail": "Najcięższa ukończona seria z każdego treningu; liczba powtórzeń rozstrzyga remis.",
+    "estimatedOneRepMaxAccessibilityLabel": "Wykres szacowanego maksymalnego ciężaru na jedno powtórzenie z ostatnich {{weeks}} tygodni.",
+    "bestSetAccessibilityLabel": "Wykres ciężaru najlepszych serii z ostatnich {{weeks}} tygodni."
+  },
+  "method": {
+    "estimatedOneRepMax": "Wynik obliczamy lokalnie wzorem Epleya, wyłącznie z ukończonych serii.",
+    "bestSet": "Najlepsza seria to największy ukończony ciężar z treningu, a przy remisie większa liczba powtórzeń."
+  },
+  "empty": {
+    "title": "Brak ostatnich danych o postępie",
+    "detail": "Ukończ trening z co najmniej jedną serią, aby zacząć śledzić postęp."
+  },
+  "noData": {
+    "title": "Brak ukończonych serii dla tego ćwiczenia",
+    "detail": "Ukończ kolejny trening z tym ćwiczeniem, aby dodać je do wykresu."
+  },
+  "status": {
+    "loadingTitle": "Wczytywanie postępu",
+    "loadingDetail": "Zbieramy ukończone serie z ostatnich ośmiu tygodni.",
+    "errorTitle": "Nie udało się wczytać postępu",
+    "errorDetail": "Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie"
+  }
 }

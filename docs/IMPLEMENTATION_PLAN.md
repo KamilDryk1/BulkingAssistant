@@ -37,6 +37,7 @@ supabase/
 - `@react-native-async-storage/async-storage` — persisted locale preference and Supabase session storage.
 - `react-native-url-polyfill` — URL APIs expected by Supabase in React Native.
 - `react-hook-form`, `zod`, and `@hookform/resolvers` — typed auth, onboarding, and profile forms.
+- `react-native-svg` — Expo Go-compatible rendering for the lightweight Body and Progress charts.
 - Google Sans Flex font assets/package — bundled typography matching the visual specification, with a system-sans fallback if the font cannot load.
 - `eslint` and `eslint-config-expo` — Expo-aware static analysis for the phase validation gate.
 
@@ -99,11 +100,21 @@ No global state library is planned; authentication state is scoped to a provider
 
 ### Phase 6 — Body
 
-- [ ] Connect Body to the shared nutrition target and weight/activity mutations, then add full history, weekly trend, charting, and custom activities.
+- [x] Connect Body to the persisted daily nutrition target and expose immediate Cut/Maintain/Gain changes.
+- [x] Reuse today's primary weight log/edit sheet while retaining canonical kilograms and preferred-unit display.
+- [x] Calculate the latest-per-day seven-day average, previous-week comparison, and 28-day rolling-average chart in tested pure functions.
+- [x] Add recent activity logs, paginated non-strength activity history, deletion, and quick-entry navigation.
+- [x] Add private custom activity creation so new entries become available in activity logging and weekly schedules.
+- [x] Cover English/Polish copy, loading/empty/error/normal states, and Phase 6 RLS behavior.
 
 ### Phase 7 — Progress
 
-- [ ] Add exercise selection, Estimated 1RM, Best Set, charting, and recent trends.
+- [x] Add an exercise selector populated from completed workouts in the rolling eight-week window.
+- [x] Add exactly two focused modes: Estimated 1RM and Best Set.
+- [x] Calculate Estimated 1RM locally with Epley from completed sets and select one strongest result per session.
+- [x] Select one representative Best Set per session by highest weight, then higher repetitions.
+- [x] Add current results, recent change, accessible line charts, kg/lb presentation, and English/Polish copy.
+- [x] Cover loading, empty, error, and normal states plus pure unit tests and all-platform export validation.
 
 ### Phase 8 — Polish
 

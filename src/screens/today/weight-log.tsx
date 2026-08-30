@@ -54,9 +54,7 @@ export function WeightLogScreen() {
   return (
     <WeightLogForm
       existingLogId={today.data.todayWeight?.id ?? null}
-      initialWeightKg={
-        today.data.todayWeight?.weight_kg ?? today.data.latestWeight?.weight_kg ?? null
-      }
+      initialWeightKg={today.data.todayWeight?.weight_kg ?? null}
       unit={profile.preferred_weight_unit}
       userId={user.id}
     />

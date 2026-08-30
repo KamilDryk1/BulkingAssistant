@@ -2,13 +2,49 @@
   "eyebrow": "Clear signals, no clutter",
   "title": "Progress",
   "exercise": "Exercise",
-  "chooseExercise": "Choose an exercise",
-  "chooseExerciseDetail": "Completed workout sets will power the two focused progress views.",
-  "estimatedOneRepMax": "Estimated 1RM",
-  "bestSet": "Best Set",
-  "current": "Current estimate",
-  "noData": "No completed sets yet",
-  "noDataDetail": "Finish a workout to start building your strength trend.",
-  "trend": "Progress over time",
-  "eightWeeks": "8 weeks"
+  "exercisePicker": {
+    "label": "Choose an exercise"
+  },
+  "modes": {
+    "estimatedOneRepMax": "Estimated 1RM",
+    "bestSet": "Best Set"
+  },
+  "current": {
+    "estimatedOneRepMax": "Current estimated 1RM",
+    "bestSet": "Current best set",
+    "sourceSet": "Based on {{weight}} {{unit}} × {{reps}}"
+  },
+  "trend": {
+    "weight": "{{value}} {{unit}} over the last {{weeks}} weeks",
+    "reps_one": "{{sign}}{{count}} rep over the last {{weeks}} weeks",
+    "reps_other": "{{sign}}{{count}} reps over the last {{weeks}} weeks",
+    "unavailable": "Add another completed workout to calculate a recent change."
+  },
+  "chart": {
+    "title": "Progress over time",
+    "period": "{{weeks}} weeks",
+    "estimatedOneRepMaxDetail": "Best Epley estimate from each completed workout.",
+    "bestSetDetail": "Heaviest completed set from each workout; reps break ties.",
+    "estimatedOneRepMaxAccessibilityLabel": "Line chart of estimated one-rep max over the last {{weeks}} weeks.",
+    "bestSetAccessibilityLabel": "Line chart of best set weight over the last {{weeks}} weeks."
+  },
+  "method": {
+    "estimatedOneRepMax": "Estimated locally with the Epley formula from completed sets only.",
+    "bestSet": "Best Set uses the highest completed weight in each workout, then higher reps."
+  },
+  "empty": {
+    "title": "No recent progress data",
+    "detail": "Complete a workout with at least one set to start tracking your progress."
+  },
+  "noData": {
+    "title": "No completed sets for this exercise",
+    "detail": "Complete another workout with this exercise to add it to your chart."
+  },
+  "status": {
+    "loadingTitle": "Loading progress",
+    "loadingDetail": "We’re gathering your completed sets from the last eight weeks.",
+    "errorTitle": "Progress could not be loaded",
+    "errorDetail": "Check your connection and try again.",
+    "retry": "Try again"
+  }
 }

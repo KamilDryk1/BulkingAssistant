@@ -10,6 +10,11 @@ const planName = z
   .trim()
   .min(1, 'validation.planNameRequired')
   .max(80, 'validation.nameTooLong');
+const activityName = z
+  .string()
+  .trim()
+  .min(1, 'validation.activityNameRequired')
+  .max(80, 'validation.nameTooLong');
 
 export const customExerciseSchema = z.object({
   equipment: z.enum(['barbell', 'dumbbell', 'machine', 'cable', 'bodyweight', 'other']),
@@ -21,5 +26,10 @@ export const workoutPlanSchema = z.object({
   name: planName,
 });
 
+export const customActivitySchema = z.object({
+  name: activityName,
+});
+
+export type CustomActivityFormValues = z.infer<typeof customActivitySchema>;
 export type CustomExerciseFormValues = z.infer<typeof customExerciseSchema>;
 export type WorkoutPlanFormValues = z.infer<typeof workoutPlanSchema>;

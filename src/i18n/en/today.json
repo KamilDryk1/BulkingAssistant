@@ -88,7 +88,7 @@
     "editTitle": "Edit today's weight",
     "detail": "The app keeps kilograms canonical and converts only for your preferred display unit.",
     "weight": "Weight ({{unit}})",
-    "placeholder": "e.g. 70.2",
+    "placeholder": "Enter weight",
     "save": "Save weight",
     "saveError": "The weight could not be saved."
   },

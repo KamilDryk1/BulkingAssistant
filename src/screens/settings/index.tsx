@@ -24,7 +24,7 @@ type SettingsScreenProps = {
 export function SettingsScreen({ onOpenProfile }: SettingsScreenProps) {
   const { t } = useTranslation('settings');
   const { profile, profileError, refreshProfile, user } = useAuth();
-  const currentLocale = getCurrentLocale();
+  const currentLocale = profile?.locale ?? getCurrentLocale();
   const updateProfile = useUpdateProfile(user?.id ?? 'missing-user');
   const logout = useMutation({ mutationFn: signOut });
 

@@ -2,16 +2,83 @@
   "eyebrow": "Trend ponad codziennymi wahaniami",
   "title": "Ciało i żywienie",
   "goal": "Obecna faza",
-  "cut": "Redukcja",
-  "maintain": "Utrzymanie",
-  "gain": "Masa",
+  "goalOptions": {
+    "cut": "Redukcja",
+    "maintain": "Utrzymanie",
+    "gain": "Masa"
+  },
+  "goalUpdateError": "Nie udało się zmienić celu. Spróbuj ponownie.",
   "nutrition": "Dzienny cel",
-  "nutritionDetail": "Deterministyczny cel kalorii i makroskładników pojawi się po uzupełnieniu profilu.",
-  "profileAction": "Uzupełnij profil",
-  "weight": "Aktualna masa",
-  "weightDetail": "Zapisz wagę, aby zobaczyć najnowszy wynik, średnią z 7 dni i trend tygodniowy.",
+  "nutritionDaily": "Dzienny cel żywieniowy",
+  "nutritionUnavailable": "Cel żywieniowy jest niedostępny",
+  "nutritionDetail": "Uzupełnij profil i zapisz masę ciała, aby obliczyć swój cel.",
+  "profileAction": "Edytuj dane do obliczeń",
+  "protein": "Białko",
+  "carbs": "Węglowodany",
+  "fat": "Tłuszcz",
+  "weight": "Trend masy ciała",
+  "weightEmpty": "Brak pomiaru masy ciała",
+  "weightDetail": "Zapisz wagę, aby zobaczyć aktualną wartość, średnią z 7 dni, trend tygodniowy i wykres.",
   "logWeight": "Zapisz dzisiejszą wagę",
-  "activity": "Ostatnia aktywność",
-  "activityEmpty": "Brak ostatnich aktywności",
-  "activityEmptyDetail": "Tutaj pojawi się podsumowanie treningów i aktywności."
+  "editWeight": "Edytuj dzisiejszą wagę",
+  "weightMetrics": {
+    "current": "Aktualna",
+    "average": "Średnia z 7 dni",
+    "weeklyTrend": "Trend tygodniowy",
+    "unavailable": "—"
+  },
+  "weightChart": {
+    "title": "Zmiana w czasie",
+    "period": "4 tygodnie",
+    "detail": "7-dniowa średnia krocząca",
+    "empty": "Dodaj więcej pomiarów, aby utworzyć trend.",
+    "accessibilityLabel": "Wykres 7-dniowej średniej kroczącej masy ciała z ostatnich czterech tygodni"
+  },
+  "activity": {
+    "title": "Ostatnie aktywności",
+    "add": "Dodaj aktywność",
+    "seeAll": "Zobacz historię",
+    "createCustom": "Nowa własna",
+    "emptyTitle": "Brak zapisanych aktywności",
+    "emptyDetail": "Tutaj pojawią się proste wpisy aktywności z opcjonalnym czasem i intensywnością.",
+    "historyTitle": "Historia aktywności",
+    "historyDetail": "Dziennik aktywności innych niż siłowe, od najnowszych. Treningi siłowe pozostają w historii treningów.",
+    "duration_one": "{{count}} min",
+    "duration_few": "{{count}} min",
+    "duration_many": "{{count}} min",
+    "duration_other": "{{count}} min",
+    "intensity": {
+      "light": "Lekka",
+      "moderate": "Umiarkowana",
+      "hard": "Wysoka"
+    },
+    "delete": "Usuń aktywność",
+    "deleteTitle": "Usunąć tę aktywność?",
+    "deleteDetail": "Zapis ukończonej aktywności zostanie trwale usunięty.",
+    "loadMore": "Wczytaj więcej",
+    "loadingMore": "Wczytywanie"
+  },
+  "customActivity": {
+    "title": "Utwórz własną aktywność",
+    "detail": "Pozostanie prywatna i będzie dostępna podczas zapisywania aktywności oraz układania planu.",
+    "name": "Nazwa aktywności",
+    "placeholder": "np. Wspinaczka",
+    "save": "Utwórz aktywność",
+    "error": "Nie udało się utworzyć własnej aktywności."
+  },
+  "status": {
+    "loadingTitle": "Wczytuję sekcję Ciało",
+    "loadingDetail": "Przygotowuję cele żywieniowe, trend masy i ostatnie aktywności.",
+    "errorTitle": "Nie udało się wczytać sekcji Ciało",
+    "errorDetail": "Sprawdź połączenie i spróbuj ponownie.",
+    "retry": "Spróbuj ponownie"
+  },
+  "actions": {
+    "cancel": "Anuluj",
+    "delete": "Usuń"
+  },
+  "validation": {
+    "activityNameRequired": "Wpisz nazwę aktywności",
+    "nameTooLong": "Użyj najwyżej 80 znaków"
+  }
 }

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AppLocale } from '@/types/database';
 
 import {
+  createCustomActivity,
   createCustomExercise,
   deleteCustomExercise,
   deleteDailyScheduleOverride,
@@ -14,6 +15,7 @@ import {
   saveWorkoutPlan,
 } from './training-service';
 import type {
+  CreateCustomActivityInput,
   CreateCustomExerciseInput,
   SaveWorkoutPlanInput,
   ScheduleDraftItem,
@@ -54,6 +56,15 @@ export function useCreateCustomExercise() {
 
   return useMutation({
     mutationFn: (input: CreateCustomExerciseInput) => createCustomExercise(input),
+    onSuccess: invalidateTraining,
+  });
+}
+
+export function useCreateCustomActivity() {
+  const invalidateTraining = useInvalidateTraining();
+
+  return useMutation({
+    mutationFn: (input: CreateCustomActivityInput) => createCustomActivity(input),
     onSuccess: invalidateTraining,
   });
 }

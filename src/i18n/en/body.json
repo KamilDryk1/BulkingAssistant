@@ -2,16 +2,81 @@
   "eyebrow": "Trend over daily noise",
   "title": "Body & nutrition",
   "goal": "Current phase",
-  "cut": "Cut",
-  "maintain": "Maintain",
-  "gain": "Gain",
+  "goalOptions": {
+    "cut": "Cut",
+    "maintain": "Maintain",
+    "gain": "Gain"
+  },
+  "goalUpdateError": "The goal could not be updated. Try again.",
   "nutrition": "Daily target",
-  "nutritionDetail": "Your deterministic calorie and macro target will appear after profile setup.",
-  "profileAction": "Set up profile",
-  "weight": "Current weight",
-  "weightDetail": "Log weight to see the latest value, 7-day average, and weekly trend.",
+  "nutritionDaily": "Daily nutrition target",
+  "nutritionUnavailable": "Nutrition target unavailable",
+  "nutritionDetail": "Complete your profile and log a body weight to calculate your target.",
+  "profileAction": "Edit calculation profile",
+  "protein": "Protein",
+  "carbs": "Carbs",
+  "fat": "Fat",
+  "weight": "Weight trend",
+  "weightEmpty": "No body weight yet",
+  "weightDetail": "Log weight to see the latest value, 7-day average, weekly trend, and chart.",
   "logWeight": "Log today's weight",
-  "activity": "Recent activity",
-  "activityEmpty": "No recent activities",
-  "activityEmptyDetail": "Workout and activity logs will be summarized here."
+  "editWeight": "Edit today's weight",
+  "weightMetrics": {
+    "current": "Current",
+    "average": "7-day average",
+    "weeklyTrend": "Weekly trend",
+    "unavailable": "—"
+  },
+  "weightChart": {
+    "title": "Progress over time",
+    "period": "4 weeks",
+    "detail": "7-day rolling average",
+    "empty": "Add more weight entries to build your trend.",
+    "accessibilityLabel": "Chart of the 7-day rolling body-weight average over the last four weeks"
+  },
+  "activity": {
+    "title": "Recent activities",
+    "add": "Add activity",
+    "seeAll": "See history",
+    "createCustom": "New custom",
+    "emptyTitle": "No activities logged",
+    "emptyDetail": "Simple activity logs with optional duration and intensity will appear here.",
+    "historyTitle": "Activity history",
+    "historyDetail": "Your non-strength activity log, newest first. Strength workouts remain in workout history.",
+    "duration_one": "{{count}} min",
+    "duration_other": "{{count}} min",
+    "intensity": {
+      "light": "Light",
+      "moderate": "Moderate",
+      "hard": "Hard"
+    },
+    "delete": "Delete activity",
+    "deleteTitle": "Delete this activity?",
+    "deleteDetail": "The completed activity record will be permanently removed.",
+    "loadMore": "Load more",
+    "loadingMore": "Loading more"
+  },
+  "customActivity": {
+    "title": "Create custom activity",
+    "detail": "It stays private to your account and becomes available in activity logging and schedules.",
+    "name": "Activity name",
+    "placeholder": "e.g. Climbing",
+    "save": "Create activity",
+    "error": "The custom activity could not be created."
+  },
+  "status": {
+    "loadingTitle": "Loading Body",
+    "loadingDetail": "Preparing your nutrition, weight trend, and recent activities.",
+    "errorTitle": "Body could not be loaded",
+    "errorDetail": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "validation": {
+    "activityNameRequired": "Enter an activity name",
+    "nameTooLong": "Use no more than 80 characters"
+  }
 }

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { bodyKeys } from '@/features/body/body-query-keys';
 import type { ProfileRow } from '@/types/database';
 
 import {
@@ -22,6 +23,7 @@ export const todayKeys = {
 export function useTodayData(userId: string, date: string, profile: ProfileRow | null) {
   return useQuery({
     enabled: Boolean(userId && date && profile),
+    placeholderData: (previousData) => previousData,
     queryFn: () => fetchTodayData(userId, date, profile!),
     queryKey: todayKeys.data(userId, date, profile?.updated_at ?? ''),
   });
@@ -39,28 +41,32 @@ export function useLastCompletedWorkoutDates(
   });
 }
 
-function useInvalidateToday() {
+function useInvalidateTodayAndBody() {
   const queryClient = useQueryClient();
-  return () => queryClient.invalidateQueries({ queryKey: todayKeys.all });
+  return () =>
+    Promise.all([
+      queryClient.invalidateQueries({ queryKey: todayKeys.all }),
+      queryClient.invalidateQueries({ queryKey: bodyKeys.all }),
+    ]);
 }
 
 export function useSaveActivityLog() {
-  const invalidateToday = useInvalidateToday();
+  const invalidateTodayAndBody = useInvalidateTodayAndBody();
 
-  return useMutation({ mutationFn: saveActivityLog, onSuccess: invalidateToday });
+  return useMutation({ mutationFn: saveActivityLog, onSuccess: invalidateTodayAndBody });
 }
 
 export function useDeleteActivityLog() {
-  const invalidateToday = useInvalidateToday();
+  const invalidateTodayAndBody = useInvalidateTodayAndBody();
 
-  return useMutation({ mutationFn: deleteActivityLog, onSuccess: invalidateToday });
+  return useMutation({ mutationFn: deleteActivityLog, onSuccess: invalidateTodayAndBody });
 }
 
 export function useSaveTodayWeight() {
-  const invalidateToday = useInvalidateToday();
+  const invalidateTodayAndBody = useInvalidateTodayAndBody();
 
   return useMutation({
     mutationFn: (input: SaveTodayWeightInput) => saveTodayWeight(input),
-    onSuccess: invalidateToday,
+    onSuccess: invalidateTodayAndBody,
   });
 }

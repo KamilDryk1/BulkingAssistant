@@ -3,6 +3,7 @@ import type { AppLocale, Json } from '@/types/database';
 
 import { getActivityDisplayName, getExerciseDisplayName } from './training-domain';
 import type {
+  CreateCustomActivityInput,
   CreateCustomExerciseInput,
   DailyScheduleOverride,
   SaveWorkoutPlanInput,
@@ -147,6 +148,24 @@ export async function createCustomExercise(input: CreateCustomExerciseInput) {
       equipment: input.equipment,
       is_custom: true,
       muscle_group: input.muscleGroup,
+      owner_user_id: input.userId,
+    })
+    .select('*')
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function createCustomActivity(input: CreateCustomActivityInput) {
+  const { data, error } = await getSupabaseClient()
+    .from('activity_definitions')
+    .insert({
+      custom_name: input.name.trim(),
+      is_custom: true,
       owner_user_id: input.userId,
     })
     .select('*')
