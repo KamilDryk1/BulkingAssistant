@@ -24,27 +24,9 @@ import type {
   ProgressTrend,
 } from '@/features/progress/progress-types';
 import { useCurrentDate } from '@/features/today/use-current-date';
-import { kilogramsToPounds } from '@/features/units/weight';
+import { formatLocalizedWeight, formatLocalizedWeightChange } from '@/features/units/weight';
 import { getCurrentLocale } from '@/i18n';
 import { colors, layout, opacity, radius, spacing } from '@/theme';
-import type { AppLocale, WeightUnit } from '@/types/database';
-
-function formatWeight(weightKg: number, unit: WeightUnit, locale: AppLocale) {
-  const value = unit === 'lb' ? kilogramsToPounds(weightKg) : weightKg;
-  return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: 1,
-    minimumFractionDigits: 1,
-  }).format(value);
-}
-
-function formatSignedWeight(weightKg: number, unit: WeightUnit, locale: AppLocale) {
-  const value = unit === 'lb' ? kilogramsToPounds(weightKg) : weightKg;
-  const sign = value > 0 ? '+' : value < 0 ? '−' : '';
-  return `${sign}${new Intl.NumberFormat(locale, {
-    maximumFractionDigits: 1,
-    minimumFractionDigits: 1,
-  }).format(Math.abs(value))}`;
-}
 
 function ModeButton({
   label,
@@ -212,14 +194,14 @@ export function ProgressScreen() {
     ? t('current.sourceSet', {
         reps: current.reps,
         unit: unitLabel,
-        weight: formatWeight(current.weightKg, unit, locale),
+        weight: formatLocalizedWeight(current.weightKg, unit, locale),
       })
     : null;
   const trendText = summary.trend
     ? summary.trend.kind === 'weight'
       ? t('trend.weight', {
           unit: unitLabel,
-          value: formatSignedWeight(summary.trend.valueKg, unit, locale),
+          value: formatLocalizedWeightChange(summary.trend.valueKg, unit, locale),
           weeks: progressPeriodWeeks,
         })
       : t('trend.reps', {
@@ -254,7 +236,7 @@ export function ProgressScreen() {
               </AppText>
               <View style={{ alignItems: 'baseline', flexDirection: 'row', gap: spacing.sm }}>
                 <AppText color="primary" selectable variant="stat">
-                  {formatWeight(current.valueKg, unit, locale)}
+                  {formatLocalizedWeight(current.valueKg, unit, locale)}
                 </AppText>
                 <AppText color="textMuted" variant="bodyStrong">
                   {unitLabel}

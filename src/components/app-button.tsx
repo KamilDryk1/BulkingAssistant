@@ -50,6 +50,7 @@ export function AppButton({
     <Pressable
       accessibilityLabel={accessibilityLabel ?? title}
       accessibilityRole="button"
+      accessibilityState={{ busy: loading, disabled: inactive }}
       disabled={inactive}
       onPress={onPress}
       style={({ pressed }) => [
@@ -60,10 +61,11 @@ export function AppButton({
           borderCurve: 'continuous',
           borderRadius: radius.md,
           borderWidth: layout.borderWidth,
-          height: layout.buttonHeight,
           justifyContent: 'center',
+          minHeight: layout.buttonHeight,
           opacity: inactive ? opacity.disabled : pressed ? opacity.pressed : 1,
           paddingHorizontal: spacing.xl,
+          paddingVertical: spacing.sm,
         },
         style,
       ]}
@@ -71,7 +73,7 @@ export function AppButton({
       {loading ? (
         <ActivityIndicator color={colors[treatment.textColor]} />
       ) : (
-        <AppText color={treatment.textColor} variant="button">
+        <AppText color={treatment.textColor} style={{ textAlign: 'center' }} variant="button">
           {title}
         </AppText>
       )}

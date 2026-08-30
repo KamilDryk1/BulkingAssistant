@@ -41,7 +41,12 @@ export function WorkoutHistoryCard({
               {formatWorkoutDate(item.session_date, locale)}
             </AppText>
           </View>
-          <AppText color="textMuted" variant="title">
+          <AppText
+            accessibilityElementsHidden
+            color="textMuted"
+            importantForAccessibility="no"
+            variant="title"
+          >
             ›
           </AppText>
         </View>

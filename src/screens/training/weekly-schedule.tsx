@@ -73,7 +73,12 @@ export function WeeklyScheduleScreen() {
                           : t('scheduleScreen.itemCount', { count: dayItems.length })}
                       </AppText>
                     </View>
-                    <AppText color="textMuted" variant="title">
+                    <AppText
+                      accessibilityElementsHidden
+                      color="textMuted"
+                      importantForAccessibility="no"
+                      variant="title"
+                    >
                       ›
                     </AppText>
                   </View>

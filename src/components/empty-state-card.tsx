@@ -18,6 +18,8 @@ export function EmptyStateCard({ actionLabel, detail, onAction, title }: EmptySt
     <Card elevated style={{ gap: spacing.lg }}>
       <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
         <View
+          accessibilityElementsHidden
+          importantForAccessibility="no"
           style={{
             alignItems: 'center',
             backgroundColor: colors.primaryMuted,

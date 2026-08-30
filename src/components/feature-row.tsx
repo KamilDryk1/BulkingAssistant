@@ -14,6 +14,7 @@ type FeatureRowProps = {
 export function FeatureRow({ detail, marker, onPress, title }: FeatureRowProps) {
   return (
     <Pressable
+      accessibilityLabel={onPress ? `${title}. ${detail}` : undefined}
       accessibilityRole={onPress ? 'button' : undefined}
       disabled={!onPress}
       onPress={onPress}
@@ -27,6 +28,8 @@ export function FeatureRow({ detail, marker, onPress, title }: FeatureRowProps) 
       })}
     >
       <View
+        accessibilityElementsHidden
+        importantForAccessibility="no"
         style={{
           alignItems: 'center',
           backgroundColor: colors.surfaceSelected,
@@ -47,7 +50,12 @@ export function FeatureRow({ detail, marker, onPress, title }: FeatureRowProps) 
           {detail}
         </AppText>
       </View>
-      <AppText color="textMuted" variant="title">
+      <AppText
+        accessibilityElementsHidden
+        color="textMuted"
+        importantForAccessibility="no"
+        variant="title"
+      >
         ›
       </AppText>
     </Pressable>

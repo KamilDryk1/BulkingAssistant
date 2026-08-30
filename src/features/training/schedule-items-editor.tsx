@@ -28,6 +28,7 @@ function AddItemRow({
 }) {
   return (
     <Pressable
+      accessibilityLabel={`${title}. ${detail}`}
       accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => ({
@@ -40,6 +41,8 @@ function AddItemRow({
       })}
     >
       <View
+        accessibilityElementsHidden
+        importantForAccessibility="no"
         style={{
           alignItems: 'center',
           backgroundColor: colors.primaryMuted,

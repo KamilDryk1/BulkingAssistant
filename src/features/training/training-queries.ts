@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { todayKeys } from '@/features/today/today-queries';
 import type { AppLocale } from '@/types/database';
 
 import {
@@ -51,6 +52,16 @@ function useInvalidateTraining() {
   return () => queryClient.invalidateQueries({ queryKey: trainingKeys.all });
 }
 
+function useInvalidateTrainingAndToday() {
+  const queryClient = useQueryClient();
+
+  return () =>
+    Promise.all([
+      queryClient.invalidateQueries({ queryKey: trainingKeys.all }),
+      queryClient.invalidateQueries({ queryKey: todayKeys.all }),
+    ]);
+}
+
 export function useCreateCustomExercise() {
   const invalidateTraining = useInvalidateTraining();
 
@@ -79,30 +90,30 @@ export function useDeleteCustomExercise() {
 }
 
 export function useSaveWorkoutPlan() {
-  const invalidateTraining = useInvalidateTraining();
+  const invalidateTrainingAndToday = useInvalidateTrainingAndToday();
 
   return useMutation({
     mutationFn: (input: SaveWorkoutPlanInput) => saveWorkoutPlan(input),
-    onSuccess: invalidateTraining,
+    onSuccess: invalidateTrainingAndToday,
   });
 }
 
 export function useDeleteWorkoutPlan() {
-  const invalidateTraining = useInvalidateTraining();
+  const invalidateTrainingAndToday = useInvalidateTrainingAndToday();
 
   return useMutation({
     mutationFn: (planId: string) => deleteWorkoutPlan(planId),
-    onSuccess: invalidateTraining,
+    onSuccess: invalidateTrainingAndToday,
   });
 }
 
 export function useReplaceWeeklyScheduleDay() {
-  const invalidateTraining = useInvalidateTraining();
+  const invalidateTrainingAndToday = useInvalidateTrainingAndToday();
 
   return useMutation({
     mutationFn: ({ items, weekday }: { items: ScheduleDraftItem[]; weekday: number }) =>
       replaceWeeklyScheduleDay(weekday, items),
-    onSuccess: invalidateTraining,
+    onSuccess: invalidateTrainingAndToday,
   });
 }
 
@@ -112,9 +123,12 @@ export function useReplaceDailyScheduleOverride(userId: string, date: string) {
   return useMutation({
     mutationFn: (items: ScheduleDraftItem[]) => replaceDailyScheduleOverride(date, items),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: trainingKeys.dailyOverride(userId, date),
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: trainingKeys.dailyOverride(userId, date),
+        }),
+        queryClient.invalidateQueries({ queryKey: todayKeys.all }),
+      ]);
     },
   });
 }
@@ -125,9 +139,12 @@ export function useDeleteDailyScheduleOverride(userId: string, date: string) {
   return useMutation({
     mutationFn: () => deleteDailyScheduleOverride(date),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: trainingKeys.dailyOverride(userId, date),
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: trainingKeys.dailyOverride(userId, date),
+        }),
+        queryClient.invalidateQueries({ queryKey: todayKeys.all }),
+      ]);
     },
   });
 }

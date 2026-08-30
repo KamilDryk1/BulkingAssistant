@@ -76,7 +76,12 @@ export function WorkoutPlansScreen() {
                       {t('plansScreen.exerciseCount', { count: plan.exercises.length })}
                     </AppText>
                   </View>
-                  <AppText color="textMuted" variant="title">
+                  <AppText
+                    accessibilityElementsHidden
+                    color="textMuted"
+                    importantForAccessibility="no"
+                    variant="title"
+                  >
                     ›
                   </AppText>
                 </View>

@@ -2,7 +2,7 @@
 
 Bulking Assistant is an Expo/React Native workout, activity, body-weight, and nutrition assistant focused on fast, low-friction daily and in-gym logging.
 
-Phases 1–7 are implemented. The app now includes the production foundation, authentication and onboarding, training planning, a complete active-workout flow, a persisted Today dashboard, the Body area for nutrition, weight trends, and activity history, plus focused strength progress tracking.
+All eight MVP phases are implemented. The app includes the production foundation, authentication and onboarding, training planning, a complete active-workout flow, a persisted Today dashboard, the Body area for nutrition, weight trends and activity history, focused strength progress tracking, and the final cross-platform quality pass.
 
 ## Current foundation
 
@@ -25,12 +25,14 @@ Phases 1–7 are implemented. The app now includes the production foundation, au
 - a complete Body screen with live goal changes, current calories/macros, a seven-day weight average, weekly trend, and four-week rolling-average chart
 - paginated non-strength activity history plus private custom activities shared with logging and scheduling
 - exercise-specific eight-week progress with Estimated 1RM, Best Set, recent change, and accessible charts calculated from completed sets
+- production polish for longer Polish copy, dynamic text sizing, keyboard-safe forms, accessible controls, and synchronized query refreshes
+- automated English/Polish translation parity plus localized kg/lb presentation tests
 - lightweight Expo Go-compatible charts rendered with `react-native-svg`
 - TanStack Query provider and default caching policy
 - responsive web fallback plus iOS and Android bundles
 - Expo-aware linting and Prettier formatting
 
-See [the product specification](docs/PRODUCT_SPEC.md), [nutrition calculation](docs/NUTRITION_CALCULATION.md), and [implementation plan](docs/IMPLEMENTATION_PLAN.md) for scope and sequencing.
+See [the product specification](docs/PRODUCT_SPEC.md), [nutrition calculation](docs/NUTRITION_CALCULATION.md), [quality audit](docs/QUALITY_AUDIT.md), and [implementation plan](docs/IMPLEMENTATION_PLAN.md) for scope, validation, and sequencing.
 
 ## Requirements
 

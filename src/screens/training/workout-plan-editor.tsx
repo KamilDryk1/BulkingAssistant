@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { FlatList, KeyboardAvoidingView, Pressable, View } from 'react-native';
+import { FlatList, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -206,10 +206,7 @@ export function WorkoutPlanEditorScreen({ planId }: WorkoutPlanEditorScreenProps
   );
 
   return (
-    <KeyboardAvoidingView
-      behavior={process.env.EXPO_OS === 'ios' ? 'padding' : undefined}
-      style={{ backgroundColor: colors.background, flex: 1 }}
-    >
+    <View style={{ backgroundColor: colors.background, flex: 1 }}>
       <FlatList
         automaticallyAdjustKeyboardInsets
         contentInsetAdjustmentBehavior="automatic"
@@ -236,7 +233,7 @@ export function WorkoutPlanEditorScreen({ planId }: WorkoutPlanEditorScreenProps
                   {t(`muscleGroups.${item.muscle_group}`)} · {t(`equipment.${item.equipment}`)}
                 </AppText>
               </View>
-              <AppText color="primary" variant="title">
+              <AppText accessibilityElementsHidden color="primary" importantForAccessibility="no">
                 +
               </AppText>
             </Card>
@@ -253,6 +250,6 @@ export function WorkoutPlanEditorScreen({ planId }: WorkoutPlanEditorScreenProps
           width: '100%',
         }}
       />
-    </KeyboardAvoidingView>
+    </View>
   );
 }

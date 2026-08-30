@@ -55,7 +55,7 @@ export function FormTextField({
         ]}
       />
       {error ? (
-        <AppText color="danger" variant="caption">
+        <AppText accessibilityLiveRegion="polite" color="danger" variant="caption">
           {error}
         </AppText>
       ) : null}

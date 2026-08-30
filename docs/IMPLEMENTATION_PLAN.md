@@ -118,4 +118,11 @@ No global state library is planned; authentication state is scoped to a provider
 
 ### Phase 8 — Polish
 
-- [ ] Audit visual consistency, state coverage, accessibility, Polish expansion, conversions, platform behavior, performance, tests, and README.
+- [x] Audit all screens against the shared dark athletic design system and keep visual values centralized in theme tokens.
+- [x] Verify loading, empty, error, and normal state coverage for the major data-backed areas.
+- [x] Make form keyboard adjustment single-source and allow buttons and choices to expand with Polish copy and scaled text.
+- [x] Add semantic control state, live validation feedback, large touch targets, and screen-reader-safe decorative elements.
+- [x] Centralize localized kg/lb presentation and add automated English/Polish namespace, key, and non-empty-copy checks.
+- [x] Refresh dependent Today data after workout and schedule mutations while retaining paginated histories and stable list identity.
+- [x] Validate strict TypeScript, lint, unit tests, formatting, Expo SDK dependency alignment, and iOS/Android/web exports.
+- [x] Update the README and record the completed production-quality audit.

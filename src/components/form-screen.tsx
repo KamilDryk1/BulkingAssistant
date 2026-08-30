@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { KeyboardAvoidingView, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, layout, spacing } from '@/theme';
@@ -17,10 +17,7 @@ export function FormScreen({ children, detail, eyebrow, title }: FormScreenProps
   const insets = useSafeAreaInsets();
 
   return (
-    <KeyboardAvoidingView
-      behavior={process.env.EXPO_OS === 'ios' ? 'padding' : undefined}
-      style={{ backgroundColor: colors.background, flex: 1 }}
-    >
+    <View style={{ backgroundColor: colors.background, flex: 1 }}>
       <ScrollView
         automaticallyAdjustKeyboardInsets
         contentInsetAdjustmentBehavior="never"
@@ -46,6 +43,6 @@ export function FormScreen({ children, detail, eyebrow, title }: FormScreenProps
           {children}
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }

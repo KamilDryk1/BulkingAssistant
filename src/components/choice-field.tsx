@@ -29,7 +29,10 @@ export function ChoiceField<Value extends string>({
   return (
     <View style={{ gap: spacing.sm }}>
       <AppText variant="bodyStrong">{label}</AppText>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+      <View
+        accessibilityRole="radiogroup"
+        style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}
+      >
         {options.map((option) => {
           const selected = option.value === value;
 
@@ -55,7 +58,11 @@ export function ChoiceField<Value extends string>({
                 paddingVertical: spacing.sm,
               })}
             >
-              <AppText color={selected ? 'onPrimary' : 'textSecondary'} variant="bodyStrong">
+              <AppText
+                color={selected ? 'onPrimary' : 'textSecondary'}
+                style={{ textAlign: 'center' }}
+                variant="bodyStrong"
+              >
                 {option.label}
               </AppText>
             </Pressable>
@@ -63,7 +70,7 @@ export function ChoiceField<Value extends string>({
         })}
       </View>
       {error ? (
-        <AppText color="danger" variant="caption">
+        <AppText accessibilityLiveRegion="polite" color="danger" variant="caption">
           {error}
         </AppText>
       ) : null}

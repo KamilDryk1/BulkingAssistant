@@ -18,29 +18,12 @@ import { WeightTrendChart } from '@/features/body/weight-trend-chart';
 import { useUpdateProfile } from '@/features/profile/profile-queries';
 import { useTodayData } from '@/features/today/today-queries';
 import { useCurrentDate } from '@/features/today/use-current-date';
-import { kilogramsToPounds } from '@/features/units/weight';
+import { formatLocalizedWeight, formatLocalizedWeightChange } from '@/features/units/weight';
 import { getCurrentLocale } from '@/i18n';
 import { colors, layout, opacity, radius, spacing } from '@/theme';
-import type { AppLocale, FitnessGoal, WeightUnit } from '@/types/database';
+import type { FitnessGoal } from '@/types/database';
 
 const goals: FitnessGoal[] = ['cut', 'maintain', 'gain'];
-
-function formatWeight(weightKg: number, unit: WeightUnit, locale: AppLocale) {
-  const value = unit === 'lb' ? kilogramsToPounds(weightKg) : weightKg;
-  return new Intl.NumberFormat(locale, {
-    maximumFractionDigits: 1,
-    minimumFractionDigits: 1,
-  }).format(value);
-}
-
-function formatTrend(weightKg: number, unit: WeightUnit, locale: AppLocale) {
-  const value = unit === 'lb' ? kilogramsToPounds(weightKg) : weightKg;
-  const sign = value > 0 ? '+' : value < 0 ? '−' : '';
-  return `${sign}${new Intl.NumberFormat(locale, {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
-  }).format(Math.abs(value))}`;
-}
 
 function MacroStat({ label, value }: { label: string; value: number }) {
   const { t } = useTranslation('common');
@@ -260,7 +243,7 @@ export function BodyScreen() {
               <AppText variant="label">{t('weightMetrics.current')}</AppText>
               <View style={{ alignItems: 'baseline', flexDirection: 'row', gap: spacing.sm }}>
                 <AppText color="primary" selectable variant="stat">
-                  {formatWeight(currentWeight, unit, locale)}
+                  {formatLocalizedWeight(currentWeight, unit, locale)}
                 </AppText>
                 <AppText color="textMuted" variant="bodyStrong">
                   {unitLabel}
@@ -275,7 +258,7 @@ export function BodyScreen() {
                 value={
                   weightTrend.sevenDayAverageKg === null
                     ? t('weightMetrics.unavailable')
-                    : formatWeight(weightTrend.sevenDayAverageKg, unit, locale)
+                    : formatLocalizedWeight(weightTrend.sevenDayAverageKg, unit, locale)
                 }
               />
               <WeightMetric
@@ -284,7 +267,7 @@ export function BodyScreen() {
                 value={
                   weightTrend.weeklyChangeKg === null
                     ? t('weightMetrics.unavailable')
-                    : formatTrend(weightTrend.weeklyChangeKg, unit, locale)
+                    : formatLocalizedWeightChange(weightTrend.weeklyChangeKg, unit, locale, 2)
                 }
                 valueColor={weightTrend.weeklyChangeKg === null ? 'textSecondary' : 'primary'}
               />

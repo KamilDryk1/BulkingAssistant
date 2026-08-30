@@ -106,10 +106,7 @@ function RootNavigator() {
           options={{
             contentStyle: { backgroundColor: colors.background },
             headerShown: false,
-            presentation: 'formSheet',
-            sheetAllowedDetents: [0.9, 1],
-            sheetGrabberVisible: true,
-            sheetInitialDetentIndex: 0,
+            presentation: 'modal',
           }}
         />
         <Stack.Screen

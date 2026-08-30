@@ -55,7 +55,10 @@ export function useStartWorkoutSession() {
   return useMutation({
     mutationFn: (planId: string) => startWorkoutSession(planId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: workoutKeys.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: workoutKeys.all }),
+        queryClient.invalidateQueries({ queryKey: todayKeys.all }),
+      ]);
     },
   });
 }
