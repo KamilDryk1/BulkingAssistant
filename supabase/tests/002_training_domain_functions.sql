@@ -152,8 +152,8 @@ select lives_ok(
     select public.replace_weekly_schedule_day(
       1,
       '[
-        {"item_type":"workout","reference_id":"ca300000-0000-4000-8000-000000000001"},
-        {"item_type":"activity","reference_id":"ca200000-0000-4000-8000-000000000001"}
+        {"item_type":"workout","reference_id":"ca300000-0000-4000-8000-000000000001","duration_minutes":75,"intensity":"hard"},
+        {"item_type":"activity","reference_id":"ca200000-0000-4000-8000-000000000001","duration_minutes":45,"intensity":"light"}
       ]'::jsonb
     )
   $$,
@@ -162,14 +162,18 @@ select lives_ok(
 
 select results_eq(
   $$
-    select item_type::text, position
+    select item_type::text, planned_duration_minutes, planned_intensity::text, position
     from public.weekly_schedule_items
     where user_id = 'ca000000-0000-4000-8000-000000000001'
       and weekday = 1
     order by position
   $$,
-  $$values ('workout'::text, 0), ('activity'::text, 1)$$,
-  'Weekly schedule item order is persisted'
+  $$
+    values
+      ('workout'::text, 75, 'hard'::text, 0),
+      ('activity'::text, 45, 'light'::text, 1)
+  $$,
+  'Weekly schedule item order and training load are persisted'
 );
 
 select throws_ok(

@@ -129,7 +129,8 @@
     "itemCount_few": "{{count}} elementy",
     "itemCount_many": "{{count}} elementów",
     "itemCount_other": "{{count}} elementu",
-    "editDay": "Edytuj: {{day}}"
+    "editDay": "Edytuj: {{day}}",
+    "back": "Powrót"
   },
   "scheduleEditor": {
     "planned": "Zaplanowane elementy",
@@ -140,6 +141,16 @@
     "rest": "Dzień odpoczynku",
     "workout": "Trening",
     "activity": "Aktywność",
+    "duration": "Planowany czas (minuty)",
+    "durationPlaceholder": "60",
+    "durationError": "Podaj całkowitą liczbę od 1 do 1440",
+    "intensity": "Planowana intensywność",
+    "intensities": {
+      "light": "Lekka",
+      "moderate": "Umiarkowana",
+      "hard": "Wysoka"
+    },
+    "itemDetails": "{{type}} · {{duration}} min · {{intensity}}",
     "missingItem": "Niedostępny element",
     "noPlans": "Utwórz plan treningowy, zanim dodasz go tutaj.",
     "save": "Zapisz dzień",

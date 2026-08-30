@@ -13,13 +13,21 @@
   "heightPlaceholder": "180",
   "currentWeight": "Aktualna masa ({{unit}})",
   "weightPlaceholder": "70,0",
-  "activityLevel": "Ogólny poziom aktywności",
+  "activityLevel": "Aktywność poza treningami",
+  "activityLevelDetail": "Wybierz typowy poziom codziennego ruchu lub pracy fizycznej. Treningi z planu tygodniowego są obliczane osobno.",
   "activity": {
     "sedentary": "Siedzący tryb życia",
     "light": "Lekka aktywność",
     "moderate": "Umiarkowana aktywność",
     "very_active": "Duża aktywność",
     "extremely_active": "Bardzo duża aktywność"
+  },
+  "activityDescriptions": {
+    "sedentary": "Głównie praca siedząca i mało chodzenia — zwykle poniżej 5 tys. kroków dziennie poza treningami.",
+    "light": "Praca siedząca, ale regularne spacery i codzienne sprawy — zwykle 5–7,5 tys. kroków poza treningami.",
+    "moderate": "Praca mieszana lub sporo chodzenia w ciągu dnia — zwykle 7,5–10 tys. kroków poza treningami.",
+    "very_active": "Większość dnia na nogach albo lekka praca fizyczna — zwykle 10–12,5 tys. kroków poza treningami.",
+    "extremely_active": "Ciężka praca fizyczna lub wyjątkowo dużo ruchu — zwykle co najmniej 12,5 tys. kroków poza treningami."
   },
   "goal": "Aktualny cel",
   "goals": {

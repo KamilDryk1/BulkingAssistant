@@ -107,6 +107,10 @@ select lives_ok(
       protein_grams,
       carbohydrate_grams,
       fat_grams,
+      resting_calories,
+      baseline_calories,
+      planned_training_calories,
+      goal_adjustment_calories,
       calculation_version
     ) values (
       'ea000000-0000-4000-8000-000000000001',
@@ -115,7 +119,11 @@ select lives_ok(
       150,
       350,
       80,
-      'mifflin-st-jeor-v1'
+      1700,
+      2500,
+      250,
+      0,
+      'mifflin-st-jeor-plan-aware-v2'
     )
   $$,
   'A user can persist their deterministic nutrition target snapshot'

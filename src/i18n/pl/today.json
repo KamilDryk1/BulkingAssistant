@@ -22,6 +22,7 @@
   },
   "nutrition": {
     "dailyTarget": "Cel na dziś",
+    "plannedTrainingContribution": "Plan tygodniowy dodaje średnio {{calories}} kcal dziennie.",
     "unavailableTitle": "Cel żywieniowy jest niedostępny",
     "unavailableDetail": "Uzupełnij profil i zapisz masę ciała, aby go obliczyć."
   },

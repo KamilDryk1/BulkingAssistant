@@ -13,13 +13,21 @@
   "heightPlaceholder": "180",
   "currentWeight": "Current weight ({{unit}})",
   "weightPlaceholder": "70.0",
-  "activityLevel": "General activity level",
+  "activityLevel": "Activity outside workouts",
+  "activityLevelDetail": "Choose your typical daily movement or physical work. Workouts from the weekly plan are calculated separately.",
   "activity": {
     "sedentary": "Sedentary",
     "light": "Lightly active",
     "moderate": "Moderately active",
     "very_active": "Very active",
     "extremely_active": "Extremely active"
+  },
+  "activityDescriptions": {
+    "sedentary": "Mostly seated work and little walking — usually under 5,000 steps per day outside workouts.",
+    "light": "Seated work with regular walks and daily errands — usually 5,000–7,499 steps outside workouts.",
+    "moderate": "Mixed seated and standing work or plenty of daily walking — usually 7,500–9,999 steps outside workouts.",
+    "very_active": "Most of the day on your feet or light physical work — usually 10,000–12,499 steps outside workouts.",
+    "extremely_active": "Heavy physical work or exceptionally high daily movement — usually at least 12,500 steps outside workouts."
   },
   "goal": "Current goal",
   "goals": {

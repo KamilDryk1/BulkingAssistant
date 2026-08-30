@@ -40,6 +40,34 @@ function MacroStat({ label, value }: { label: string; value: number }) {
   );
 }
 
+function NutritionBreakdownRow({
+  label,
+  locale,
+  signed = false,
+  value,
+}: {
+  label: string;
+  locale: string;
+  signed?: boolean;
+  value: number;
+}) {
+  const { t } = useTranslation('common');
+
+  return (
+    <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
+      <AppText color="textSecondary" style={{ flex: 1 }} variant="caption">
+        {label}
+      </AppText>
+      <AppText color="textSecondary" selectable variant="bodyStrong">
+        {new Intl.NumberFormat(locale, { signDisplay: signed ? 'exceptZero' : 'auto' }).format(
+          value,
+        )}{' '}
+        {t('units.calories')}
+      </AppText>
+    </View>
+  );
+}
+
 function GoalSelector({
   disabled,
   onChange,
@@ -213,6 +241,39 @@ export function BodyScreen() {
                 <MacroStat label={t('carbs')} value={target.carbohydrate_grams} />
                 <MacroStat label={t('fat')} value={target.fat_grams} />
               </View>
+              {target.baseline_calories !== null &&
+              target.planned_training_calories !== null &&
+              target.goal_adjustment_calories !== null ? (
+                <>
+                  <View
+                    style={{
+                      backgroundColor: colors.border,
+                      height: layout.borderWidth,
+                      width: '100%',
+                    }}
+                  />
+                  <View style={{ gap: spacing.sm }}>
+                    <AppText variant="label">{t('nutritionBreakdown')}</AppText>
+                    <NutritionBreakdownRow
+                      label={t('baselineCalories')}
+                      locale={locale}
+                      value={target.baseline_calories}
+                    />
+                    <NutritionBreakdownRow
+                      label={t('plannedTrainingCalories')}
+                      locale={locale}
+                      signed
+                      value={target.planned_training_calories}
+                    />
+                    <NutritionBreakdownRow
+                      label={t('goalAdjustmentCalories')}
+                      locale={locale}
+                      signed
+                      value={target.goal_adjustment_calories}
+                    />
+                  </View>
+                </>
+              ) : null}
             </>
           ) : (
             <View style={{ gap: spacing.sm }}>

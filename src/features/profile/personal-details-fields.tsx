@@ -72,6 +72,7 @@ export function PersonalDetailsFields() {
         render={({ field, fieldState }) => (
           <ChoiceField
             columns={1}
+            detail={t('activityLevelDetail', { ns: 'onboarding' })}
             error={
               fieldState.error?.message ? t(fieldState.error.message, { ns: 'common' }) : undefined
             }
@@ -79,19 +80,27 @@ export function PersonalDetailsFields() {
             onChange={field.onChange}
             options={[
               {
+                detail: t('activityDescriptions.sedentary', { ns: 'onboarding' }),
                 label: t('activity.sedentary', { ns: 'onboarding' }),
                 value: 'sedentary',
               },
-              { label: t('activity.light', { ns: 'onboarding' }), value: 'light' },
               {
+                detail: t('activityDescriptions.light', { ns: 'onboarding' }),
+                label: t('activity.light', { ns: 'onboarding' }),
+                value: 'light',
+              },
+              {
+                detail: t('activityDescriptions.moderate', { ns: 'onboarding' }),
                 label: t('activity.moderate', { ns: 'onboarding' }),
                 value: 'moderate',
               },
               {
+                detail: t('activityDescriptions.very_active', { ns: 'onboarding' }),
                 label: t('activity.very_active', { ns: 'onboarding' }),
                 value: 'very_active',
               },
               {
+                detail: t('activityDescriptions.extremely_active', { ns: 'onboarding' }),
                 label: t('activity.extremely_active', { ns: 'onboarding' }),
                 value: 'extremely_active',
               },

@@ -5,12 +5,14 @@ import { colors, layout, opacity, radius, spacing } from '@/theme';
 import { AppText } from './app-text';
 
 type ChoiceOption<Value extends string> = {
+  detail?: string;
   label: string;
   value: Value;
 };
 
 type ChoiceFieldProps<Value extends string> = {
-  columns?: 1 | 2;
+  columns?: 1 | 2 | 3;
+  detail?: string;
   error?: string;
   label: string;
   onChange: (value: Value) => void;
@@ -20,15 +22,23 @@ type ChoiceFieldProps<Value extends string> = {
 
 export function ChoiceField<Value extends string>({
   columns = 2,
+  detail,
   error,
   label,
   onChange,
   options,
   value,
 }: ChoiceFieldProps<Value>) {
+  const selectedDetail = options.find((option) => option.value === value)?.detail;
+
   return (
     <View style={{ gap: spacing.sm }}>
       <AppText variant="bodyStrong">{label}</AppText>
+      {detail ? (
+        <AppText color="textMuted" variant="caption">
+          {detail}
+        </AppText>
+      ) : null}
       <View
         accessibilityRole="radiogroup"
         style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}
@@ -49,7 +59,7 @@ export function ChoiceField<Value extends string>({
                 borderCurve: 'continuous',
                 borderRadius: radius.md,
                 borderWidth: layout.borderWidth,
-                flexBasis: columns === 1 ? '100%' : '47%',
+                flexBasis: columns === 1 ? '100%' : columns === 3 ? '30%' : '47%',
                 flexGrow: 1,
                 justifyContent: 'center',
                 minHeight: layout.minTouchTarget,
@@ -69,6 +79,23 @@ export function ChoiceField<Value extends string>({
           );
         })}
       </View>
+      {selectedDetail ? (
+        <View
+          style={{
+            backgroundColor: colors.surfaceSelected,
+            borderColor: colors.borderStrong,
+            borderCurve: 'continuous',
+            borderRadius: radius.md,
+            borderWidth: layout.borderWidth,
+            paddingHorizontal: spacing.lg,
+            paddingVertical: spacing.md,
+          }}
+        >
+          <AppText accessibilityLiveRegion="polite" color="textSecondary" variant="caption">
+            {selectedDetail}
+          </AppText>
+        </View>
+      ) : null}
       {error ? (
         <AppText accessibilityLiveRegion="polite" color="danger" variant="caption">
           {error}

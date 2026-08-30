@@ -1,5 +1,6 @@
 import type {
   ActivityDefinitionRow,
+  ActivityIntensity,
   AppLocale,
   EquipmentCategory,
   ExerciseRow,
@@ -29,6 +30,8 @@ export type WorkoutPlan = WorkoutPlanRow & {
 };
 
 export type ScheduleDraftItem = {
+  durationMinutes: number | null;
+  intensity: ActivityIntensity | null;
   itemType: ScheduleItemType;
   referenceId: string | null;
 };

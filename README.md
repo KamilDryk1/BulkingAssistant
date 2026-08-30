@@ -16,11 +16,11 @@ All eight MVP phases are implemented. The app includes the production foundation
 - synchronized profile, language, and kg/lb preferences with kilograms kept canonical in storage
 - virtualized bilingual exercise library with private custom exercise creation and deletion
 - workout plan creation/editing with transactionally persisted exercise ordering
-- weekly workout/activity/rest scheduling and one-date overrides without changing the recurring week
+- weekly workout/activity/rest scheduling with planned duration and intensity, plus one-date overrides without changing the recurring week
 - focused active workouts with elapsed time, exercise progress, previous-session reference, and independent weight/repetition sets
 - resumable sessions, safe set editing/deletion/completion, localized session snapshots, and paginated workout history
 - a live Today dashboard with local-date schedule resolution, daily overrides, workout shortcuts, completed activity, and current body weight
-- deterministic Mifflin–St Jeor calorie and macro targets persisted as daily snapshots
+- deterministic plan-aware Mifflin–St Jeor calorie and macro targets persisted with a visible calculation breakdown
 - native form sheets for quick activity logging and one-primary-entry-per-day weight logging
 - a complete Body screen with live goal changes, current calories/macros, a seven-day weight average, weekly trend, and four-week rolling-average chart
 - paginated non-strength activity history plus private custom activities shared with logging and scheduling

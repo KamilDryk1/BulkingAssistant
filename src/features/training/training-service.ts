@@ -13,6 +13,8 @@ import type {
 
 function serializeScheduleItems(items: readonly ScheduleDraftItem[]): Json {
   return items.map((item) => ({
+    duration_minutes: item.durationMinutes,
+    intensity: item.intensity,
     item_type: item.itemType,
     reference_id: item.referenceId,
   }));
@@ -91,7 +93,9 @@ export async function fetchTrainingData(userId: string, locale: AppLocale): Prom
     exercises,
     plans,
     weeklySchedule: (weeklyResult.data ?? []).map((item) => ({
+      durationMinutes: item.planned_duration_minutes,
       id: item.id,
+      intensity: item.planned_intensity,
       itemType: item.item_type,
       position: item.position,
       referenceId: item.workout_plan_id ?? item.activity_definition_id,
@@ -134,6 +138,8 @@ export async function fetchDailyScheduleOverride(
     date: dailyOverride.scheduled_date,
     id: dailyOverride.id,
     items: (items ?? []).map((item) => ({
+      durationMinutes: item.planned_duration_minutes,
+      intensity: item.planned_intensity,
       itemType: item.item_type,
       referenceId: item.workout_plan_id ?? item.activity_definition_id,
     })),

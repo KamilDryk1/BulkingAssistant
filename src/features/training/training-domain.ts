@@ -41,9 +41,45 @@ export function getIsoWeekday(dateKey: string) {
   return weekday === 0 ? 7 : weekday;
 }
 
+export function getIsoWeekDateKeys(date = new Date()) {
+  const current = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const daysSinceMonday = getIsoWeekday(getLocalDateKey(current)) - 1;
+  const monday = new Date(current);
+  monday.setDate(current.getDate() - daysSinceMonday);
+
+  return Array.from({ length: 7 }, (_, index) => {
+    const day = new Date(monday);
+    day.setDate(monday.getDate() + index);
+    return getLocalDateKey(day);
+  });
+}
+
+export function getSuggestedWorkoutDuration(exerciseCount: number) {
+  const estimatedMinutes = 15 + exerciseCount * 8;
+  return Math.min(120, Math.max(30, Math.round(estimatedMinutes / 5) * 5));
+}
+
+export function isScheduleDraftValid(items: readonly ScheduleDraftItem[]) {
+  return items.every((item) => {
+    if (item.itemType === 'rest') {
+      return item.referenceId === null;
+    }
+
+    return (
+      item.referenceId !== null &&
+      Number.isInteger(item.durationMinutes) &&
+      (item.durationMinutes ?? 0) > 0 &&
+      (item.durationMinutes ?? 0) <= 1440 &&
+      item.intensity !== null
+    );
+  });
+}
+
 export function addScheduleItem(items: readonly ScheduleDraftItem[], nextItem: ScheduleDraftItem) {
   if (nextItem.itemType === 'rest') {
-    return [{ itemType: 'rest', referenceId: null }] satisfies ScheduleDraftItem[];
+    return [
+      { durationMinutes: null, intensity: null, itemType: 'rest', referenceId: null },
+    ] satisfies ScheduleDraftItem[];
   }
 
   const withoutRest = items.filter((item) => item.itemType !== 'rest');
@@ -93,7 +129,27 @@ export function resolveScheduleForDate(
     items: weeklyItems
       .filter((item) => item.weekday === weekday)
       .sort((left, right) => left.position - right.position)
-      .map(({ itemType, referenceId }) => ({ itemType, referenceId })),
+      .map(({ durationMinutes, intensity, itemType, referenceId }) => ({
+        durationMinutes,
+        intensity,
+        itemType,
+        referenceId,
+      })),
     source: 'weekly' as const,
   };
+}
+
+export function resolveScheduleForWeek(
+  dateKeys: readonly string[],
+  weeklyItems: readonly WeeklyScheduleItem[],
+  dailyOverrides: readonly DailyScheduleOverride[],
+) {
+  return dateKeys.flatMap(
+    (dateKey) =>
+      resolveScheduleForDate(
+        dateKey,
+        weeklyItems,
+        dailyOverrides.find((override) => override.date === dateKey) ?? null,
+      ).items,
+  );
 }

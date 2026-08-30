@@ -1,14 +1,24 @@
 import {
   calculateNutritionTarget,
   nutritionCalculationVersion,
+  strengthTrainingMetByIntensity,
+  type PlannedTrainingSession,
 } from '@/features/today/nutrition-domain';
 import {
   calculateSevenDayAverage,
   getLocalDayBounds,
   getSevenDayStartIso,
 } from '@/features/today/today-domain';
+import { getIsoWeekDateKeys, resolveScheduleForWeek } from '@/features/training/training-domain';
 import { getSupabaseClient } from '@/services/supabase/get-client';
-import type { NutritionTargetSnapshotRow, ProfileRow, WeightLogRow } from '@/types/database';
+import type {
+  ActivityDefinitionRow,
+  ActivityIntensity,
+  DailyScheduleOverrideItemRow,
+  NutritionTargetSnapshotRow,
+  ProfileRow,
+  WeightLogRow,
+} from '@/types/database';
 
 import type { SaveActivityLogInput, SaveTodayWeightInput, TodayData } from './today-types';
 
@@ -22,8 +32,127 @@ function targetMatches(
     snapshot.calories === target.calories &&
     snapshot.protein_grams === target.proteinGrams &&
     snapshot.carbohydrate_grams === target.carbohydrateGrams &&
-    snapshot.fat_grams === target.fatGrams,
+    snapshot.fat_grams === target.fatGrams &&
+    snapshot.resting_calories === target.restingCalories &&
+    snapshot.baseline_calories === target.baselineCalories &&
+    snapshot.planned_training_calories === target.plannedTrainingCalories &&
+    snapshot.goal_adjustment_calories === target.goalAdjustmentCalories,
   );
+}
+
+function getActivityMet(activity: ActivityDefinitionRow, intensity: ActivityIntensity) {
+  if (intensity === 'light') {
+    return activity.met_light;
+  }
+
+  if (intensity === 'hard') {
+    return activity.met_hard;
+  }
+
+  return activity.met_moderate;
+}
+
+async function fetchPlannedTrainingSessions(
+  userId: string,
+  date: string,
+): Promise<PlannedTrainingSession[]> {
+  const client = getSupabaseClient();
+  const weekDates = getIsoWeekDateKeys(new Date(`${date}T12:00:00`));
+  const [weeklyResult, overrideResult, activityResult] = await Promise.all([
+    client
+      .from('weekly_schedule_items')
+      .select('*')
+      .eq('user_id', userId)
+      .order('weekday')
+      .order('position'),
+    client
+      .from('daily_schedule_overrides')
+      .select('*')
+      .eq('user_id', userId)
+      .gte('scheduled_date', weekDates[0])
+      .lte('scheduled_date', weekDates[6]),
+    client.from('activity_definitions').select('*'),
+  ]);
+  const firstError = [weeklyResult.error, overrideResult.error, activityResult.error].find(Boolean);
+
+  if (firstError) {
+    throw firstError;
+  }
+
+  const overrides = overrideResult.data ?? [];
+  const overrideIds = overrides.map((override) => override.id);
+  let overrideItems: DailyScheduleOverrideItemRow[] = [];
+
+  if (overrideIds.length > 0) {
+    const overrideItemsResult = await client
+      .from('daily_schedule_override_items')
+      .select('*')
+      .in('daily_override_id', overrideIds)
+      .order('position');
+
+    if (overrideItemsResult.error) {
+      throw overrideItemsResult.error;
+    }
+
+    overrideItems = overrideItemsResult.data ?? [];
+  }
+
+  const weeklyItems = weeklyResult.data ?? [];
+  const activityById = new Map(
+    (activityResult.data ?? []).map((activity) => [activity.id, activity]),
+  );
+  const normalizedWeeklyItems = weeklyItems.map((item) => ({
+    durationMinutes: item.planned_duration_minutes ?? (item.item_type === 'rest' ? null : 60),
+    id: item.id,
+    intensity: item.planned_intensity ?? (item.item_type === 'rest' ? null : 'moderate'),
+    itemType: item.item_type,
+    position: item.position,
+    referenceId: item.workout_plan_id ?? item.activity_definition_id,
+    weekday: item.weekday,
+  }));
+  const normalizedOverrides = overrides.map((override) => ({
+    date: override.scheduled_date,
+    id: override.id,
+    items: overrideItems
+      .filter((item) => item.daily_override_id === override.id)
+      .map((item) => ({
+        durationMinutes: item.planned_duration_minutes ?? (item.item_type === 'rest' ? null : 60),
+        intensity: item.planned_intensity ?? (item.item_type === 'rest' ? null : 'moderate'),
+        itemType: item.item_type,
+        referenceId: item.workout_plan_id ?? item.activity_definition_id,
+      })),
+  }));
+  const scheduledItems = resolveScheduleForWeek(
+    weekDates,
+    normalizedWeeklyItems,
+    normalizedOverrides,
+  );
+
+  return scheduledItems.flatMap((item) => {
+    if (item.itemType === 'rest' || !item.durationMinutes || !item.intensity) {
+      return [];
+    }
+
+    if (item.itemType === 'workout') {
+      return [
+        {
+          durationMinutes: item.durationMinutes,
+          met: strengthTrainingMetByIntensity[item.intensity],
+        },
+      ];
+    }
+
+    const activity = item.referenceId ? activityById.get(item.referenceId) : null;
+
+    return activity
+      ? [
+          {
+            durationMinutes: item.durationMinutes,
+            met: getActivityMet(activity, item.intensity),
+          },
+        ]
+      : [];
+  });
 }
 
 async function ensureNutritionTarget(
@@ -32,6 +161,7 @@ async function ensureNutritionTarget(
   profile: ProfileRow,
   latestWeight: WeightLogRow | null,
   existingSnapshot: NutritionTargetSnapshotRow | null,
+  plannedSessions: readonly PlannedTrainingSession[],
 ) {
   if (
     !latestWeight ||
@@ -49,6 +179,7 @@ async function ensureNutritionTarget(
     dateOfBirth: profile.date_of_birth,
     goal: profile.goal,
     heightCm: profile.height_cm,
+    plannedSessions,
     sex: profile.sex,
     targetDate: date,
     weightKg: latestWeight.weight_kg,
@@ -62,11 +193,15 @@ async function ensureNutritionTarget(
     .from('nutrition_target_snapshots')
     .upsert(
       {
+        baseline_calories: target.baselineCalories,
         calculation_version: nutritionCalculationVersion,
         calories: target.calories,
         carbohydrate_grams: target.carbohydrateGrams,
         fat_grams: target.fatGrams,
+        goal_adjustment_calories: target.goalAdjustmentCalories,
+        planned_training_calories: target.plannedTrainingCalories,
         protein_grams: target.proteinGrams,
+        resting_calories: target.restingCalories,
         target_date: date,
         user_id: userId,
       },
@@ -97,6 +232,7 @@ export async function fetchTodayData(
     recentWeightResult,
     todayWeightResult,
     targetResult,
+    plannedSessions,
   ] = await Promise.all([
     client
       .from('activity_logs')
@@ -140,6 +276,7 @@ export async function fetchTodayData(
       .eq('user_id', userId)
       .eq('target_date', date)
       .maybeSingle(),
+    fetchPlannedTrainingSessions(userId, date),
   ]);
 
   const firstError = [
@@ -162,6 +299,7 @@ export async function fetchTodayData(
     profile,
     latestWeight,
     targetResult.data,
+    plannedSessions,
   );
 
   return {

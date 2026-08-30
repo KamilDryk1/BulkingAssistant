@@ -65,23 +65,26 @@ on conflict (id) do update set
   equipment = excluded.equipment;
 
 insert into public.activity_definitions (
-  id, slug, name_en, name_pl, is_custom
+  id, slug, name_en, name_pl, is_custom, met_light, met_moderate, met_hard
 ) values
-  ('20000000-0000-4000-8000-000000000001', 'boxing', 'Boxing', 'Boks', false),
-  ('20000000-0000-4000-8000-000000000002', 'muay-thai', 'Muay Thai', 'Muay Thai', false),
-  ('20000000-0000-4000-8000-000000000003', 'kickboxing', 'Kickboxing', 'Kick-boxing', false),
-  ('20000000-0000-4000-8000-000000000004', 'mma', 'MMA', 'MMA', false),
-  ('20000000-0000-4000-8000-000000000005', 'bjj', 'Brazilian Jiu-Jitsu', 'Brazylijskie jiu-jitsu', false),
-  ('20000000-0000-4000-8000-000000000006', 'running', 'Running', 'Bieganie', false),
-  ('20000000-0000-4000-8000-000000000007', 'cycling', 'Cycling', 'Jazda na rowerze', false),
-  ('20000000-0000-4000-8000-000000000008', 'swimming', 'Swimming', 'Pływanie', false),
-  ('20000000-0000-4000-8000-000000000009', 'walking', 'Walking', 'Spacer', false),
-  ('20000000-0000-4000-8000-000000000010', 'hiking', 'Hiking', 'Wędrówka', false),
-  ('20000000-0000-4000-8000-000000000011', 'football', 'Football', 'Piłka nożna', false),
-  ('20000000-0000-4000-8000-000000000012', 'basketball', 'Basketball', 'Koszykówka', false),
-  ('20000000-0000-4000-8000-000000000013', 'tennis', 'Tennis', 'Tenis', false),
-  ('20000000-0000-4000-8000-000000000014', 'rowing', 'Rowing', 'Wioślarstwo', false)
+  ('20000000-0000-4000-8000-000000000001', 'boxing', 'Boxing', 'Boks', false, 5.5, 7.8, 12.3),
+  ('20000000-0000-4000-8000-000000000002', 'muay-thai', 'Muay Thai', 'Muay Thai', false, 5.5, 7.8, 10.3),
+  ('20000000-0000-4000-8000-000000000003', 'kickboxing', 'Kickboxing', 'Kick-boxing', false, 5.5, 7.8, 10.3),
+  ('20000000-0000-4000-8000-000000000004', 'mma', 'MMA', 'MMA', false, 5.5, 8.0, 10.5),
+  ('20000000-0000-4000-8000-000000000005', 'bjj', 'Brazilian Jiu-Jitsu', 'Brazylijskie jiu-jitsu', false, 4.0, 6.0, 8.0),
+  ('20000000-0000-4000-8000-000000000006', 'running', 'Running', 'Bieganie', false, 6.0, 9.8, 12.8),
+  ('20000000-0000-4000-8000-000000000007', 'cycling', 'Cycling', 'Jazda na rowerze', false, 4.3, 7.0, 10.0),
+  ('20000000-0000-4000-8000-000000000008', 'swimming', 'Swimming', 'Pływanie', false, 4.8, 6.0, 9.8),
+  ('20000000-0000-4000-8000-000000000009', 'walking', 'Walking', 'Spacer', false, 2.5, 3.5, 4.8),
+  ('20000000-0000-4000-8000-000000000010', 'hiking', 'Hiking', 'Wędrówka', false, 4.0, 5.3, 7.3),
+  ('20000000-0000-4000-8000-000000000011', 'football', 'Football', 'Piłka nożna', false, 4.0, 7.0, 10.0),
+  ('20000000-0000-4000-8000-000000000012', 'basketball', 'Basketball', 'Koszykówka', false, 4.5, 7.5, 9.3),
+  ('20000000-0000-4000-8000-000000000013', 'tennis', 'Tennis', 'Tenis', false, 4.5, 7.3, 10.0),
+  ('20000000-0000-4000-8000-000000000014', 'rowing', 'Rowing', 'Wioślarstwo', false, 4.8, 7.0, 12.0)
 on conflict (id) do update set
   slug = excluded.slug,
   name_en = excluded.name_en,
-  name_pl = excluded.name_pl;
+  name_pl = excluded.name_pl,
+  met_light = excluded.met_light,
+  met_moderate = excluded.met_moderate,
+  met_hard = excluded.met_hard;

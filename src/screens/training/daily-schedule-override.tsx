@@ -8,7 +8,7 @@ import { AppText } from '@/components/app-text';
 import { QueryStateCard } from '@/components/query-state-card';
 import { StackScrollScreen } from '@/components/stack-scroll-screen';
 import { useAuth } from '@/features/auth/auth-context';
-import { getIsoWeekday } from '@/features/training/training-domain';
+import { getIsoWeekday, isScheduleDraftValid } from '@/features/training/training-domain';
 import { ScheduleItemsEditor } from '@/features/training/schedule-items-editor';
 import {
   useDailyScheduleOverride,
@@ -48,7 +48,12 @@ export function DailyScheduleOverrideScreen({ date }: DailyScheduleOverrideScree
     () =>
       (training.data?.weeklySchedule ?? [])
         .filter((item) => item.weekday === getIsoWeekday(date))
-        .map(({ itemType, referenceId }) => ({ itemType, referenceId })),
+        .map(({ durationMinutes, intensity, itemType, referenceId }) => ({
+          durationMinutes,
+          intensity,
+          itemType,
+          referenceId,
+        })),
     [date, training.data?.weeklySchedule],
   );
 
@@ -104,32 +109,37 @@ export function DailyScheduleOverrideScreen({ date }: DailyScheduleOverrideScree
             activities={training.data.activities}
             items={items}
             onChange={setItems}
+            plannedItemsFooter={
+              <View style={{ gap: spacing.md }}>
+                {replaceOverride.isError ? (
+                  <AppText color="danger" variant="caption">
+                    {t('scheduleEditor.saveError')}
+                  </AppText>
+                ) : null}
+                {deleteOverride.isError ? (
+                  <AppText color="danger" variant="caption">
+                    {t('overrideScreen.resetError')}
+                  </AppText>
+                ) : null}
+                <AppButton
+                  disabled={!isScheduleDraftValid(items)}
+                  loading={replaceOverride.isPending}
+                  onPress={() => replaceOverride.mutate(items, { onSuccess: () => router.back() })}
+                  title={t('overrideScreen.save')}
+                />
+                {dailyOverride.data ? (
+                  <AppButton
+                    disabled={replaceOverride.isPending}
+                    loading={deleteOverride.isPending}
+                    onPress={resetOverride}
+                    title={t('overrideScreen.reset')}
+                    variant="ghost"
+                  />
+                ) : null}
+              </View>
+            }
             plans={training.data.plans}
           />
-          {replaceOverride.isError ? (
-            <AppText color="danger" variant="caption">
-              {t('scheduleEditor.saveError')}
-            </AppText>
-          ) : null}
-          {deleteOverride.isError ? (
-            <AppText color="danger" variant="caption">
-              {t('overrideScreen.resetError')}
-            </AppText>
-          ) : null}
-          <AppButton
-            loading={replaceOverride.isPending}
-            onPress={() => replaceOverride.mutate(items, { onSuccess: () => router.back() })}
-            title={t('overrideScreen.save')}
-          />
-          {dailyOverride.data ? (
-            <AppButton
-              disabled={replaceOverride.isPending}
-              loading={deleteOverride.isPending}
-              onPress={resetOverride}
-              title={t('overrideScreen.reset')}
-              variant="ghost"
-            />
-          ) : null}
         </View>
       )}
     </StackScrollScreen>

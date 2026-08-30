@@ -9,6 +9,7 @@ import { QueryStateCard } from '@/components/query-state-card';
 import { StackScrollScreen } from '@/components/stack-scroll-screen';
 import { useAuth } from '@/features/auth/auth-context';
 import { ScheduleItemsEditor } from '@/features/training/schedule-items-editor';
+import { isScheduleDraftValid } from '@/features/training/training-domain';
 import { useReplaceWeeklyScheduleDay, useTrainingData } from '@/features/training/training-queries';
 import type { ScheduleDraftItem } from '@/features/training/training-types';
 import { getCurrentLocale } from '@/i18n';
@@ -36,7 +37,12 @@ export function ScheduleDayEditorScreen({ weekday }: ScheduleDayEditorScreenProp
     setItems(
       training.data.weeklySchedule
         .filter((item) => item.weekday === weekday)
-        .map(({ itemType, referenceId }) => ({ itemType, referenceId })),
+        .map(({ durationMinutes, intensity, itemType, referenceId }) => ({
+          durationMinutes,
+          intensity,
+          itemType,
+          referenceId,
+        })),
     );
   }, [training.data, weekday]);
 
@@ -73,6 +79,7 @@ export function ScheduleDayEditorScreen({ weekday }: ScheduleDayEditorScreenProp
             </AppText>
           ) : null}
           <AppButton
+            disabled={!isScheduleDraftValid(items)}
             loading={replaceDay.isPending}
             onPress={save}
             title={t('scheduleEditor.save')}

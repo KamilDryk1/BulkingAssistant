@@ -74,6 +74,9 @@ export type ActivityDefinitionRow = {
   custom_name: string | null;
   id: string;
   is_custom: boolean;
+  met_hard: number;
+  met_light: number;
+  met_moderate: number;
   name_en: string | null;
   name_pl: string | null;
   owner_user_id: string | null;
@@ -86,6 +89,9 @@ type ActivityDefinitionInsert = {
   custom_name?: string | null;
   id?: string;
   is_custom?: boolean;
+  met_hard?: number;
+  met_light?: number;
+  met_moderate?: number;
   name_en?: string | null;
   name_pl?: string | null;
   owner_user_id?: string | null;
@@ -132,6 +138,8 @@ export type WeeklyScheduleItemRow = {
   created_at: string;
   id: string;
   item_type: ScheduleItemType;
+  planned_duration_minutes: number | null;
+  planned_intensity: ActivityIntensity | null;
   position: number;
   updated_at: string;
   user_id: string;
@@ -144,6 +152,8 @@ type WeeklyScheduleItemInsert = {
   created_at?: string;
   id?: string;
   item_type: ScheduleItemType;
+  planned_duration_minutes?: number | null;
+  planned_intensity?: ActivityIntensity | null;
   position?: number;
   updated_at?: string;
   user_id: string;
@@ -173,6 +183,8 @@ export type DailyScheduleOverrideItemRow = {
   daily_override_id: string;
   id: string;
   item_type: ScheduleItemType;
+  planned_duration_minutes: number | null;
+  planned_intensity: ActivityIntensity | null;
   position: number;
   updated_at: string;
   workout_plan_id: string | null;
@@ -184,6 +196,8 @@ type DailyScheduleOverrideItemInsert = {
   daily_override_id: string;
   id?: string;
   item_type: ScheduleItemType;
+  planned_duration_minutes?: number | null;
+  planned_intensity?: ActivityIntensity | null;
   position?: number;
   updated_at?: string;
   workout_plan_id?: string | null;
@@ -310,26 +324,34 @@ type WeightLogInsert = {
 };
 
 export type NutritionTargetSnapshotRow = {
+  baseline_calories: number | null;
   calculation_version: string;
   calories: number;
   carbohydrate_grams: number;
   created_at: string;
   fat_grams: number;
   id: string;
+  goal_adjustment_calories: number | null;
+  planned_training_calories: number | null;
   protein_grams: number;
+  resting_calories: number | null;
   target_date: string;
   updated_at: string;
   user_id: string;
 };
 
 type NutritionTargetSnapshotInsert = {
+  baseline_calories?: number | null;
   calculation_version: string;
   calories: number;
   carbohydrate_grams: number;
   created_at?: string;
   fat_grams: number;
   id?: string;
+  goal_adjustment_calories?: number | null;
+  planned_training_calories?: number | null;
   protein_grams: number;
+  resting_calories?: number | null;
   target_date: string;
   updated_at?: string;
   user_id: string;

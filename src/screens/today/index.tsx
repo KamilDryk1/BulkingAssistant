@@ -12,6 +12,7 @@ import { QueryStateCard } from '@/components/query-state-card';
 import { Screen } from '@/components/screen';
 import { SectionLabel } from '@/components/section-label';
 import { useAuth } from '@/features/auth/auth-context';
+import { ScheduleItemIcon } from '@/features/training/schedule-item-icon';
 import { resolveScheduleForDate } from '@/features/training/training-domain';
 import { useDailyScheduleOverride, useTrainingData } from '@/features/training/training-queries';
 import type { WorkoutPlan } from '@/features/training/training-types';
@@ -70,26 +71,29 @@ function PlannedWorkout({
 
   return (
     <View style={{ gap: spacing.md }}>
-      <View style={{ gap: spacing.xs }}>
-        <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.sm }}>
-          <AppText style={{ flex: 1 }} variant="title">
-            {plan.name}
-          </AppText>
-          {completedSession ? (
-            <AppText color="success" variant="label">
-              {t('training.completed')}
+      <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
+        <ScheduleItemIcon itemType="workout" />
+        <View style={{ flex: 1, gap: spacing.xs }}>
+          <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.sm }}>
+            <AppText style={{ flex: 1 }} variant="title">
+              {plan.name}
             </AppText>
-          ) : null}
+            {completedSession ? (
+              <AppText color="success" variant="label">
+                {t('training.completed')}
+              </AppText>
+            ) : null}
+          </View>
+          <AppText color="textSecondary" variant="caption">
+            {t('training.exerciseCount', { count: plan.exercises.length })}
+            {' · '}
+            {lastDate
+              ? t('training.lastPerformed', {
+                  count: getCalendarDayDifference(date, lastDate),
+                })
+              : t('training.neverPerformed')}
+          </AppText>
         </View>
-        <AppText color="textSecondary" variant="caption">
-          {t('training.exerciseCount', { count: plan.exercises.length })}
-          {' · '}
-          {lastDate
-            ? t('training.lastPerformed', {
-                count: getCalendarDayDifference(date, lastDate),
-              })
-            : t('training.neverPerformed')}
-        </AppText>
       </View>
       <AppButton
         disabled={!completedSession && plan.exercises.length === 0}
@@ -253,6 +257,15 @@ export function TodayScreen() {
                     {t('units.calories', { ns: 'common' })}
                   </AppText>
                 </View>
+                {target.planned_training_calories !== null ? (
+                  <AppText color="textSecondary" variant="caption">
+                    {t('nutrition.plannedTrainingContribution', {
+                      calories: new Intl.NumberFormat(locale).format(
+                        target.planned_training_calories,
+                      ),
+                    })}
+                  </AppText>
+                ) : null}
               </View>
               <View
                 style={{
@@ -285,11 +298,14 @@ export function TodayScreen() {
         <SectionLabel title={t('plannedTraining')} />
         {activeSession ? (
           <Card elevated style={{ gap: spacing.lg }}>
-            <View style={{ gap: spacing.xs }}>
-              <AppText color="primary" variant="label">
-                {t('training.active')}
-              </AppText>
-              <AppText variant="title">{activeSession.workout_name_snapshot}</AppText>
+            <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
+              <ScheduleItemIcon itemType="workout" />
+              <View style={{ flex: 1, gap: spacing.xs }}>
+                <AppText color="primary" variant="label">
+                  {t('training.active')}
+                </AppText>
+                <AppText variant="title">{activeSession.workout_name_snapshot}</AppText>
+              </View>
             </View>
             <AppButton
               onPress={() => router.push(`/workout/${activeSession.id}`)}
@@ -317,9 +333,15 @@ export function TodayScreen() {
             {resolvedSchedule.items.map((item, index) => {
               if (item.itemType === 'rest') {
                 return (
-                  <AppText key={`rest-${index}`} variant="title">
-                    {t('training.rest')}
-                  </AppText>
+                  <View
+                    key={`rest-${index}`}
+                    style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}
+                  >
+                    <ScheduleItemIcon itemType="rest" />
+                    <AppText style={{ flex: 1 }} variant="title">
+                      {t('training.rest')}
+                    </AppText>
+                  </View>
                 );
               }
 
@@ -336,6 +358,7 @@ export function TodayScreen() {
                     key={`${item.itemType}-${item.referenceId}-${index}`}
                     style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}
                   >
+                    <ScheduleItemIcon activitySlug={activity.slug} itemType="activity" />
                     <View style={{ flex: 1, gap: spacing.xs }}>
                       <AppText variant="title">{activity.displayName}</AppText>
                       <AppText color="textMuted" variant="caption">

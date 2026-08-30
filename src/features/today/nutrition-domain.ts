@@ -1,6 +1,6 @@
-import type { ActivityLevel, FitnessGoal, ProfileSex } from '@/types/database';
+import type { ActivityIntensity, ActivityLevel, FitnessGoal, ProfileSex } from '@/types/database';
 
-export const nutritionCalculationVersion = 'mifflin-st-jeor-v1';
+export const nutritionCalculationVersion = 'mifflin-st-jeor-plan-aware-v2';
 
 const activityFactors: Record<ActivityLevel, number> = {
   sedentary: 1.2,
@@ -31,11 +31,23 @@ const minimumCalories: Record<ProfileSex, number> = {
   male: 1500,
 };
 
+export const strengthTrainingMetByIntensity: Record<ActivityIntensity, number> = {
+  hard: 6,
+  light: 3.5,
+  moderate: 5,
+};
+
+export type PlannedTrainingSession = {
+  durationMinutes: number;
+  met: number;
+};
+
 export type NutritionCalculationInput = {
   activityLevel: ActivityLevel;
   dateOfBirth: string;
   goal: FitnessGoal;
   heightCm: number;
+  plannedSessions?: readonly PlannedTrainingSession[];
   sex: ProfileSex;
   targetDate: string;
   weightKg: number;
@@ -50,14 +62,33 @@ export function calculateAge(dateOfBirth: string, targetDate: string) {
   return targetYear - birthYear - (birthdayPassed ? 0 : 1);
 }
 
+export function calculatePlannedSessionNetCalories(
+  session: PlannedTrainingSession,
+  restingCalories: number,
+  weightKg: number,
+) {
+  const grossCalories = (session.met * 3.5 * weightKg * session.durationMinutes) / 200;
+  const restingCaloriesDuringSession = (restingCalories / 1440) * session.durationMinutes;
+
+  return Math.max(0, grossCalories - restingCaloriesDuringSession);
+}
+
 export function calculateNutritionTarget(input: NutritionCalculationInput) {
   const age = calculateAge(input.dateOfBirth, input.targetDate);
   const sexAdjustment = input.sex === 'male' ? 5 : -161;
   const restingCalories = 10 * input.weightKg + 6.25 * input.heightCm - 5 * age + sexAdjustment;
   const baselineCalories = restingCalories * activityFactors[input.activityLevel];
+  const weeklyPlannedTrainingCalories = (input.plannedSessions ?? []).reduce(
+    (total, session) =>
+      total + calculatePlannedSessionNetCalories(session, restingCalories, input.weightKg),
+    0,
+  );
+  const plannedTrainingCalories = weeklyPlannedTrainingCalories / 7;
+  const maintenanceCalories = baselineCalories + plannedTrainingCalories;
+  const goalAdjustmentCalories = goalCalorieAdjustments[input.goal];
   const calories = Math.max(
     minimumCalories[input.sex],
-    Math.round((baselineCalories + goalCalorieAdjustments[input.goal]) / 10) * 10,
+    Math.round((maintenanceCalories + goalAdjustmentCalories) / 10) * 10,
   );
   const proteinGrams = Math.round(input.weightKg * proteinGramsPerKilogram[input.goal]);
   const fatGrams = Math.round((calories * fatCaloriesRatio) / caloriesPerFatGram);
@@ -74,7 +105,11 @@ export function calculateNutritionTarget(input: NutritionCalculationInput) {
     calories,
     carbohydrateGrams,
     fatGrams,
+    goalAdjustmentCalories,
+    maintenanceCalories: Math.round(maintenanceCalories),
+    plannedTrainingCalories: Math.round(plannedTrainingCalories),
     proteinGrams,
     restingCalories: Math.round(restingCalories),
+    weeklyPlannedTrainingCalories: Math.round(weeklyPlannedTrainingCalories),
   };
 }

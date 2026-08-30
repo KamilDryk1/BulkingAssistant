@@ -22,6 +22,7 @@
   },
   "nutrition": {
     "dailyTarget": "Daily target",
+    "plannedTrainingContribution": "Your weekly plan adds an average of {{calories}} kcal per day.",
     "unavailableTitle": "Nutrition target unavailable",
     "unavailableDetail": "Complete your profile and log a body weight to calculate it."
   },

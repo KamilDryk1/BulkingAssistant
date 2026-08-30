@@ -26,7 +26,7 @@ An active workout is a focused stack flow outside the dashboard. It shows the cu
 - Each strength set is an independent `weight + reps` record with a completion state.
 - The default weight UX exposes one entry per day, but the schema supports multiple timestamped entries; the latest is primary.
 - Kilograms are canonical in storage. The UI can display and accept kilograms or pounds.
-- Nutrition targets are deterministic, based on a centralized Mifflin–St Jeor/TDEE calculation and documented goal/macro defaults. AI is not on the MVP critical path.
+- Nutrition targets are deterministic. A centralized Mifflin–St Jeor calculation combines activity outside workouts with the resolved weekly training plan's duration and intensity, then applies documented goal and macro defaults. AI is not on the MVP critical path.
 - Estimated 1RM uses completed sets and the Epley formula: `weight × (1 + reps / 30)`.
 - Best Set chooses the highest completed weight, breaking ties with higher repetitions.
 

@@ -94,6 +94,12 @@ export function WeeklyScheduleScreen() {
           })}
         </View>
       )}
+
+      <AppButton
+        onPress={() => router.back()}
+        title={t('scheduleScreen.back')}
+        variant="secondary"
+      />
     </StackScrollScreen>
   );
 }

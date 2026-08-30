@@ -35,7 +35,14 @@ export function ScheduleItemList({ activities, emptyLabel, items, plans }: Sched
                 t('scheduleEditor.missingItem'))
               : (activities.find((activity) => activity.id === item.referenceId)?.displayName ??
                 t('scheduleEditor.missingItem'));
-        const typeLabel = t(`scheduleEditor.${item.itemType}`);
+        const typeLabel =
+          item.itemType === 'rest'
+            ? t('scheduleEditor.rest')
+            : t('scheduleEditor.itemDetails', {
+                duration: item.durationMinutes,
+                intensity: t(`scheduleEditor.intensities.${item.intensity ?? 'moderate'}`),
+                type: t(`scheduleEditor.${item.itemType}`),
+              });
 
         return (
           <View

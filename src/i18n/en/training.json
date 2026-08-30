@@ -125,7 +125,8 @@
     "emptyDay": "Nothing planned",
     "itemCount_one": "{{count}} item",
     "itemCount_other": "{{count}} items",
-    "editDay": "Edit {{day}}"
+    "editDay": "Edit {{day}}",
+    "back": "Back"
   },
   "scheduleEditor": {
     "planned": "Planned items",
@@ -136,6 +137,16 @@
     "rest": "Rest day",
     "workout": "Workout",
     "activity": "Activity",
+    "duration": "Planned duration (minutes)",
+    "durationPlaceholder": "60",
+    "durationError": "Enter a whole number from 1 to 1440",
+    "intensity": "Planned intensity",
+    "intensities": {
+      "light": "Light",
+      "moderate": "Moderate",
+      "hard": "Hard"
+    },
+    "itemDetails": "{{type}} · {{duration}} min · {{intensity}}",
     "missingItem": "Unavailable item",
     "noPlans": "Create a workout plan before adding one here.",
     "save": "Save day",
