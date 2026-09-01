@@ -86,6 +86,18 @@ function RootNavigator() {
       </Stack.Protected>
       <Stack.Protected guard={Boolean(session) && onboardingComplete}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="ai-suggestion"
+          options={{
+            contentStyle: { backgroundColor: colors.background },
+            gestureEnabled: false,
+            headerShown: false,
+            presentation: 'formSheet',
+            sheetAllowedDetents: [0.7, 0.95],
+            sheetGrabberVisible: false,
+            sheetInitialDetentIndex: 0,
+          }}
+        />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen name="training-tools" options={{ headerShown: false }} />
         <Stack.Screen name="workout" options={{ headerShown: false }} />

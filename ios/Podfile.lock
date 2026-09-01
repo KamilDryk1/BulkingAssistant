@@ -1,10 +1,10 @@
 PODS:
-  - EXConstants (57.0.16):
+  - EXConstants (57.0.17):
     - ExpoModulesCore
   - EXJSONUtils (57.0.1)
   - EXManifests (57.0.1):
     - ExpoModulesCore
-  - Expo (57.0.18):
+  - Expo (57.0.19):
     - ExpoModulesCore
     - ExpoModulesJSI
     - hermes-engine
@@ -30,15 +30,15 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-client (57.0.16):
+  - expo-dev-client (57.0.18):
     - EXManifests
     - expo-dev-launcher
     - expo-dev-menu
     - expo-dev-menu-interface
     - EXUpdatesInterface
-  - expo-dev-launcher (57.0.16):
+  - expo-dev-launcher (57.0.19):
     - EXManifests
-    - expo-dev-launcher/Main (= 57.0.16)
+    - expo-dev-launcher/Main (= 57.0.19)
     - expo-dev-menu
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -67,7 +67,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-launcher/Main (57.0.16):
+  - expo-dev-launcher/Main (57.0.19):
     - EXManifests
     - expo-dev-launcher/Unsafe
     - expo-dev-menu
@@ -98,7 +98,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-launcher/Unsafe (57.0.16):
+  - expo-dev-launcher/Unsafe (57.0.19):
     - EXManifests
     - expo-dev-menu
     - expo-dev-menu-interface
@@ -128,8 +128,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - expo-dev-menu (57.0.16):
-    - expo-dev-menu/Main (= 57.0.16)
+  - expo-dev-menu (57.0.18):
+    - expo-dev-menu/Main (= 57.0.18)
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -152,7 +152,7 @@ PODS:
     - ReactNativeDependencies
     - Yoga
   - expo-dev-menu-interface (57.0.0)
-  - expo-dev-menu/Main (57.0.16):
+  - expo-dev-menu/Main (57.0.18):
     - EXManifests
     - expo-dev-menu-interface
     - ExpoModulesCore
@@ -178,25 +178,25 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - ExpoAsset (57.0.15):
+  - ExpoAsset (57.0.16):
     - ExpoModulesCore
   - ExpoDomWebView (57.0.1):
     - ExpoModulesCore
   - ExpoFileSystem (57.0.6):
     - ExpoModulesCore
-  - ExpoFont (57.0.2):
+  - ExpoFont (57.0.3):
     - ExpoModulesCore
   - ExpoGlassEffect (57.0.1):
     - ExpoModulesCore
   - ExpoKeepAwake (57.0.1):
     - ExpoModulesCore
-  - ExpoLinking (57.0.8):
+  - ExpoLinking (57.0.9):
     - ExpoModulesCore
   - ExpoLocalization (57.0.1):
     - ExpoModulesCore
   - ExpoLogBox (57.0.4):
     - React-Core
-  - ExpoModulesCore (57.0.14):
+  - ExpoModulesCore (57.0.15):
     - ExpoModulesJSI
     - hermes-engine
     - RCTRequired
@@ -220,18 +220,18 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - ExpoModulesJSI (57.0.6):
+  - ExpoModulesJSI (57.0.7):
     - React-Core
     - ReactCommon
-  - ExpoModulesWorklets (57.0.14):
+  - ExpoModulesWorklets (57.0.15):
     - ExpoModulesCore
     - ExpoModulesJSI
-  - ExpoModulesWorkletsAdapter (57.0.14):
+  - ExpoModulesWorkletsAdapter (57.0.15):
     - ExpoModulesCore
     - ExpoModulesJSI
     - ExpoModulesWorklets
     - RNWorklets
-  - ExpoRouter (57.0.17):
+  - ExpoRouter (57.0.18):
     - ExpoModulesCore
     - RNScreens
   - ExpoSplashScreen (57.0.8):
@@ -240,7 +240,7 @@ PODS:
     - ExpoModulesCore
   - ExpoSystemUI (57.0.3):
     - ExpoModulesCore
-  - ExpoUI (57.0.14):
+  - ExpoUI (57.0.15):
     - ExpoModulesCore
     - ExpoModulesWorklets
     - React-RCTFabric
@@ -2806,32 +2806,32 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  EXConstants: 736b7f1ed7235956785cb81e0ce37ab6a4f33fb4
+  EXConstants: 799577d2516460afb4b57874d6823a62327ce5c7
   EXJSONUtils: 7a1683cfa2cbe6d11fca97097d51a496755b0287
   EXManifests: f9888c0bf5aaa6ddb7e3d4b224d6d54ac4ca84a4
-  Expo: b3509245f68fe53664ff17b31bb1eda11c24e684
-  expo-dev-client: ae71f92c5da549bc7c6225a996d3376ca006dbac
-  expo-dev-launcher: d4f23607b4232f6f214c741cde5356607c95edac
-  expo-dev-menu: d2f0a5c130f290466028fd1579a5b1f3bf441313
+  Expo: e174d0ecd763a050d7c8a25a0a8b5dadc43158e8
+  expo-dev-client: 053b4d48d32e7ed130d3498491461fdba04aee28
+  expo-dev-launcher: c8fe1fb0f46dc02948c63ab23340179f670dc000
+  expo-dev-menu: 272e23ced973a0e401c2b9a679595ea6c7c05d78
   expo-dev-menu-interface: 7a59e803916fbfd1b96c75ff91ea8dddac7e722f
-  ExpoAsset: ff225ee16cea2409800b20fe4945a7c720a24cee
+  ExpoAsset: bea9115098b9f4ddfb0456961c8a7d2779ccc8f5
   ExpoDomWebView: beaec034e51bd028428b98bb1f2633ab79c6d095
   ExpoFileSystem: cc500f33804065aacc7b3366007267b84deca8c8
-  ExpoFont: 02ab7433c23831e76b98aa1e2de67b404eeebc4a
+  ExpoFont: d5b77d74f8d5d1a248de70955bfad847079e9074
   ExpoGlassEffect: 4b62afb489e6b84357701737ce002137c9d5fdbc
   ExpoKeepAwake: c26f14275017370cc8a4b7b43a0e23361f2053a5
-  ExpoLinking: b616f5d0c2e11db3a5cccd8ae6bff45294929fd2
+  ExpoLinking: 0e104e1f3402abec3fd8243fd9586ca38df8e3ef
   ExpoLocalization: 659243b03b3a3e9589793cee2f728a899e181329
   ExpoLogBox: 80957303325cd4439137765c90a87d7f22aaf2ff
-  ExpoModulesCore: 85e91b5895f6dc59e2c87c185f9d9ad43f853405
-  ExpoModulesJSI: 1529d4289b9a3647d8901a27b41f1af173598b45
-  ExpoModulesWorklets: 57a11e6ae984c2680e7967b785ded96199caed8c
-  ExpoModulesWorkletsAdapter: be52ecb2cbbed64febbb739971bd77d9c8e84569
-  ExpoRouter: 9bf293bba85908c1834190e6913b22da1e573689
+  ExpoModulesCore: e89872bce2c4b936eda0bd4019ceac1e9d72388b
+  ExpoModulesJSI: 52f43ddb01b1db76ccfcff4c4df4fed39e31ba7d
+  ExpoModulesWorklets: 5e70b46d570c5b1b702c18bc8ac8d1af0171450e
+  ExpoModulesWorkletsAdapter: e6b5fe31d23bed76c5cb22e9fbf19e740ce03253
+  ExpoRouter: 00ce3fd59a48778a90c313bf1be5598835aad24e
   ExpoSplashScreen: 6f422fd595600d78520c6b7dcf8a908fb8a7fec0
   ExpoSymbols: 0efd93edf0f825bf3c762582b0769dd3b296235c
   ExpoSystemUI: e5f9a81b45481222f6b8b45b86fa37b18d0a86c9
-  ExpoUI: 6867422a567a251dcc25444c706b53f479e457ae
+  ExpoUI: 3a63ce87d7d2d2a565fd1eabba08ed5ecdae7991
   EXUpdatesInterface: 92d2aa5194b6fb93ca8ab749db75665cb28b2e60
   FBLazyVector: 2138c6c2ab66c31bf5754dc18097fbc498a49c7f
   hermes-engine: 63c5db7d529c36335fada6582fd293ae2a105d77

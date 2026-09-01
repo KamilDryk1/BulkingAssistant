@@ -103,6 +103,8 @@ select lives_ok(
     insert into public.nutrition_target_snapshots (
       user_id,
       target_date,
+      base_calories,
+      calorie_adjustment_calories,
       calories,
       protein_grams,
       carbohydrate_grams,
@@ -115,6 +117,8 @@ select lives_ok(
     ) values (
       'ea000000-0000-4000-8000-000000000001',
       '2026-08-29',
+      2750,
+      0,
       2750,
       150,
       350,

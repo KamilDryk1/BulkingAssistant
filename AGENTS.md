@@ -34,6 +34,16 @@
 - Treat predefined exercises and activities as globally readable, immutable catalog data. Custom entries are private to their owner.
 - Never put a service-role key, AI provider key, or other privileged credential in the client. Only `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` belong in the Expo public environment.
 
+## AI Coach
+
+- Keep OpenAI calls inside authenticated Supabase Edge Functions and configure model identifiers through secrets; never call a provider directly from Expo.
+- Build compact AI context from unit-tested deterministic domain summaries. Do not ask the model to calculate canonical weight conversion, nutrition targets, rolling averages, schedule resolution, or Estimated 1RM.
+- Prefer `no_action` when evidence is sparse or mixed. Validate strict structured output in code before persistence and keep provider requests non-retained where supported.
+- Derive user identity from the verified bearer token. Use user-scoped RLS reads and narrow service-role RPCs for processing state.
+- Never apply AI output automatically. Stage 1 permits only an explicit, atomic user approval of a bounded calorie adjustment; workout plans and schedules remain unchanged.
+- Keep model-generated copy in the profile locale, keep IDs and commands out of model output, and never log secrets or full user context in production.
+- Keep Stage 2 conversational agents and tools design-only until the user explicitly approves implementation.
+
 ## Validation
 
 - Before handing off a phase, run TypeScript, lint, relevant tests, and an Expo export/start smoke check.

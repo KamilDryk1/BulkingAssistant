@@ -29,6 +29,8 @@ function targetMatches(
   return Boolean(
     snapshot &&
     snapshot.calculation_version === nutritionCalculationVersion &&
+    snapshot.base_calories === target.baseCalories &&
+    snapshot.calorie_adjustment_calories === target.calorieAdjustmentCalories &&
     snapshot.calories === target.calories &&
     snapshot.protein_grams === target.proteinGrams &&
     snapshot.carbohydrate_grams === target.carbohydrateGrams &&
@@ -176,6 +178,7 @@ async function ensureNutritionTarget(
 
   const target = calculateNutritionTarget({
     activityLevel: profile.activity_level,
+    calorieAdjustmentCalories: profile.calorie_adjustment_calories,
     dateOfBirth: profile.date_of_birth,
     goal: profile.goal,
     heightCm: profile.height_cm,
@@ -194,7 +197,9 @@ async function ensureNutritionTarget(
     .upsert(
       {
         baseline_calories: target.baselineCalories,
+        base_calories: target.baseCalories,
         calculation_version: nutritionCalculationVersion,
+        calorie_adjustment_calories: target.calorieAdjustmentCalories,
         calories: target.calories,
         carbohydrate_grams: target.carbohydrateGrams,
         fat_grams: target.fatGrams,

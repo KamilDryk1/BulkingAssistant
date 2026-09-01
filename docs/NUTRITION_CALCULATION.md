@@ -40,7 +40,8 @@ Subtracting resting energy for the same interval prevents counting it twice. The
 ```text
 maintenance = restingCalories × outsideWorkoutActivityFactor
             + weeklyPlannedTrainingCalories ÷ 7
-target = maintenance + goalAdjustment
+base target = maintenance + goalAdjustment
+effective target = base target + approved persistent calorie adjustment
 ```
 
 Completed workout and activity logs are not added again: the resolved plan is the single training-energy source for the target.
@@ -53,7 +54,7 @@ Goal adjustment:
 | Maintain |           0 kcal |
 | Gain     |        +250 kcal |
 
-The result is rounded to the nearest 10 kcal. The general MVP safeguard is 1,500 kcal for male profiles and 1,200 kcal for female profiles. MET values and activity factors are population-level estimates, so the result should be treated as a starting point and refined later from weight trend rather than as a precise measurement.
+The base result is rounded to the nearest 10 kcal. The general MVP safeguard is 1,500 kcal for male profiles and 1,200 kcal for female profiles. A Stage 1 AI suggestion can propose a conservative adjustment in non-zero 50 kcal steps up to 300 kcal, but the persistent offset changes only after explicit user approval. The user can reset that offset to zero from Body. MET values and activity factors are population-level estimates, so the result should be treated as a starting point and refined from repeated trends rather than as a precise measurement.
 
 ## Macros
 
@@ -63,6 +64,6 @@ The result is rounded to the nearest 10 kcal. The general MVP safeguard is 1,500
 
 ## Persistence and recalculation
 
-The Today query uses the profile, latest canonical kilogram weight, and resolved schedule for the current calendar week. It compares the result with the snapshot for the local calendar date and upserts only when the calculation version or result differs. The snapshot keeps resting calories, the outside-workout baseline, average planned-training calories, goal adjustment, target, and macros.
+The Today query uses the profile, latest canonical kilogram weight, and resolved schedule for the current calendar week. It compares the result with the snapshot for the local calendar date and upserts only when the calculation version or result differs. The snapshot keeps resting calories, the outside-workout baseline, average planned-training calories, goal adjustment, deterministic base target, approved persistent adjustment, effective target, and macros.
 
 Profile, body-weight, plan, recurring-schedule, and date-specific override mutations invalidate Today data, so the current snapshot is recalculated without asking for information the app already knows.

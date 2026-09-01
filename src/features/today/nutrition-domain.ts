@@ -44,6 +44,7 @@ export type PlannedTrainingSession = {
 
 export type NutritionCalculationInput = {
   activityLevel: ActivityLevel;
+  calorieAdjustmentCalories?: number;
   dateOfBirth: string;
   goal: FitnessGoal;
   heightCm: number;
@@ -86,10 +87,12 @@ export function calculateNutritionTarget(input: NutritionCalculationInput) {
   const plannedTrainingCalories = weeklyPlannedTrainingCalories / 7;
   const maintenanceCalories = baselineCalories + plannedTrainingCalories;
   const goalAdjustmentCalories = goalCalorieAdjustments[input.goal];
-  const calories = Math.max(
+  const baseCalories = Math.max(
     minimumCalories[input.sex],
     Math.round((maintenanceCalories + goalAdjustmentCalories) / 10) * 10,
   );
+  const calorieAdjustmentCalories = input.calorieAdjustmentCalories ?? 0;
+  const calories = baseCalories + calorieAdjustmentCalories;
   const proteinGrams = Math.round(input.weightKg * proteinGramsPerKilogram[input.goal]);
   const fatGrams = Math.round((calories * fatCaloriesRatio) / caloriesPerFatGram);
   const carbohydrateGrams = Math.max(
@@ -102,6 +105,8 @@ export function calculateNutritionTarget(input: NutritionCalculationInput) {
 
   return {
     baselineCalories: Math.round(baselineCalories),
+    baseCalories,
+    calorieAdjustmentCalories,
     calories,
     carbohydrateGrams,
     fatGrams,

@@ -1,4 +1,4 @@
-import type { AppLocale, WeightUnit } from '@/types/database';
+import type { AppLocale, WeightUnit } from '@/types/database.ts';
 
 const poundsPerKilogram = 2.2046226218;
 

@@ -1,4 +1,4 @@
-import type { AppLocale } from '@/types/database';
+import type { AppLocale } from '@/types/database.ts';
 
 export type ProgressMode = 'estimatedOneRepMax' | 'bestSet';
 

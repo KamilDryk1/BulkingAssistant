@@ -24,7 +24,7 @@ src/
 
 supabase/
 ├── migrations/             # Versioned PostgreSQL schema and RLS
-├── functions/              # Future privileged/AI server boundaries
+├── functions/              # Privileged/AI server boundaries
 └── seed.sql                # Repeatable predefined catalog data
 ```
 
@@ -126,3 +126,14 @@ No global state library is planned; authentication state is scoped to a provider
 - [x] Refresh dependent Today data after workout and schedule mutations while retaining paginated histories and stable list identity.
 - [x] Validate strict TypeScript, lint, unit tests, formatting, Expo SDK dependency alignment, and iOS/Android/web exports.
 - [x] Update the README and record the completed production-quality audit.
+
+### Stage 1 — Automatic daily AI analysis
+
+- [x] Document the shared AI architecture, conservative policy, context, schema, lifecycle, configuration, and Stage 2 boundary.
+- [x] Add one-per-local-day analysis persistence, RLS, atomic claim/retry/display RPCs, and idempotent explicit calorie acceptance.
+- [x] Build deterministic weight, strength, adherence, activity, and nutrition context with data-sufficiency gates.
+- [x] Add the authenticated Supabase Edge Function with environment-selected live, mock, and disabled modes plus strict OpenAI Responses output validation.
+- [x] Trigger analysis outside the core Today query and display only new actionable suggestions in a localized form sheet.
+- [x] Persist the approved calorie offset separately from the deterministic base target and expose its breakdown/reset in Body.
+- [x] Add English/Polish copy, pure-domain/model-mock tests, pgTAP lifecycle/security coverage, and all-platform validation.
+- [ ] Keep Stage 2 conversational Coach tools unimplemented until explicit approval.

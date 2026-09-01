@@ -23,6 +23,7 @@ export type UpdateProfileInput = Partial<
   Pick<
     ProfileRow,
     | 'activity_level'
+    | 'calorie_adjustment_calories'
     | 'date_of_birth'
     | 'goal'
     | 'height_cm'

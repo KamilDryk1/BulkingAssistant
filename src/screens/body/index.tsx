@@ -158,7 +158,8 @@ export function BodyScreen() {
   const { dateKey } = useCurrentDate();
   const body = useBodyData(user?.id ?? '', dateKey);
   const today = useTodayData(user?.id ?? '', dateKey, profile);
-  const updateProfile = useUpdateProfile(user?.id ?? '');
+  const updateGoal = useUpdateProfile(user?.id ?? '');
+  const resetCalorieAdjustment = useUpdateProfile(user?.id ?? '');
   const locale = profile?.locale ?? getCurrentLocale();
   const retry = () => {
     void body.refetch();
@@ -193,7 +194,7 @@ export function BodyScreen() {
   const currentWeight = today.data.latestWeight?.weight_kg ?? null;
   const goalChange = (goal: FitnessGoal) => {
     if (goal !== profile.goal) {
-      updateProfile.mutate({ goal });
+      updateGoal.mutate({ goal });
     }
   };
 
@@ -201,12 +202,8 @@ export function BodyScreen() {
     <Screen header={<AppHeader eyebrow={t('eyebrow')} title={t('title')} />}>
       <View style={{ gap: spacing.md }}>
         <SectionLabel title={t('goal')} />
-        <GoalSelector
-          disabled={updateProfile.isPending}
-          onChange={goalChange}
-          value={profile.goal}
-        />
-        {updateProfile.isError ? (
+        <GoalSelector disabled={updateGoal.isPending} onChange={goalChange} value={profile.goal} />
+        {updateGoal.isError ? (
           <AppText color="danger" variant="caption">
             {t('goalUpdateError')}
           </AppText>
@@ -271,6 +268,19 @@ export function BodyScreen() {
                       signed
                       value={target.goal_adjustment_calories}
                     />
+                    <NutritionBreakdownRow
+                      label={t('baseTargetCalories')}
+                      locale={locale}
+                      value={target.base_calories}
+                    />
+                    {target.calorie_adjustment_calories !== 0 ? (
+                      <NutritionBreakdownRow
+                        label={t('persistentCalorieAdjustment')}
+                        locale={locale}
+                        signed
+                        value={target.calorie_adjustment_calories}
+                      />
+                    ) : null}
                   </View>
                 </>
               ) : null}
@@ -286,6 +296,19 @@ export function BodyScreen() {
             title={t('profileAction')}
             variant="secondary"
           />
+          {profile.calorie_adjustment_calories !== 0 ? (
+            <AppButton
+              loading={resetCalorieAdjustment.isPending}
+              onPress={() => resetCalorieAdjustment.mutate({ calorie_adjustment_calories: 0 })}
+              title={t('resetCalorieAdjustment')}
+              variant="ghost"
+            />
+          ) : null}
+          {resetCalorieAdjustment.isError ? (
+            <AppText color="danger" variant="caption">
+              {t('resetCalorieAdjustmentError')}
+            </AppText>
+          ) : null}
         </Card>
       </View>
 

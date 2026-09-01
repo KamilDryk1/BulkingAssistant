@@ -1,4 +1,6 @@
-import { useRouter } from 'expo-router';
+import { useCalendars } from 'expo-localization';
+import { type Href, useRouter } from 'expo-router';
+import { useEffect, useRef } from 'react';
 import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +14,10 @@ import { QueryStateCard } from '@/components/query-state-card';
 import { Screen } from '@/components/screen';
 import { SectionLabel } from '@/components/section-label';
 import { useAuth } from '@/features/auth/auth-context';
+import {
+  useClaimDailyAnalysisForDisplay,
+  useEnsureDailyAnalysis,
+} from '@/features/ai/daily-analysis-queries';
 import { ScheduleItemIcon } from '@/features/training/schedule-item-icon';
 import { resolveScheduleForDate } from '@/features/training/training-domain';
 import { useDailyScheduleOverride, useTrainingData } from '@/features/training/training-queries';
@@ -155,11 +161,21 @@ export function TodayScreen() {
   const { t } = useTranslation(['today', 'common']);
   const router = useRouter();
   const { profile, user } = useAuth();
+  const [calendar] = useCalendars();
   const locale = profile?.locale ?? getCurrentLocale();
   const { date, dateKey } = useCurrentDate();
   const training = useTrainingData(user?.id ?? '', locale);
   const dailyOverride = useDailyScheduleOverride(user?.id ?? '', dateKey);
   const today = useTodayData(user?.id ?? '', dateKey, profile);
+  const timeZone = calendar?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'UTC';
+  const dailyAnalysis = useEnsureDailyAnalysis(
+    user?.id ?? '',
+    dateKey,
+    timeZone,
+    Boolean(today.data && profile?.onboarding_completed_at),
+  );
+  const claimDailyAnalysis = useClaimDailyAnalysisForDisplay();
+  const openingAnalysisId = useRef<string | null>(null);
   const activeWorkout = useActiveWorkoutSession(user?.id ?? '');
   const activeSession = activeWorkout.data;
   const startWorkout = useStartWorkoutSession();
@@ -187,6 +203,34 @@ export function TodayScreen() {
   const failed =
     training.isError || dailyOverride.isError || today.isError || activeWorkout.isError;
   const dateLabel = formatFullDate(date, locale);
+
+  useEffect(() => {
+    const analysis = dailyAnalysis.data?.analysis;
+    if (
+      analysis?.status !== 'suggestion' ||
+      analysis.first_shown_at ||
+      analysis.accepted_at ||
+      analysis.dismissed_at ||
+      openingAnalysisId.current === analysis.id
+    ) {
+      return;
+    }
+
+    openingAnalysisId.current = analysis.id;
+    claimDailyAnalysis.mutate(analysis.id, {
+      onError: () => {
+        openingAnalysisId.current = null;
+      },
+      onSuccess: (claimed) => {
+        if (claimed) {
+          router.push({
+            pathname: '/ai-suggestion',
+            params: { analysisId: claimed.id },
+          } as unknown as Href);
+        }
+      },
+    });
+  }, [claimDailyAnalysis, dailyAnalysis.data?.analysis, router]);
 
   const retry = () => {
     void training.refetch();

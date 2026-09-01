@@ -1,0 +1,19 @@
+{
+  "suggestion": {
+    "eyebrow": "Sugestia trenera",
+    "loadingTitle": "Wczytuję sugestię",
+    "loadingDetail": "Przygotowuję uzasadnienie i proponowane działanie.",
+    "errorTitle": "Sugestia jest niedostępna",
+    "errorDetail": "Nie udało się wczytać sugestii. Pozostałe dane w aplikacji działają normalnie.",
+    "evidence": "Dlaczego to widzisz",
+    "currentTarget": "Obecny cel",
+    "suggestedTarget": "Sugerowany cel",
+    "requiresApproval": "Nic się nie zmieni, dopóki nie zastosujesz tej korekty.",
+    "applyCalories": "Zastosuj {{value}} kcal",
+    "notNow": "Nie teraz",
+    "actionError": "Nie udało się zaktualizować sugestii. Spróbuj ponownie."
+  },
+  "actions": {
+    "close": "Zamknij"
+  }
+}

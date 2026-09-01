@@ -2,7 +2,7 @@
 
 Bulking Assistant is an Expo/React Native workout, activity, body-weight, and nutrition assistant focused on fast, low-friction daily and in-gym logging.
 
-All eight MVP phases are implemented. The app includes the production foundation, authentication and onboarding, training planning, a complete active-workout flow, a persisted Today dashboard, the Body area for nutrition, weight trends and activity history, focused strength progress tracking, and the final cross-platform quality pass.
+All eight MVP phases and the first AI Coach stage are implemented. The app includes the production foundation, authentication and onboarding, training planning, a complete active-workout flow, a persisted Today dashboard, the Body area for nutrition, weight trends and activity history, focused strength progress tracking, and conservative automatic daily analysis.
 
 ## Current foundation
 
@@ -21,6 +21,8 @@ All eight MVP phases are implemented. The app includes the production foundation
 - resumable sessions, safe set editing/deletion/completion, localized session snapshots, and paginated workout history
 - a live Today dashboard with local-date schedule resolution, daily overrides, workout shortcuts, completed activity, and current body weight
 - deterministic plan-aware Mifflin–St Jeor calorie and macro targets persisted with a visible calculation breakdown
+- authenticated once-per-local-day AI analysis built from deterministic weight, strength, adherence, activity, and nutrition summaries
+- strict OpenAI Responses output validation, silent no-action behavior, explicit suggestion approval, bounded calorie adjustments, and mock/disabled modes
 - native form sheets for quick activity logging and one-primary-entry-per-day weight logging
 - a complete Body screen with live goal changes, current calories/macros, a seven-day weight average, weekly trend, and four-week rolling-average chart
 - paginated non-strength activity history plus private custom activities shared with logging and scheduling
@@ -32,7 +34,7 @@ All eight MVP phases are implemented. The app includes the production foundation
 - responsive web fallback plus iOS and Android bundles
 - Expo-aware linting and Prettier formatting
 
-See [the product specification](docs/PRODUCT_SPEC.md), [nutrition calculation](docs/NUTRITION_CALCULATION.md), [quality audit](docs/QUALITY_AUDIT.md), and [implementation plan](docs/IMPLEMENTATION_PLAN.md) for scope, validation, and sequencing.
+See [the product specification](docs/PRODUCT_SPEC.md), [AI Coach specification](docs/AI_COACH_SPEC.md), [nutrition calculation](docs/NUTRITION_CALCULATION.md), [quality audit](docs/QUALITY_AUDIT.md), and [implementation plan](docs/IMPLEMENTATION_PLAN.md) for scope, validation, and sequencing.
 
 ## Requirements
 
@@ -82,6 +84,25 @@ npx supabase db push --include-seed
 
 Before using the app against the hosted project, enable email/password sign-up in Supabase Auth and set the two public values in `.env`.
 
+### Stage 1 AI Coach
+
+The OpenAI key is a Supabase Edge Function secret, never an Expo variable. Configure live analysis and deploy the function after applying the migration:
+
+```bash
+npx supabase secrets set OPENAI_API_KEY=YOUR_KEY
+npx supabase secrets set OPENAI_DAILY_ANALYSIS_MODEL=gpt-5.6-terra
+npx supabase secrets set AI_DAILY_ANALYSIS_MODE=live
+npx supabase functions deploy ensure-daily-analysis
+```
+
+`OPENAI_AGENT_MODEL=gpt-5.6-terra` is reserved for the approved future conversational stage and is not read by Stage 1. For local, paid-call-free testing, create an ignored `supabase/functions/.env.local` with `AI_DAILY_ANALYSIS_MODE=mock`, `AI_DAILY_ANALYSIS_MOCK_RESULT` set to a strict result JSON string, and optionally `AI_DAILY_ANALYSIS_ALLOW_DEBUG_RESET=true`. Then run:
+
+```bash
+npx supabase functions serve ensure-daily-analysis --env-file supabase/functions/.env.local
+```
+
+Use `AI_DAILY_ANALYSIS_MODE=disabled` to record a silent no-action result without gathering context or calling OpenAI. Leave `AI_DAILY_ANALYSIS_LOG_CONTEXT` unset in production; setting it to `true` logs the compact fitness context for local diagnosis.
+
 Start the app:
 
 ```bash
@@ -99,6 +120,8 @@ npm run test:unit
 npm run format:check
 npx supabase db lint --local
 npx supabase test db
+npx --yes deno check --config supabase/functions/ensure-daily-analysis/deno.json supabase/functions/ensure-daily-analysis/index.ts
+npx supabase functions serve ensure-daily-analysis --env-file supabase/functions/.env.local
 npx expo export --platform all
 ```
 
@@ -116,7 +139,7 @@ src/lib/          shared environment and query setup
 src/providers/    app-level providers
 src/services/     Supabase and future external-service boundaries
 src/theme/        the only source of visual tokens
-supabase/         migrations, seed data, and future edge functions
+supabase/         migrations, tests, seed data, and Edge Functions
 docs/             product specification and implementation plan
 ```
 

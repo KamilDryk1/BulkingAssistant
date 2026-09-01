@@ -10,12 +10,20 @@ export type EquipmentCategory =
   'barbell' | 'dumbbell' | 'machine' | 'cable' | 'bodyweight' | 'other';
 export type ScheduleItemType = 'workout' | 'activity' | 'rest';
 export type ActivityIntensity = 'light' | 'moderate' | 'hard';
+export type AiAnalysisStatus = 'pending' | 'failed' | 'no_action' | 'suggestion';
+export type AiAnalysisCategory =
+  'none' | 'nutrition' | 'training' | 'recovery' | 'adherence' | 'activity';
+export type AiAnalysisPriority = 'low' | 'medium' | 'high';
+export type AiAnalysisConfidence = 'low' | 'medium' | 'high';
+export type AiAnalysisOutcomeReason = 'model' | 'insufficient_data' | 'disabled' | 'mock';
 
 export type ProfileRow = {
   activity_level: ActivityLevel | null;
+  calorie_adjustment_calories: number;
   created_at: string;
   date_of_birth: string | null;
   goal: FitnessGoal | null;
+  goal_changed_at: string | null;
   height_cm: number | null;
   locale: AppLocale;
   onboarding_completed_at: string | null;
@@ -27,9 +35,11 @@ export type ProfileRow = {
 
 type ProfileInsert = {
   activity_level?: ActivityLevel | null;
+  calorie_adjustment_calories?: number;
   created_at?: string;
   date_of_birth?: string | null;
   goal?: FitnessGoal | null;
+  goal_changed_at?: string | null;
   height_cm?: number | null;
   locale?: AppLocale;
   onboarding_completed_at?: string | null;
@@ -325,7 +335,9 @@ type WeightLogInsert = {
 
 export type NutritionTargetSnapshotRow = {
   baseline_calories: number | null;
+  base_calories: number;
   calculation_version: string;
+  calorie_adjustment_calories: number;
   calories: number;
   carbohydrate_grams: number;
   created_at: string;
@@ -342,7 +354,9 @@ export type NutritionTargetSnapshotRow = {
 
 type NutritionTargetSnapshotInsert = {
   baseline_calories?: number | null;
+  base_calories: number;
   calculation_version: string;
+  calorie_adjustment_calories?: number;
   calories: number;
   carbohydrate_grams: number;
   created_at?: string;
@@ -353,6 +367,66 @@ type NutritionTargetSnapshotInsert = {
   protein_grams: number;
   resting_calories?: number | null;
   target_date: string;
+  updated_at?: string;
+  user_id: string;
+};
+
+export type AiDailyAnalysisRow = {
+  accepted_at: string | null;
+  analysis_date: string;
+  analysis_time_zone: string;
+  attempt_count: number;
+  category: AiAnalysisCategory | null;
+  completed_at: string | null;
+  confidence: AiAnalysisConfidence | null;
+  context_version: string | null;
+  created_at: string;
+  dismissed_at: string | null;
+  error_code: string | null;
+  evidence: Json;
+  first_shown_at: string | null;
+  id: string;
+  message: string | null;
+  model: string | null;
+  outcome_reason: AiAnalysisOutcomeReason | null;
+  priority: AiAnalysisPriority | null;
+  processing_started_at: string;
+  processing_token: string;
+  proposed_action: Json | null;
+  provider_response_id: string | null;
+  retry_after: string | null;
+  status: AiAnalysisStatus;
+  title: string | null;
+  updated_at: string;
+  user_id: string;
+};
+
+type AiDailyAnalysisInsert = {
+  accepted_at?: string | null;
+  analysis_date: string;
+  analysis_time_zone: string;
+  attempt_count?: number;
+  category?: AiAnalysisCategory | null;
+  completed_at?: string | null;
+  confidence?: AiAnalysisConfidence | null;
+  context_version?: string | null;
+  created_at?: string;
+  dismissed_at?: string | null;
+  error_code?: string | null;
+  evidence?: Json;
+  first_shown_at?: string | null;
+  id?: string;
+  message?: string | null;
+  model?: string | null;
+  outcome_reason?: AiAnalysisOutcomeReason | null;
+  priority?: AiAnalysisPriority | null;
+  processing_started_at?: string;
+  processing_token?: string;
+  proposed_action?: Json | null;
+  provider_response_id?: string | null;
+  retry_after?: string | null;
+  status?: AiAnalysisStatus;
+  title?: string | null;
   updated_at?: string;
   user_id: string;
 };
@@ -370,6 +444,11 @@ export type Database = {
     Enums: {
       activity_intensity: ActivityIntensity;
       activity_level: ActivityLevel;
+      ai_analysis_category: AiAnalysisCategory;
+      ai_analysis_confidence: AiAnalysisConfidence;
+      ai_analysis_outcome_reason: AiAnalysisOutcomeReason;
+      ai_analysis_priority: AiAnalysisPriority;
+      ai_analysis_status: AiAnalysisStatus;
       app_locale: AppLocale;
       equipment_category: EquipmentCategory;
       fitness_goal: FitnessGoal;
@@ -379,6 +458,46 @@ export type Database = {
       weight_unit: WeightUnit;
     };
     Functions: {
+      accept_ai_daily_analysis: {
+        Args: { analysis_id_value: string };
+        Returns: AiDailyAnalysisRow;
+      };
+      claim_ai_daily_analysis: {
+        Args: {
+          analysis_user_id: string;
+          requested_analysis_date: string;
+          requested_time_zone: string;
+        };
+        Returns: {
+          analysis_id: string;
+          analysis_status: AiAnalysisStatus;
+          processing_token: string;
+          should_process: boolean;
+        }[];
+      };
+      claim_ai_daily_analysis_for_display: {
+        Args: { analysis_id_value: string };
+        Returns: AiDailyAnalysisRow | null;
+      };
+      complete_ai_daily_analysis: {
+        Args: {
+          analysis_id_value: string;
+          processing_token_value: string;
+          result_category: AiAnalysisCategory;
+          result_confidence: AiAnalysisConfidence;
+          result_context_version: string;
+          result_evidence: Json;
+          result_message: string | null;
+          result_model: string | null;
+          result_outcome_reason: AiAnalysisOutcomeReason;
+          result_priority: AiAnalysisPriority;
+          result_proposed_action: Json;
+          result_provider_response_id: string | null;
+          result_status: AiAnalysisStatus;
+          result_title: string | null;
+        };
+        Returns: AiDailyAnalysisRow;
+      };
       complete_onboarding: {
         Args: {
           birth_date: string;
@@ -397,6 +516,19 @@ export type Database = {
           override_date: string;
         };
         Returns: undefined;
+      };
+      dismiss_ai_daily_analysis: {
+        Args: { analysis_id_value: string };
+        Returns: AiDailyAnalysisRow;
+      };
+      fail_ai_daily_analysis: {
+        Args: {
+          analysis_id_value: string;
+          failure_code: string;
+          processing_token_value: string;
+          retry_delay?: string;
+        };
+        Returns: AiDailyAnalysisRow;
       };
       delete_workout_set: {
         Args: {
@@ -464,6 +596,11 @@ export type Database = {
       };
     };
     Tables: {
+      ai_daily_analyses: Table<
+        AiDailyAnalysisRow,
+        AiDailyAnalysisInsert,
+        Partial<AiDailyAnalysisInsert>
+      >;
       activity_definitions: Table<
         ActivityDefinitionRow,
         ActivityDefinitionInsert,

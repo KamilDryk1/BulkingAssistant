@@ -4,6 +4,7 @@ import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import authEn from './en/auth.json';
+import aiEn from './en/ai.json';
 import bodyEn from './en/body.json';
 import commonEn from './en/common.json';
 import onboardingEn from './en/onboarding.json';
@@ -14,6 +15,7 @@ import todayEn from './en/today.json';
 import trainingEn from './en/training.json';
 import workoutEn from './en/workout.json';
 import authPl from './pl/auth.json';
+import aiPl from './pl/ai.json';
 import bodyPl from './pl/body.json';
 import commonPl from './pl/common.json';
 import onboardingPl from './pl/onboarding.json';
@@ -32,6 +34,7 @@ const i18n = createInstance();
 
 const resources = {
   en: {
+    ai: aiEn,
     auth: authEn,
     body: bodyEn,
     common: commonEn,
@@ -44,6 +47,7 @@ const resources = {
     workout: workoutEn,
   },
   pl: {
+    ai: aiPl,
     auth: authPl,
     body: bodyPl,
     common: commonPl,

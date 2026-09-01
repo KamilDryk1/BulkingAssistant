@@ -34,6 +34,8 @@ test('calculates a deterministic Mifflin-St Jeor maintenance target', () => {
     }),
     {
       baselineCalories: 2759,
+      baseCalories: 2760,
+      calorieAdjustmentCalories: 0,
       calories: 2760,
       carbohydrateGrams: 373,
       fatGrams: 77,
@@ -82,6 +84,23 @@ test('applies goal-specific calories and protein without changing input values',
   assert.equal(target.calories, 2360);
   assert.equal(target.proteinGrams, 160);
   assert.equal(input.weightKg, 80);
+});
+
+test('keeps a persistent calorie adjustment separate from the deterministic base target', () => {
+  const target = calculateNutritionTarget({
+    activityLevel: 'moderate',
+    calorieAdjustmentCalories: 150,
+    dateOfBirth: '1996-08-29',
+    goal: 'gain',
+    heightCm: 180,
+    sex: 'male',
+    targetDate: '2026-08-29',
+    weightKg: 80,
+  });
+
+  assert.equal(target.baseCalories, 3010);
+  assert.equal(target.calorieAdjustmentCalories, 150);
+  assert.equal(target.calories, 3160);
 });
 
 test('keeps extreme inputs above the configured calorie safeguard', () => {

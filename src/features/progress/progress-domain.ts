@@ -6,7 +6,7 @@ import type {
   ProgressSetSource,
   ProgressSummary,
   ProgressTrend,
-} from './progress-types';
+} from './progress-types.ts';
 
 export const progressPeriodWeeks = 8;
 

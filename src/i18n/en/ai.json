@@ -1,0 +1,19 @@
+{
+  "suggestion": {
+    "eyebrow": "Coach suggestion",
+    "loadingTitle": "Loading suggestion",
+    "loadingDetail": "Preparing the evidence and proposed action.",
+    "errorTitle": "Suggestion unavailable",
+    "errorDetail": "The suggestion could not be loaded. Your normal app data is unaffected.",
+    "evidence": "Why this came up",
+    "currentTarget": "Current target",
+    "suggestedTarget": "Suggested target",
+    "requiresApproval": "Nothing changes until you apply this adjustment.",
+    "applyCalories": "Apply {{value}} kcal",
+    "notNow": "Not now",
+    "actionError": "The suggestion could not be updated. Try again."
+  },
+  "actions": {
+    "close": "Close"
+  }
+}
