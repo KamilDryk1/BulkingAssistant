@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { todayKeys } from '@/features/today/today-queries';
 import type { AppLocale } from '@/types/database';
 
+import { isDailyWorkoutExerciseSchemaMissing } from './daily-workout-exercise-state';
 import {
   createCustomActivity,
   createCustomExercise,
@@ -10,6 +11,7 @@ import {
   deleteDailyScheduleOverride,
   deleteWorkoutPlan,
   fetchDailyScheduleOverride,
+  fetchDailyWorkoutExerciseOverrides,
   fetchTrainingData,
   replaceDailyScheduleOverride,
   replaceWeeklyScheduleDay,
@@ -26,6 +28,8 @@ export const trainingKeys = {
   all: ['training'] as const,
   dailyOverride: (userId: string, date: string) =>
     [...trainingKeys.all, 'daily-override', userId, date] as const,
+  dailyWorkoutExercises: (userId: string, date: string) =>
+    [...trainingKeys.all, 'daily-workout-exercises', userId, date] as const,
   data: (userId: string, locale: AppLocale) =>
     [...trainingKeys.all, 'data', userId, locale] as const,
 };
@@ -43,6 +47,15 @@ export function useDailyScheduleOverride(userId: string, date: string) {
     enabled: Boolean(userId && date),
     queryFn: () => fetchDailyScheduleOverride(userId, date),
     queryKey: trainingKeys.dailyOverride(userId, date),
+  });
+}
+
+export function useDailyWorkoutExerciseOverrides(userId: string, date: string) {
+  return useQuery({
+    enabled: Boolean(userId && date),
+    queryFn: () => fetchDailyWorkoutExerciseOverrides(userId, date),
+    queryKey: trainingKeys.dailyWorkoutExercises(userId, date),
+    retry: (failureCount, error) => !isDailyWorkoutExerciseSchemaMissing(error) && failureCount < 1,
   });
 }
 

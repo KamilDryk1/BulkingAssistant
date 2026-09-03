@@ -1,4 +1,11 @@
 {
+  "coach": {
+    "title": "Coach",
+    "cardTitle": "Ask about your progress",
+    "cardDetail": "Use your training, body and nutrition data in a private conversation.",
+    "setupRequired": "Coach still needs its backend to be set up. The rest of the app is available.",
+    "open": "Ask Coach"
+  },
   "eyebrow": "Your day at a glance",
   "nutritionTarget": "Nutrition target",
   "protein": "Protein",

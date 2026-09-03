@@ -98,6 +98,7 @@ function RootNavigator() {
             sheetInitialDetentIndex: 0,
           }}
         />
+        <Stack.Screen name="coach" options={{ headerShown: false }} />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen name="training-tools" options={{ headerShown: false }} />
         <Stack.Screen name="workout" options={{ headerShown: false }} />

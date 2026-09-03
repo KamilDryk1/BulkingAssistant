@@ -11,7 +11,53 @@
     "requiresApproval": "Nic się nie zmieni, dopóki nie zastosujesz tej korekty.",
     "applyCalories": "Zastosuj {{value}} kcal",
     "notNow": "Nie teraz",
-    "actionError": "Nie udało się zaktualizować sugestii. Spróbuj ponownie."
+    "actionError": "Nie udało się zaktualizować sugestii. Spróbuj ponownie.",
+    "discussWithCoach": "Omów z Coachem"
+  },
+  "coach": {
+    "title": "AI Coach",
+    "subtitle": "Trening, ciało i żywienie",
+    "back": "Wróć",
+    "history": "Historia",
+    "new": "Nowa",
+    "untitled": "Rozmowa",
+    "loading": "Wczytuję rozmowę",
+    "loadingDetail": "Przywracam Twoje wiadomości.",
+    "loadError": "Rozmowa jest niedostępna",
+    "loadErrorDetail": "Nie udało się wczytać wiadomości. Pozostałe dane w aplikacji działają normalnie.",
+    "loadingHistory": "Wczytuję historię",
+    "loadingHistoryDetail": "Przywracam Twoje rozmowy.",
+    "noHistory": "Nie masz jeszcze rozmów",
+    "noHistoryDetail": "Rozpocznij nową rozmowę z Coachem.",
+    "analysisContext": "Kontekst dziennej sugestii",
+    "emptyTitle": "Zapytaj o swój trening",
+    "emptyDetail": "Coach może sprawdzić Twoje dane, wyjaśnić postęp i wykonać kontrolowane zmiany.",
+    "prompts": {
+      "progress": "Jak rozwija się mój Bench Press?",
+      "workout": "Zmień dzisiejszy trening",
+      "weight": "Jak wygląda mój trend masy ciała?"
+    },
+    "inputLabel": "Wiadomość do Coacha",
+    "inputPlaceholder": "Zapytaj Coacha…",
+    "send": "Wyślij",
+    "working": "Coach pracuje",
+    "workingDetail": "Sprawdzam potrzebne dane i narzędzia.",
+    "responseError": "Wiadomość nie została ukończona",
+    "responseErrorDetail": "Żadna zmiana nie została zgłoszona jako wykonana. Ponów to samo żądanie.",
+    "retry": "Ponów",
+    "confirmation": {
+      "apply": "Zastosuj zmiany",
+      "retryApply": "Ponów zastosowanie",
+      "cancel": "Anuluj",
+      "error": "Nie udało się zaktualizować proponowanej akcji. Spróbuj ponownie.",
+      "status": {
+        "running": "Wprowadzam zmianę",
+        "awaiting_confirmation": "Wymagane potwierdzenie",
+        "succeeded": "Zastosowano",
+        "failed": "Nie zastosowano",
+        "cancelled": "Anulowano"
+      }
+    }
   },
   "actions": {
     "close": "Zamknij"

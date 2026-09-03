@@ -7,7 +7,7 @@ import type {
   MuscleGroup,
   ScheduleItemType,
   WorkoutPlanRow,
-} from '@/types/database';
+} from '@/types/database.ts';
 
 export type TrainingLocale = AppLocale;
 
@@ -47,6 +47,8 @@ export type DailyScheduleOverride = {
   id: string;
   items: ScheduleDraftItem[];
 };
+
+export type DailyWorkoutExerciseOverrides = Record<string, string[]>;
 
 export type TrainingData = {
   activities: ActivityDefinition[];

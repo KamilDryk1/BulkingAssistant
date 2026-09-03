@@ -16,6 +16,11 @@ export type AiAnalysisCategory =
 export type AiAnalysisPriority = 'low' | 'medium' | 'high';
 export type AiAnalysisConfidence = 'low' | 'medium' | 'high';
 export type AiAnalysisOutcomeReason = 'model' | 'insufficient_data' | 'disabled' | 'mock';
+export type AiConversationStatus = 'idle' | 'processing' | 'failed';
+export type AiMessageRole = 'user' | 'assistant';
+export type AiToolKind = 'read' | 'daily_write' | 'persistent_write';
+export type AiToolStatus =
+  'running' | 'awaiting_confirmation' | 'succeeded' | 'failed' | 'cancelled';
 
 export type ProfileRow = {
   activity_level: ActivityLevel | null;
@@ -431,6 +436,134 @@ type AiDailyAnalysisInsert = {
   user_id: string;
 };
 
+export type AiConversationRow = {
+  created_at: string;
+  id: string;
+  last_error_code: string | null;
+  processing_started_at: string | null;
+  processing_token: string | null;
+  source_analysis_id: string | null;
+  status: AiConversationStatus;
+  title: string | null;
+  updated_at: string;
+  user_id: string;
+};
+
+type AiConversationInsert = {
+  created_at?: string;
+  id?: string;
+  last_error_code?: string | null;
+  processing_started_at?: string | null;
+  processing_token?: string | null;
+  source_analysis_id?: string | null;
+  status?: AiConversationStatus;
+  title?: string | null;
+  updated_at?: string;
+  user_id: string;
+};
+
+export type AiMessageRow = {
+  client_request_id: string | null;
+  content: string;
+  conversation_id: string;
+  created_at: string;
+  id: string;
+  provider_response_id: string | null;
+  role: AiMessageRole;
+  user_id: string;
+};
+
+type AiMessageInsert = {
+  client_request_id?: string | null;
+  content: string;
+  conversation_id: string;
+  created_at?: string;
+  id?: string;
+  provider_response_id?: string | null;
+  role: AiMessageRole;
+  user_id: string;
+};
+
+export type AiToolRunRow = {
+  arguments: Json;
+  assistant_message_id: string | null;
+  cancelled_at: string | null;
+  completed_at: string | null;
+  confirmation_summary: string | null;
+  confirmed_at: string | null;
+  conversation_id: string;
+  created_at: string;
+  error_code: string | null;
+  high_level_change: string | null;
+  id: string;
+  provider_call_id: string;
+  provider_response_id: string | null;
+  result: Json | null;
+  status: AiToolStatus;
+  tool_kind: AiToolKind;
+  tool_name: string;
+  updated_at: string;
+  user_id: string;
+};
+
+type AiToolRunInsert = {
+  arguments?: Json;
+  assistant_message_id?: string | null;
+  cancelled_at?: string | null;
+  completed_at?: string | null;
+  confirmation_summary?: string | null;
+  confirmed_at?: string | null;
+  conversation_id: string;
+  created_at?: string;
+  error_code?: string | null;
+  high_level_change?: string | null;
+  id?: string;
+  provider_call_id: string;
+  provider_response_id?: string | null;
+  result?: Json | null;
+  status: AiToolStatus;
+  tool_kind: AiToolKind;
+  tool_name: string;
+  updated_at?: string;
+  user_id: string;
+};
+
+export type DailyWorkoutExerciseOverrideRow = {
+  created_at: string;
+  id: string;
+  override_date: string;
+  updated_at: string;
+  user_id: string;
+  workout_plan_id: string;
+};
+
+type DailyWorkoutExerciseOverrideInsert = {
+  created_at?: string;
+  id?: string;
+  override_date: string;
+  updated_at?: string;
+  user_id: string;
+  workout_plan_id: string;
+};
+
+export type DailyWorkoutExerciseOverrideItemRow = {
+  created_at: string;
+  daily_workout_override_id: string;
+  exercise_id: string;
+  id: string;
+  position: number;
+  updated_at: string;
+};
+
+type DailyWorkoutExerciseOverrideItemInsert = {
+  created_at?: string;
+  daily_workout_override_id: string;
+  exercise_id: string;
+  id?: string;
+  position: number;
+  updated_at?: string;
+};
+
 type Table<Row, Insert, Update = Partial<Insert>> = {
   Insert: Insert;
   Relationships: [];
@@ -449,6 +582,10 @@ export type Database = {
       ai_analysis_outcome_reason: AiAnalysisOutcomeReason;
       ai_analysis_priority: AiAnalysisPriority;
       ai_analysis_status: AiAnalysisStatus;
+      ai_conversation_status: AiConversationStatus;
+      ai_message_role: AiMessageRole;
+      ai_tool_kind: AiToolKind;
+      ai_tool_status: AiToolStatus;
       app_locale: AppLocale;
       equipment_category: EquipmentCategory;
       fitness_goal: FitnessGoal;
@@ -479,6 +616,30 @@ export type Database = {
         Args: { analysis_id_value: string };
         Returns: AiDailyAnalysisRow | null;
       };
+      begin_ai_coach_turn: {
+        Args: {
+          request_user_id: string;
+          requested_conversation_id: string | null;
+          requested_source_analysis_id?: string | null;
+          user_client_request_id: string;
+          user_message_content: string;
+        };
+        Returns: {
+          conversation_id: string;
+          processing_token: string | null;
+          should_process: boolean;
+          user_message_id: string;
+        }[];
+      };
+      claim_ai_coach_confirmation: {
+        Args: { request_user_id: string; requested_tool_run_id: string };
+        Returns: {
+          conversation_id: string;
+          processing_token: string;
+          tool_arguments: Json;
+          tool_name: string;
+        }[];
+      };
       complete_ai_daily_analysis: {
         Args: {
           analysis_id_value: string;
@@ -497,6 +658,16 @@ export type Database = {
           result_title: string | null;
         };
         Returns: AiDailyAnalysisRow;
+      };
+      complete_ai_coach_turn: {
+        Args: {
+          assistant_message_content: string;
+          request_user_id: string;
+          requested_conversation_id: string;
+          requested_processing_token: string;
+          response_id?: string | null;
+        };
+        Returns: AiMessageRow;
       };
       complete_onboarding: {
         Args: {
@@ -530,6 +701,15 @@ export type Database = {
         };
         Returns: AiDailyAnalysisRow;
       };
+      fail_ai_coach_turn: {
+        Args: {
+          failure_code: string;
+          request_user_id: string;
+          requested_conversation_id: string;
+          requested_processing_token: string;
+        };
+        Returns: undefined;
+      };
       delete_workout_set: {
         Args: {
           workout_set_id_value: string;
@@ -547,6 +727,18 @@ export type Database = {
           override_date: string;
           schedule_items: Json;
         };
+        Returns: string;
+      };
+      replace_daily_workout_exercises: {
+        Args: {
+          ordered_exercise_ids: string[];
+          override_date_value: string;
+          workout_plan_id_value: string;
+        };
+        Returns: string;
+      };
+      replace_active_workout_session_exercises: {
+        Args: { ordered_exercise_ids: string[] };
         Returns: string;
       };
       finish_workout_session: {
@@ -577,6 +769,14 @@ export type Database = {
         };
         Returns: WorkoutPlanRow;
       };
+      save_ai_workout_plan: {
+        Args: {
+          idempotency_plan_id: string;
+          ordered_exercise_ids: string[];
+          workout_plan_name: string;
+        };
+        Returns: WorkoutPlanRow;
+      };
       save_workout_set: {
         Args: {
           completed_value: boolean;
@@ -596,11 +796,18 @@ export type Database = {
       };
     };
     Tables: {
+      ai_conversations: Table<
+        AiConversationRow,
+        AiConversationInsert,
+        Partial<AiConversationInsert>
+      >;
       ai_daily_analyses: Table<
         AiDailyAnalysisRow,
         AiDailyAnalysisInsert,
         Partial<AiDailyAnalysisInsert>
       >;
+      ai_messages: Table<AiMessageRow, AiMessageInsert, Partial<AiMessageInsert>>;
+      ai_tool_runs: Table<AiToolRunRow, AiToolRunInsert, Partial<AiToolRunInsert>>;
       activity_definitions: Table<
         ActivityDefinitionRow,
         ActivityDefinitionInsert,
@@ -616,6 +823,16 @@ export type Database = {
         DailyScheduleOverrideRow,
         DailyScheduleOverrideInsert,
         Partial<DailyScheduleOverrideInsert>
+      >;
+      daily_workout_exercise_override_items: Table<
+        DailyWorkoutExerciseOverrideItemRow,
+        DailyWorkoutExerciseOverrideItemInsert,
+        Partial<DailyWorkoutExerciseOverrideItemInsert>
+      >;
+      daily_workout_exercise_overrides: Table<
+        DailyWorkoutExerciseOverrideRow,
+        DailyWorkoutExerciseOverrideInsert,
+        Partial<DailyWorkoutExerciseOverrideInsert>
       >;
       exercises: Table<ExerciseRow, ExerciseInsert, Partial<ExerciseInsert>>;
       nutrition_target_snapshots: Table<

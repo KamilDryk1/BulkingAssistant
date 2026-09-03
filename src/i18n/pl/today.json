@@ -1,4 +1,11 @@
 {
+  "coach": {
+    "title": "Coach",
+    "cardTitle": "Zapytaj o swoje postępy",
+    "cardDetail": "Porozmawiaj na podstawie danych o treningu, ciele i żywieniu.",
+    "setupRequired": "Coach wymaga jeszcze uruchomienia backendu. Pozostałe funkcje aplikacji są dostępne.",
+    "open": "Zapytaj Coacha"
+  },
   "eyebrow": "Twój dzień w skrócie",
   "nutritionTarget": "Cel żywieniowy",
   "protein": "Białko",

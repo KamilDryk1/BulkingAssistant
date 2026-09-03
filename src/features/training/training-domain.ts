@@ -1,10 +1,10 @@
-import type { ActivityDefinitionRow, AppLocale, ExerciseRow } from '@/types/database';
+import type { ActivityDefinitionRow, AppLocale, ExerciseRow } from '@/types/database.ts';
 
 import type {
   DailyScheduleOverride,
   ScheduleDraftItem,
   WeeklyScheduleItem,
-} from './training-types';
+} from './training-types.ts';
 
 export function getExerciseDisplayName(exercise: ExerciseRow, locale: AppLocale) {
   if (exercise.is_custom) {

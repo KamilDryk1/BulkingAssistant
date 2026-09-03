@@ -6,10 +6,54 @@ import type {
   CreateCustomActivityInput,
   CreateCustomExerciseInput,
   DailyScheduleOverride,
+  DailyWorkoutExerciseOverrides,
   SaveWorkoutPlanInput,
   ScheduleDraftItem,
   TrainingData,
 } from './training-types';
+
+export async function fetchDailyWorkoutExerciseOverrides(
+  userId: string,
+  date: string,
+): Promise<DailyWorkoutExerciseOverrides> {
+  const client = getSupabaseClient();
+  const { data: overrides, error: overrideError } = await client
+    .from('daily_workout_exercise_overrides')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('override_date', date);
+
+  if (overrideError) {
+    throw overrideError;
+  }
+
+  const overrideRows = overrides ?? [];
+  if (overrideRows.length === 0) {
+    return {};
+  }
+
+  const { data: items, error: itemError } = await client
+    .from('daily_workout_exercise_override_items')
+    .select('*')
+    .in(
+      'daily_workout_override_id',
+      overrideRows.map((override) => override.id),
+    )
+    .order('position');
+
+  if (itemError) {
+    throw itemError;
+  }
+
+  return Object.fromEntries(
+    overrideRows.map((override) => [
+      override.workout_plan_id,
+      (items ?? [])
+        .filter((item) => item.daily_workout_override_id === override.id)
+        .map((item) => item.exercise_id),
+    ]),
+  );
+}
 
 function serializeScheduleItems(items: readonly ScheduleDraftItem[]): Json {
   return items.map((item) => ({

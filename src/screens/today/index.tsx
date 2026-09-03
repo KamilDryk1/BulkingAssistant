@@ -19,8 +19,13 @@ import {
   useEnsureDailyAnalysis,
 } from '@/features/ai/daily-analysis-queries';
 import { ScheduleItemIcon } from '@/features/training/schedule-item-icon';
+import { getDailyWorkoutExerciseReadState } from '@/features/training/daily-workout-exercise-state';
 import { resolveScheduleForDate } from '@/features/training/training-domain';
-import { useDailyScheduleOverride, useTrainingData } from '@/features/training/training-queries';
+import {
+  useDailyScheduleOverride,
+  useDailyWorkoutExerciseOverrides,
+  useTrainingData,
+} from '@/features/training/training-queries';
 import type { WorkoutPlan } from '@/features/training/training-types';
 import {
   useDeleteActivityLog,
@@ -166,6 +171,9 @@ export function TodayScreen() {
   const { date, dateKey } = useCurrentDate();
   const training = useTrainingData(user?.id ?? '', locale);
   const dailyOverride = useDailyScheduleOverride(user?.id ?? '', dateKey);
+  const dailyWorkoutExercises = useDailyWorkoutExerciseOverrides(user?.id ?? '', dateKey);
+  const dailyWorkoutExerciseState = getDailyWorkoutExerciseReadState(dailyWorkoutExercises);
+  const coachSchemaMissing = dailyWorkoutExerciseState === 'schema_missing';
   const today = useTodayData(user?.id ?? '', dateKey, profile);
   const timeZone = calendar?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'UTC';
   const dailyAnalysis = useEnsureDailyAnalysis(
@@ -190,7 +198,41 @@ export function TodayScreen() {
             item.itemType === 'workout'
               ? training.data.plans.find((candidate) => candidate.id === item.referenceId)
               : null;
-          return plan ? [plan] : [];
+          if (!plan) {
+            return [];
+          }
+
+          const exerciseIds = coachSchemaMissing
+            ? undefined
+            : dailyWorkoutExercises.data?.[plan.id];
+          if (!exerciseIds) {
+            return [plan];
+          }
+
+          const exerciseById = new Map(
+            plan.exercises.map((planExercise) => [planExercise.exercise.id, planExercise]),
+          );
+          const trainingExerciseById = new Map(
+            training.data.exercises.map((exercise) => [exercise.id, exercise]),
+          );
+          return [
+            {
+              ...plan,
+              exercises: exerciseIds.flatMap((exerciseId, position) => {
+                const existing = exerciseById.get(exerciseId);
+                const exercise = existing?.exercise ?? trainingExerciseById.get(exerciseId);
+                return exercise
+                  ? [
+                      {
+                        exercise,
+                        id: existing?.id ?? `daily-${plan.id}-${exerciseId}`,
+                        position,
+                      },
+                    ]
+                  : [];
+              }),
+            },
+          ];
         })
       : [];
   const lastWorkoutDates = useLastCompletedWorkoutDates(
@@ -199,9 +241,17 @@ export function TodayScreen() {
     scheduledPlans.map((plan) => plan.id),
   );
   const loading =
-    training.isPending || dailyOverride.isPending || today.isPending || activeWorkout.isPending;
+    training.isPending ||
+    dailyOverride.isPending ||
+    dailyWorkoutExerciseState === 'loading' ||
+    today.isPending ||
+    activeWorkout.isPending;
   const failed =
-    training.isError || dailyOverride.isError || today.isError || activeWorkout.isError;
+    training.isError ||
+    dailyOverride.isError ||
+    dailyWorkoutExerciseState === 'error' ||
+    today.isError ||
+    activeWorkout.isError;
   const dateLabel = formatFullDate(date, locale);
 
   useEffect(() => {
@@ -235,6 +285,7 @@ export function TodayScreen() {
   const retry = () => {
     void training.refetch();
     void dailyOverride.refetch();
+    void dailyWorkoutExercises.refetch();
     void today.refetch();
     void activeWorkout.refetch();
     void lastWorkoutDates.refetch();
@@ -284,6 +335,21 @@ export function TodayScreen() {
 
   return (
     <Screen header={<AppHeader eyebrow={t('eyebrow')} title={dateLabel} />}>
+      <View style={{ gap: spacing.md }}>
+        <SectionLabel title={t('coach.title')} />
+        <Card elevated style={{ gap: spacing.md }}>
+          <AppText variant="title">{t('coach.cardTitle')}</AppText>
+          <AppText color="textSecondary">
+            {t(coachSchemaMissing ? 'coach.setupRequired' : 'coach.cardDetail')}
+          </AppText>
+          <AppButton
+            disabled={coachSchemaMissing}
+            onPress={() => router.push('/coach' as Href)}
+            title={t('coach.open')}
+          />
+        </Card>
+      </View>
+
       <View style={{ gap: spacing.md }}>
         <SectionLabel title={t('nutritionTarget')} />
         <Card elevated padding="large" style={{ gap: spacing.xl }}>

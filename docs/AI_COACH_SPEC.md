@@ -2,7 +2,7 @@
 
 ## Scope and rollout
 
-This document defines the shared AI architecture and the implemented Stage 1 daily analysis. Stage 2, the conversational AI Coach and its application tools, is intentionally design-only until it is explicitly approved.
+This document defines the shared AI architecture, the implemented Stage 1 daily analysis, and the implemented Stage 2 conversational Coach with controlled application tools.
 
 AI augments the existing deterministic domains. It does not replace weight-unit conversion, rolling averages, Estimated 1RM, schedule resolution, workout completion statistics, or nutrition calculations.
 
@@ -21,9 +21,9 @@ AI augments the existing deterministic domains. It does not replace weight-unit 
 Expo / React Native
   -> authenticated Supabase Edge Function
     -> user-scoped Supabase reads protected by RLS
-    -> deterministic compact context builder
-    -> OpenAI Responses API with strict structured output
-    -> validated result
+    -> deterministic compact context builders and domain services
+    -> OpenAI Responses API with strict structured output or function tools
+    -> validated result / bounded tool execution
     -> service-role persistence through constrained database RPCs
   -> TanStack Query cache
   -> existing Today and Body UI patterns
@@ -46,6 +46,20 @@ The OpenAI key and model configuration exist only in Supabase Edge Function secr
 11. The suggestion form sheet can dismiss the row or explicitly accept a calorie adjustment. Training suggestions never mutate plans in Stage 1.
 
 AI failure is isolated from normal application queries. A failure stores a sanitized error class and retry time; Today, Body, nutrition, and workouts continue normally.
+
+## Stage 2 flow
+
+1. The user opens Coach from Today, returns to the latest durable conversation, starts a new one, or opens it with a Daily Analysis suggestion attached.
+2. The `ai-coach` Edge Function verifies the bearer token and validates that the supplied local date matches the current date in the supplied IANA time zone.
+3. The service-only `begin_ai_coach_turn` RPC creates or claims the conversation and persists the user-visible message with a client request ID. Duplicate requests are idempotent; a failed/stale turn can resume with the same message.
+4. The function loads at most 24 recent visible messages. It adds only locale, display unit, current date, and optional compact Stage 1 suggestion metadata to the instructions.
+5. The Responses API runs with `store: false`, `parallel_tool_calls: false`, and at most six tool iterations. Encrypted reasoning state may pass in memory between calls during that single turn but is never persisted.
+6. Every requested function name and JSON argument object is validated against the local strict registry before dispatch.
+7. Read tools return compact domain data. Explicit low-risk writes update only the current date/session. Persistent writes are staged in `ai_tool_runs` and tool access is then disabled for the confirmation response.
+8. Apply/Cancel acts on the audited pending row. Apply revalidates current ownership/data before executing; Cancel performs no domain mutation. Both write a visible assistant acknowledgement.
+9. TanStack Query replaces the conversation bundle and invalidates affected Today, Training, Workout, Body, Progress, and Profile caches.
+
+The database is the durable source for conversation history. Provider conversation storage and `previous_response_id` are intentionally not required, so app restart, device restart, and provider retention settings do not affect visible history.
 
 ## Database changes
 
@@ -76,6 +90,23 @@ One user-owned row per local date stores:
 - the IANA time zone used to validate the calendar date.
 
 The table has RLS and direct authenticated access is read-only. Server processing and user interactions happen through narrow RPCs. `accept_ai_daily_analysis` locks the row, validates the proposed calorie delta, updates the profile adjustment once, and records acceptance in the same transaction.
+
+### `ai_conversations`, `ai_messages`, and `ai_tool_runs`
+
+- `ai_conversations` owns the user, optional Stage 1 source analysis, title, processing lease/token, and sanitized failure state.
+- `ai_messages` stores only visible `user`/`assistant` content. A unique client request ID makes send retries idempotent.
+- `ai_tool_runs` stores function name, class, validated arguments, compact result, status, confirmation copy, high-level change, and timestamps needed for recovery/audit.
+
+Authenticated clients have RLS-protected read access only. Conversation processing writes are performed through service-only claim/complete/fail RPCs after the Edge Function derives the user from Supabase Auth. Hidden reasoning and raw prompts are not stored.
+
+### Today-only workout exercise overrides
+
+`daily_workout_exercise_overrides` and ordered child rows store a user/date/plan-specific exercise list. The reusable `workout_plan_exercises` rows remain unchanged.
+
+- Before a workout starts, Coach updates this dated list through `replace_daily_workout_exercises`.
+- `start_workout_session` snapshots the dated list when present, otherwise the reusable plan.
+- After a session starts, `replace_active_workout_session_exercises` updates only the session snapshot.
+- An exercise with recorded sets cannot be removed, preventing completed work from being silently reattributed or deleted.
 
 ## Daily analysis context v1
 
@@ -148,16 +179,45 @@ Responses follow the profile locale. Internal schema values remain language-inde
 - Training, recovery, adherence, and activity suggestions explain and dismiss only. Stage 1 never changes a plan or schedule.
 - Body exposes the active calorie adjustment and a manual reset to zero.
 
+## Stage 2 tool inventory and confirmation policy
+
+All 20 tools use strict JSON schemas with `additionalProperties: false`. Every property is required; nullable values are represented explicitly. UUIDs, limits, enums, array uniqueness, weight ranges, and 50 kcal increments are validated again at runtime.
+
+The provider schemas use the documented Structured Outputs subset. Exercise-array uniqueness is enforced only by the runtime validator and database constraints, not by an unsupported `uniqueItems` provider keyword.
+
+| Class                | Tools                                                                                                                                                                                                    | Execution policy                                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Read                 | `get_today_context`, `get_today_workout`, `get_workout_plan`, `get_recent_workouts`, `get_exercise_progress`, `get_weight_trend`, `get_nutrition_target`, `search_exercises`, `get_activity_definitions` | Immediate; no confirmation                                                                                           |
+| Low-risk daily write | `replace_exercise_for_today`, `add_exercise_for_today`, `remove_exercise_for_today`, `change_today_workout`, `add_activity`, `edit_activity`, `log_weight`, `update_today_weight`                        | Immediate only when the latest message explicitly requests the action; scope is current local date or active session |
+| Persistent write     | `create_workout_plan`, `update_workout_plan`, `update_nutrition_adjustment`                                                                                                                              | Stage an audited proposal, show exact Apply/Cancel card, and execute only after Apply                                |
+| Destructive          | none                                                                                                                                                                                                     | Broad deletion is not exposed to the model                                                                           |
+
+A question or recommendation request never grants mutation authority. Ambiguous commands cause a concise clarification. A persistent tool call itself does not mutate; the server returns `confirmationRequired`, stops further tool use for the turn, and links the pending audit row to the assistant confirmation card.
+
+Confirmed plan updates reuse `save_workout_plan`. Confirmed plan creation uses a wrapper that assigns the tool-run UUID as the plan ID before calling the same RPC, making crash recovery idempotent. Today schedule changes reuse `replace_daily_schedule_override`; activities, weights, and profile adjustments use the same RLS-protected domain tables as their regular UI services. Weight input is converted to canonical kilograms at the boundary. Progress and weight tools reuse deterministic Estimated 1RM and rolling-average functions.
+
+The first inventory deliberately excludes permanent weekly-schedule changes, goal changes, plan deletion, and stored-data deletion. They require separate product design and narrower confirmation semantics.
+
+## Stage 2 UI and navigation
+
+- Coach is a full-screen Expo Router route opened from a dedicated card on Today; no sixth bottom tab is added.
+- When the Stage 2 exercise-override tables have not been deployed yet, Today keeps using the existing workout templates and disables its Coach entry with a setup message. Only missing-table responses for those tables are treated as unavailable Stage 2; authentication, network, permission, and other schema errors remain visible.
+- The screen uses a virtualized message list, compact empty-state prompts, multiline composer, send/loading/error/retry states, conversation history, and New conversation.
+- Returning from Today restores the most recently updated conversation. Conversation messages survive logout/login and device restart because they are stored in Supabase.
+- Persistent actions render Apply and Cancel directly below the proposing assistant message, including terminal applied/failed/cancelled state.
+- Daily Suggestion exposes Discuss with Coach. It opens a new conversation with `source_analysis_id`; the suggestion is visible as context, and supporting facts are still fetched through read tools on demand.
+- All static interface copy is keyed in English and Polish. Model instructions use the profile locale; custom names remain untouched.
+
 ## Edge Function configuration
 
 Required for live Stage 1:
 
 - `OPENAI_API_KEY`
-- `OPENAI_DAILY_ANALYSIS_MODEL` (initial recommendation: `gpt-5.6-terra`)
+- `OPENAI_DAILY_ANALYSIS_MODEL` (configured deployment; current recommendation: `gpt-5.6-terra`)
 
-Reserved for Stage 2:
+Required for live Stage 2:
 
-- `OPENAI_AGENT_MODEL` (initial recommendation: `gpt-5.6-terra`)
+- `OPENAI_AGENT_MODEL` (current recommendation: `gpt-5.6-terra`)
 
 Optional development configuration:
 
@@ -165,8 +225,13 @@ Optional development configuration:
 - `AI_DAILY_ANALYSIS_MOCK_RESULT=<strict JSON result>`
 - `AI_DAILY_ANALYSIS_LOG_CONTEXT=true` to inspect the compact context locally only
 - `AI_DAILY_ANALYSIS_ALLOW_DEBUG_RESET=true` to allow an authenticated mock-mode reset for the current date
+- `AI_COACH_MODE=live|mock|disabled`
+- `AI_COACH_MOCK_RESPONSES=<JSON array>` to replay read/write tool calls and final messages without paid requests
+- `AI_COACH_LOG_TOOL_RESULTS=true` for local-only compact tool diagnostics
 
-Model names are read once by Edge Function configuration code and the identifier used is persisted with every model-produced result.
+Model names are read once by Edge Function configuration code. Stage 1 persists the model identifier with its analysis result; Stage 2 keeps the configured model server-side and persists provider response IDs with user-visible assistant messages and tool audits.
+
+The agent model choice follows the current official model capability page and requires Responses API function calling, multilingual output, and multi-step reasoning. The integration follows the official [Responses create reference](https://developers.openai.com/api/reference/typescript/resources/beta/subresources/responses/methods/create) and [GPT-5.6 Terra capability page](https://developers.openai.com/api/docs/models/gpt-5.6-terra). The business layer remains model-independent through environment configuration.
 
 ## Logging and privacy
 
@@ -174,22 +239,19 @@ Normal logs contain an analysis ID and a sanitized event/error class, not tokens
 
 ## Testing strategy
 
-- Unit tests: local date/time-zone boundaries, weight windows, strength progression, adherence, activity summaries, insufficiency, strict response validation, prompt request construction with a mocked Responses client, and calorie adjustment math.
-- pgTAP: uniqueness and claim idempotency, stale/failed retry claims, RLS isolation, one-time display claim, dismiss lifecycle, and atomic one-time calorie acceptance.
+- Unit tests: local date/time-zone boundaries, weight windows, strength progression, adherence, activity summaries, insufficiency, strict Stage 1 validation, strict Stage 2 tool schemas/classification, mocked multi-step Responses calls, confirmation tool lockout, and calorie adjustment math.
+- pgTAP: Stage 1 uniqueness/claim lifecycle plus Stage 2 RLS isolation, message idempotency, service-only claims, today-only override semantics, active-session history protection, confirmation claiming, and idempotent persistent plan creation.
 - Validation gate: strict TypeScript, Expo lint, unit tests, formatting, migration lint/pgTAP when local Supabase is available, Edge Function type check/serve where available, and Expo all-platform export.
-- Manual states: AI disabled/failure, insufficient/no-action, actionable nutrition, actionable non-nutrition, dismiss, accept, reset, and duplicate same-day requests.
+- Manual states: Stage 1 disabled/no-action/suggestion/accept/dismiss; Stage 2 empty/history/loading/error/retry, read answer, multi-step today-only replacement, activity/weight write, persistent Apply/Cancel, Polish/English, kg/lb, and suggestion-to-Coach context.
 
 Tests inject a mock Responses client and never use a paid OpenAI call.
 
-## Stage 2 design boundary (not implemented)
+## Stage 2 security and reliability assumptions
 
-Stage 2 will reuse the same locale, unit, deterministic metric, validation, model-configuration, security, and audit conventions. It will add durable conversations/messages/tool runs and a bounded server-side tool registry.
-
-Initial tool classes remain:
-
-- read: today context/workout, plans, recent workouts, exercise progress, weight trend, nutrition target, exercise/activity search;
-- explicit low-risk daily writes: today-only workout/exercise overrides, activity logs, and today's weight;
-- persistent writes requiring confirmation: reusable plans, weekly schedule, and nutrition adjustment;
-- destructive operations: excluded unless a later product requirement justifies a narrowly confirmed tool.
-
-Every tool will derive the user from authentication, use stable IDs obtained from read/search tools, validate strict arguments, reuse the same underlying domain rules as the regular UI, and persist only user-visible content plus necessary tool audit metadata. It will never execute arbitrary SQL or store hidden reasoning.
+- The request body never contains a trusted user ID. The Edge Function derives identity from the verified bearer token, and every domain query runs through that user's RLS client.
+- The model receives no token, email, service key, authentication metadata, arbitrary query interface, or SQL capability.
+- Service-role access is limited to conversation processing/audit state. Service-only RPCs are revoked from authenticated clients.
+- Tool arguments are treated as untrusted even after strict provider schema enforcement. Stable IDs are ownership-checked immediately before every operation.
+- A conversation permits one fresh processing lease. Provider/tool failures store bounded codes and never break the core application.
+- Retrying a request reuses its visible message. Audited completed writes are acknowledged instead of repeated; a stale in-progress write is replayed with the same audit ID. Daily operations are idempotent at their effect boundary, including a deterministic activity-log ID. Persistent writes are absolute operations; plan creation uses a deterministic resource ID.
+- OpenAI requests use `store: false`; only in-memory encrypted reasoning continuity is requested during a single tool loop and discarded afterward.

@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { type Href, useLocalSearchParams, useRouter } from 'expo-router';
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -154,6 +154,14 @@ export function DailySuggestionScreen() {
           })}
         />
       ) : null}
+      <AppButton
+        disabled={accept.isPending || dismiss.isPending}
+        onPress={() =>
+          router.replace({ pathname: '/coach', params: { analysisId } } as unknown as Href)
+        }
+        title={t('suggestion.discussWithCoach')}
+        variant="secondary"
+      />
       <AppButton
         disabled={accept.isPending}
         loading={dismiss.isPending}

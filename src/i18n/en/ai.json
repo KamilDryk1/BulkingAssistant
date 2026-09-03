@@ -11,7 +11,53 @@
     "requiresApproval": "Nothing changes until you apply this adjustment.",
     "applyCalories": "Apply {{value}} kcal",
     "notNow": "Not now",
-    "actionError": "The suggestion could not be updated. Try again."
+    "actionError": "The suggestion could not be updated. Try again.",
+    "discussWithCoach": "Discuss with Coach"
+  },
+  "coach": {
+    "title": "AI Coach",
+    "subtitle": "Training, body and nutrition",
+    "back": "Go back",
+    "history": "History",
+    "new": "New",
+    "untitled": "Conversation",
+    "loading": "Loading conversation",
+    "loadingDetail": "Restoring your messages.",
+    "loadError": "Conversation unavailable",
+    "loadErrorDetail": "Your messages could not be loaded. Other app data is unaffected.",
+    "loadingHistory": "Loading history",
+    "loadingHistoryDetail": "Restoring your conversations.",
+    "noHistory": "No conversations yet",
+    "noHistoryDetail": "Start a new conversation with Coach.",
+    "analysisContext": "Daily suggestion context",
+    "emptyTitle": "Ask about your training",
+    "emptyDetail": "Coach can inspect your data, explain progress and carry out controlled changes.",
+    "prompts": {
+      "progress": "How is my Bench Press progressing?",
+      "workout": "Change today's workout",
+      "weight": "How is my weight trend?"
+    },
+    "inputLabel": "Message to Coach",
+    "inputPlaceholder": "Ask Coach…",
+    "send": "Send",
+    "working": "Coach is working",
+    "workingDetail": "Checking the relevant data and tools.",
+    "responseError": "Message not completed",
+    "responseErrorDetail": "Nothing was reported as changed. Retry the same request.",
+    "retry": "Retry",
+    "confirmation": {
+      "apply": "Apply changes",
+      "retryApply": "Retry apply",
+      "cancel": "Cancel",
+      "error": "The proposed action could not be updated. Try again.",
+      "status": {
+        "running": "Applying change",
+        "awaiting_confirmation": "Confirmation required",
+        "succeeded": "Applied",
+        "failed": "Not applied",
+        "cancelled": "Cancelled"
+      }
+    }
   },
   "actions": {
     "close": "Close"

@@ -13,6 +13,8 @@ export const layout = {
   emptyChartHeight: 180,
   swipeActionWidth: 84,
   dragAutoScrollEdge: 80,
+  chatComposerMaxHeight: 128,
+  chatMessageMaxWidth: '86%',
   borderWidth: 1,
 } as const;
 
